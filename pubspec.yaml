@@ -33,9 +33,8 @@ dependencies:
   geolocator: ^13.0.2
   geocoding: ^3.0.0
 
-  # Android Widget + WorkManager
+  # Android Widget
   home_widget: ^0.7.0
-  workmanager: ^0.9.0
 
   # Environment
   flutter_dotenv: ^5.2.1
