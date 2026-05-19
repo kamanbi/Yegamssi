@@ -1,0 +1,21 @@
+{
+  "@@locale": "ja",
+
+  "appName": "予感さん",
+  "tabHome": "今日",
+  "tabWeather": "天気",
+  "tabScore": "スコア",
+  "tabFortune": "運勢",
+  "tabSettings": "設定",
+
+  "scoreLabel": "活動スコア",
+  "scoreTierExcellent": "外出日和です",
+  "scoreTierGood": "まずまずの天気",
+  "scoreTierFair": "少し不便かも",
+  "scoreTierPoor": "室内で過ごしましょう",
+
+  "fortuneTitle": "今日の運勢",
+
+  "onboardingTitle": "予感さん",
+  "onboardingStart": "始める"
+}

@@ -1,0 +1,21 @@
+{
+  "@@locale": "zh",
+
+  "appName": "预感先生",
+  "tabHome": "今天",
+  "tabWeather": "天气",
+  "tabScore": "评分",
+  "tabFortune": "运势",
+  "tabSettings": "设置",
+
+  "scoreLabel": "户外活动评分",
+  "scoreTierExcellent": "完美的户外天气",
+  "scoreTierGood": "天气不错",
+  "scoreTierFair": "稍有不便",
+  "scoreTierPoor": "建议待在室内",
+
+  "fortuneTitle": "今日运势",
+
+  "onboardingTitle": "预感先生",
+  "onboardingStart": "开始"
+}

@@ -1,0 +1,68 @@
+{
+  "@@locale": "en",
+
+  "appName": "Yegamssi",
+  "@appName": { "description": "Application name" },
+
+  "tabHome": "Today",
+  "@tabHome": { "description": "Home tab label" },
+  "tabWeather": "Weather",
+  "@tabWeather": { "description": "Weather tab label" },
+  "tabScore": "Score",
+  "@tabScore": { "description": "Score tab label" },
+  "tabFortune": "Fortune",
+  "@tabFortune": { "description": "Fortune tab label" },
+  "tabSettings": "Settings",
+  "@tabSettings": { "description": "Settings tab label" },
+
+  "weatherFeelsLike": "Feels like {temp}°",
+  "@weatherFeelsLike": {
+    "description": "Feels-like temperature label",
+    "placeholders": { "temp": { "type": "String" } }
+  },
+  "weatherHumidity": "Humidity {value}%",
+  "@weatherHumidity": {
+    "placeholders": { "value": { "type": "int" } }
+  },
+  "weatherWind": "Wind {speed}m/s",
+  "@weatherWind": {
+    "placeholders": { "speed": { "type": "String" } }
+  },
+
+  "scoreLabel": "Activity Score",
+  "@scoreLabel": { "description": "Activity score section label" },
+  "scoreTierExcellent": "Perfect conditions",
+  "scoreTierGood": "Good conditions",
+  "scoreTierFair": "Manageable",
+  "scoreTierPoor": "Stay indoors",
+
+  "fortuneTitle": "Your Daily Fortune",
+  "@fortuneTitle": { "description": "Fortune section header" },
+  "fortuneLuckyColor": "Lucky Color",
+  "fortuneLuckyNumber": "Lucky Number",
+
+  "settingsLanguage": "Language",
+  "settingsCountry": "Region",
+  "settingsTheme": "Appearance",
+  "settingsThemeDark": "Dark",
+  "settingsThemeLight": "Light",
+
+  "onboardingTitle": "Yegamssi",
+  "onboardingSubtitle": "Weather · Score · Fortune",
+  "onboardingStart": "Get Started",
+
+  "widgetScoreLabel": "Score",
+  "widgetFortuneLabel": "Fortune",
+  "widget_description": "Yegamssi daily summary widget",
+
+  "activityRunning": "Running",
+  "activityCycling": "Cycling",
+  "activityHiking": "Hiking",
+  "activityWalking": "Walking",
+  "activityOutdoor": "Outdoor Work",
+
+  "errorNetwork": "Please check your internet connection.",
+  "errorServer": "Server error occurred.",
+  "errorLocation": "Unable to get location.",
+  "errorUnknown": "An unknown error occurred."
+}

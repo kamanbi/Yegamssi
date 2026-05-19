@@ -1,0 +1,60 @@
+decision_A|intro|오늘 판단력 최상급, 평소 결정장애였던 거 한 방에 ㄹㅇ 정리 모드
+decision_A|intro|오늘 결정 운세 만렙, 미뤄둔 고민 다 가져와도 그 자리에서 정답 출력
+decision_A|effect|직관이 핵심 한 방에 찍어내고 논리가 풀로 받쳐주는 갓콤보 발동되며
+decision_A|effect|복잡한 선택지가 알아서 한 줄로 정리되는 마법의 하루며
+decision_A|action|오늘 결정한 거 미래의 자신이 박수칠 확률 99%, 자신감 갖고 GO
+decision_A|action|미뤄둔 인생 숙제 오늘 처리하세요, 운이 부족분 다 채워줍니다
+decision_B|intro|오늘 판단력 평타 데이, 무리수만 안 두면 ㄹㅇ 무난한 하루
+decision_B|intro|오늘 결정 운 그저 그래요, 큰 결단은 다음 갓컨디션 때 시전
+decision_B|effect|평이한 판단으로 일상 결정은 술술 풀려가고
+decision_B|effect|큰 도박만 안 하면 평범한 결과 챙길 수 있고
+decision_B|action|급한 거 아니면 익숙한 루트로 가는 게 ㄹㅇ 답
+decision_B|action|검증된 선택지 하나 골라 차분히 시전하세요
+decision_B1|intro|오늘 판단 컨디션 김밥처럼 평이해요, 무리수는 정중히 거절 모드
+decision_B1|intro|오늘 결정 운 잔잔, 큰 결단은 다음 기회 폴더로 이동
+decision_B1|effect|작은 결정은 무리 없이 굴러가나 큰 결정은 흐릿하고
+decision_B1|effect|익숙한 선택은 OK인데 새 결단엔 살짝 머뭇거리고
+decision_B1|action|오늘은 결정 일단 보류, 내일의 자신에게 외주 패스
+decision_B1|action|작은 결정만 처리하고 큰 건은 다음 컨디션 때로 미루세요
+decision_C|intro|오늘 판단력 흐림 주의보 발효 중, 결정 버튼 누르기 전에 한 번 더 보세요
+decision_C|intro|오늘 결정 운 살짝 졸고 있어요, 신중 모드 강제 발동 중
+decision_C|effect|판단이 흐려져서 실수 한두 개 슬쩍 끼어들기 쉽고
+decision_C|effect|급한 결정일수록 후회 확률 +10% 적립되고
+decision_C|action|오늘 결정은 한 박자 늦추고 검토 한 번 더 시전
+decision_C|action|확실하지 않으면 일단 보류 버튼 풀가동하세요
+decision_C1|intro|오늘 판단력 헷갈림 모드 풀가동, 중요한 건 정중히 패스
+decision_C1|intro|오늘 결정 운 어수선, 큰 선택은 미루는 게 ㄹㅇ 정답
+decision_C1|effect|헷갈림 쌓여서 잘못된 결론으로 슬쩍 빠지기 쉽고
+decision_C1|effect|확신 없이 누른 결정이 후회로 부메랑 올 거고
+decision_C1|action|오늘은 어떤 결정도 일단 메모만 남기고 내일 검토하세요
+decision_C1|action|확실치 않은 건 다 보류 폴더로 드래그앤드롭
+decision_D|intro|오늘 판단력은 휴가 떠났습니다, 점심 메뉴조차 가위바위보로 정하세요
+decision_D|intro|오늘 결정 운 0%, 동전 던지기가 차라리 더 정확할 듯
+decision_D|effect|어떤 결정을 내려도 후회 직행 KTX 탑승 확률 매우 높고
+decision_D|effect|잘못된 판단 한 번이 도미노처럼 큰 손실로 번지기 좋은 환경이고
+decision_D|action|오늘은 모든 결정 동결, 내일의 자신에게 떠넘기세요
+decision_D|action|급해 보여도 한 박자 쉬고 친구한테 나 오늘 결정운 망함 외쳐주세요
+money_A|intro|오늘 통장 잔고가 미소 짓는 날, 뜻밖의 이득 들어올 흐름
+money_A|intro|오늘 재물 운세 최상급, 계획한 수익이 현실로 이어짐
+money_A|effect|투자나 거래에서 유리한 상황 조성, 기대 이상 결과 가능거고
+money_A|effect|금전적 여유 생기고 미뤄둔 재정 흐름이 술술 풀리고
+money_A|action|오늘은 보수보다 적극 결정이 ㄹㅇ 더 유리, GO 타이밍
+money_A|action|기회 눈에 들어오면 망설이지 말고 바로 GO 누르세요
+money_B|intro|오늘 재물 흐름 무난, 생활 수준에 맞게 잘 굴러가요
+money_B|intro|오늘 금전 기운 안정, 수입이랑 지출 균형 ㄹㅇ 잘 맞아요
+money_B|effect|예상한 수익 들어오거나 지출 줄어드는 긍정 흐름 이어지고
+money_B|effect|재물 흐름 안정적이라 작은 기회 챙기기 좋고
+money_B|action|쓸 돈 잘 정리하고 불필요한 지출 줄이면 재물운 +1
+money_B|action|새 재테크 아이디어 있으면 오늘 검토하기 좋은 날
+money_B1|intro|오늘 재물 기운 잔잔, 잃지도 따지도 않는 평이한 날
+money_B1|intro|오늘 금전 흐름 평이, 큰 변동 없는 보통날
+money_B1|effect|수입이랑 지출 균형 무난해서 안정 재정 유지 가능하고
+money_B1|effect|신규 수익이나 절약 기회 자연스럽게 찾아오고
+money_B1|action|현재 흐름 유지하면서 작은 절약 한두 가지 실천
+money_B1|action|지출 꼼꼼히 살피기만 해도 재물운 충분히 활용 가능
+money_C|intro|오늘 재물 기운 흐림, 금전 흐름 신중 모드 강제 발동 중
+money_C|intro|오늘 금전 에너지 약함, 불필요한 지출 줄이는 게 ㄹㅇ 정답
+money_C|effect|계획 없는 지출 생기거나 예상 수입 늦어질 가능성 적립되고
+money_C|effect|재물 흐름 살짝 막혀서 새 투자는 다음 기회 폴더로 이동하고
+money_C|action|지출 내역 꼼꼼히 기록하고 충동 소비 하루 미뤄보세요
+money_C|action|오늘은 저축이랑 절약이 ㄹㅇ 똑똑한 재물 관리

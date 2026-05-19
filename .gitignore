@@ -1,0 +1,117 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Android release signing secrets
+/android/key.properties
+/keystore/
+/android/keystore/
+*.jks
+*.keystore
+
+# Build outputs
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Dependencies
+.pub-cache/
+.pub/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.claude/
+.agents/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test & coverage
+coverage/
+*.lcov
+
+# Generated files
+*.freezed.dart
+*.mocks.dart
+lib/generated/
+
+# Assets (대용량)
+assets/videos/
+assets/raw/
+assets/fonts/
+assets/SCREENSHOT/
+
+# Logs & cache
+*.log
+tmp_*.png
+widget_check.png
+FYegamssietcfortune_styleshumor_base_samples.txt
+CON
+captures/
+temp_widget_icons/
+tool/_debug*/
+tool/_debug_*.png
+tool/_tiles_*/
+tool/_widget_icon_test.*
+etc/fortune_styles/backup/
+etc/supabase_exports/
+etc/*.png
+etc/*.jpg
+etc/*.jpeg
+etc/*.zip
+
+# 환경변수
+.env
+.env.*
+*.env
+env.dart
+lib/config/env.dart
+secrets.json
+google-services.json
+GoogleService-Info.plist

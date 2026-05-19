@@ -1,0 +1,24 @@
+overall_A|intro|오늘 우주가 당신 편입니다, 평소에 못 하던 거 다 들이박으세요
+overall_A|intro|오늘 운세 최상급, 로또 사도 될 듯 (단, 책임은 본인)
+overall_A|effect|주도적으로 나설수록 더 큰 결과 따라오고 협력 운 풀발동이고
+overall_A|effect|오늘 시작한 일은 나중까지 좋은 결과로 이어질 확률 ㄹㅇ 매우 높고
+overall_A|action|망설이지 말고 첫발 내딛으면 오늘의 대운이 풀로 받쳐줘요
+overall_A|action|평소 미뤄둔 중요한 도전 오늘 시동 걸기 좋은 날
+overall_B|intro|오늘은 하루 전반이 무난, 평타 데이라 잘 굴러가요
+overall_B|intro|오늘은 에너지 안정적이라 해야 할 일 차분히 처리 가능
+overall_B|effect|조금만 더 주의 기울이면 기대 이상 결과 따라올 수 있고
+overall_B|effect|잡은 흐름이 전체적으로 일에 유리하게 작용하고
+overall_B|action|에너지 좋은 오늘 가장 중요한 일 한 가지 처리하면 효율 폭발
+overall_B|action|평소보다 의욕 있는 만큼 미뤄둔 일 하나 해결
+overall_B1|intro|오늘은 평균 이상 기운, 꾸준히 움직이면 보람 +1
+overall_B1|intro|오늘은 전반적인 흐름이 무난하고 안정적으로 이어집니다
+overall_B1|effect|집중해서 움직이면 원하는 결과에 한 발 가까워지고
+overall_B1|effect|큰 변수 없이 하루가 안정적으로 흘러가고 계획대로 진행되고
+overall_B1|action|흐름 나쁘진 않으니 중요한 일은 오늘 안에 마무리
+overall_B1|action|무리 NO, 계획한 것 하나만 실천해도 충분한 하루
+overall_C|intro|오늘은 기운 살짝 쳐졌어요, 중간 강도로 신중히 다루는 게 답
+overall_C|intro|오늘은 에너지 평소보다 약함, 무리한 계획보다 여유 ㄹㅇ 추천
+overall_C|effect|기대보다 결과 더디게 올 수 있어서 인내심 필요한 하루고
+overall_C|effect|쉬운 일에도 예상 못한 변수 생길 수 있어서 여유 두는 게 안전하고
+overall_C|action|오늘은 새 도전보다 기존 거 마무리에 풀가동하세요
+overall_C|action|지금 갖고 있는 범위 안에서만 움직이면 에너지 효율적
