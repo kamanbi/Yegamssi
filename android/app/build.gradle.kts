@@ -11,6 +11,7 @@ val keyProps = Properties().apply {
     val keyFile = rootProject.file("key.properties")
     if (keyFile.exists()) load(keyFile.inputStream())
 }
+val hasKeyProps = keyProps.isNotEmpty()
 
 android {
     namespace = "com.yegamssi.yegamssi"
@@ -38,17 +39,20 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            keyAlias = keyProps["keyAlias"] as String
-            keyPassword = keyProps["keyPassword"] as String
-            storeFile = rootProject.file(keyProps["storeFile"] as String)
-            storePassword = keyProps["storePassword"] as String
+        if (hasKeyProps) {
+            create("release") {
+                keyAlias = keyProps["keyAlias"] as String
+                keyPassword = keyProps["keyPassword"] as String
+                storeFile = rootProject.file(keyProps["storeFile"] as String)
+                storePassword = keyProps["storePassword"] as String
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = if (hasKeyProps) signingConfigs.getByName("release")
+                            else signingConfigs.getByName("debug")
         }
     }
 }
