@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,6 +33,11 @@ Future<WeatherEntity> currentWeather(Ref ref) async {
 
   final cachedWeather = await WeatherCacheStore.load();
   if (cachedWeather != null) {
+    debugPrint(
+      '[Weather] cache hit condition=${cachedWeather.condition.name}'
+      ' temp=${cachedWeather.tempCelsius.round()}'
+      ' feelsLike=${cachedWeather.feelsLikeCelsius.round()}',
+    );
     _refreshWeatherInBackground(ref, cachedWeather);
     return cachedWeather;
   }
@@ -43,10 +49,16 @@ Future<WeatherEntity> currentWeather(Ref ref) async {
     lon: position.lon,
   );
   if (result.error != null) {
+    debugPrint('[Weather] fetch error: ${result.error}');
     throw result.error!;
   }
 
   final weather = result.data!;
+  debugPrint(
+    '[Weather] fetch ok condition=${weather.condition.name}'
+    ' temp=${weather.tempCelsius.round()}'
+    ' feelsLike=${weather.feelsLikeCelsius.round()}',
+  );
   if (shouldPersistWeatherSnapshot(
     nextWeather: weather,
     cachedWeather: cachedWeather,
@@ -81,6 +93,10 @@ void _refreshWeatherInBackground(Ref ref, WeatherEntity cachedWeather) {
         nextWeather: result.data!,
         cachedWeather: cachedWeather,
       );
+      debugPrint(
+        '[Weather] bg refresh ok condition=${weather.condition.name}'
+        ' temp=${weather.tempCelsius.round()}',
+      );
       if (shouldPersistWeatherSnapshot(
         nextWeather: weather,
         cachedWeather: cachedWeather,
@@ -88,7 +104,9 @@ void _refreshWeatherInBackground(Ref ref, WeatherEntity cachedWeather) {
         await WeatherCacheStore.save(weather);
       }
       ref.invalidateSelf();
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[Weather] bg refresh error: $e');
+    }
   }());
 }
 

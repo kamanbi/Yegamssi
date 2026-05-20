@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../core/utils/date_format_helper.dart';
 import '../fortune/domain/entities/fortune_result.dart';
 import '../fortune/domain/entities/oheng.dart';
@@ -16,15 +18,23 @@ Future<void> syncWidgetSnapshot({
   final now = DateTime.now();
   final isNight = _isNightByHour(now);
 
+  final conditionKey = _widgetConditionKey(weather.condition, isNight);
+  final fortuneSymbol = widgetFortuneSymbolFor(fortune);
+  debugPrint(
+    '[Widget] sync condition=$conditionKey'
+    ' temp=${weather.tempCelsius.round()}'
+    ' score=${score.score}'
+    ' fortune=$fortuneSymbol',
+  );
   return WidgetDataWriter.update(
-    weatherCondition: _widgetConditionKey(weather.condition, isNight),
+    weatherCondition: conditionKey,
     weatherSymbol: WeatherIconMapper.widgetSymbolFor(
       weather.condition,
       isNight: isNight,
     ),
     temperatureCelsius: weather.tempCelsius.round(),
     feelsLikeCelsius: weather.feelsLikeCelsius.round(),
-    fortuneSymbol: widgetFortuneSymbolFor(fortune),
+    fortuneSymbol: fortuneSymbol,
     score: score.score,
     dateLabel: AppDateFormat.widgetDate(now),
     timeLabel: AppDateFormat.widgetTime(now),

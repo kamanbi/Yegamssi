@@ -89,6 +89,7 @@ assets/SCREENSHOT/
 
 # Logs & cache
 *.log
+*.hprof
 tmp_*.png
 widget_check.png
 FYegamssietcfortune_styleshumor_base_samples.txt

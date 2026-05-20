@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,5 +13,7 @@ part 'score_provider.g.dart';
 @Riverpod(keepAlive: true)
 Future<ActivityScore> currentScore(Ref ref) async {
   final weather = await ref.watch(currentWeatherProvider.future);
-  return const KrScoreCalculator().calculate(weather);
+  final score = const KrScoreCalculator().calculate(weather);
+  debugPrint('[Score] score=${score.score} tier=${score.tier.name}');
+  return score;
 }

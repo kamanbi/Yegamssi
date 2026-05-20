@@ -53,7 +53,7 @@ class WeatherUpdateWorker(
                 .putString(KEY_WEATHER_CONDITION, weatherCondition)
                 .putString(KEY_WEATHER_SYMBOL, weatherSymbol(weatherCondition))
                 .putInt(KEY_TEMPERATURE, weather.temperatureCelsius.roundToInt())
-                .putInt(KEY_FEELS_LIKE, weather.temperatureCelsius.roundToInt())
+                .putInt(KEY_FEELS_LIKE, weather.feelsLikeCelsius.roundToInt())
                 .putFloat(KEY_LATITUDE, position.lat.toFloat())
                 .putFloat(KEY_LONGITUDE, position.lon.toFloat())
                 .putString(KEY_UPDATED_AT, nowText)
@@ -202,6 +202,7 @@ class WeatherUpdateWorker(
 
         return NativeWeather(
             temperatureCelsius = temperature,
+            feelsLikeCelsius = feelsLike(temperature, windSpeed, humidity),
             precipitationType = precipitationType,
             humidity = humidity,
             windSpeedMs = windSpeed,
@@ -248,6 +249,21 @@ class WeatherUpdateWorker(
         }
     }
 
+    /**
+     * Flutter KMA 측 _feelsLike() 와 동일한 공식.
+     * temp >= 27 → 열지수, temp <= 10 && wind >= 1.3 → 풍속체감, 그 외 → 기온
+     */
+    private fun feelsLike(temp: Double, windMs: Double, humidity: Double): Double {
+        if (temp >= 27.0) {
+            return temp + 0.33 * (humidity / 100.0 * 6.105) - 4.0
+        }
+        if (windMs >= 1.3 && temp <= 10.0) {
+            val windFactor = (windMs * 3.6).pow(0.16)
+            return 13.12 + 0.6215 * temp - 11.37 * windFactor + 0.3965 * temp * windFactor
+        }
+        return temp
+    }
+
     private fun isNightNow(): Boolean {
         val hour = LocalDateTime.now().hour
         return hour < 6 || hour >= 20
@@ -286,6 +302,7 @@ class WeatherUpdateWorker(
     private data class KmaBaseTime(val date: String, val time: String)
     private data class NativeWeather(
         val temperatureCelsius: Double,
+        val feelsLikeCelsius: Double,
         val precipitationType: Int,
         val humidity: Double,
         val windSpeedMs: Double,
