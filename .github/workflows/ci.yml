@@ -47,5 +47,8 @@ jobs:
       - name: Analyze
         run: flutter analyze --no-fatal-infos
 
+      - name: Test
+        run: flutter test --reporter=expanded
+
       - name: Build APK (debug)
         run: flutter build apk --debug
