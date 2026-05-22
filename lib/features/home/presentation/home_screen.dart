@@ -146,6 +146,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _loadInterstitialAd();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       WidgetInstallPromptController.showIfNeeded(context);
+      _tryInitialWidgetSync();
+    });
+  }
+
+  void _tryInitialWidgetSync() {
+    final weather = ref.read(currentWeatherProvider).valueOrNull;
+    final score = ref.read(currentScoreProvider).valueOrNull;
+    if (weather == null || score == null) return;
+    ref.read(currentPositionProvider.future).then((position) {
+      if (!mounted) return;
+      _scheduleWidgetSync(
+        weather: weather,
+        score: score,
+        latitude: position.lat,
+        longitude: position.lon,
+        fortune: ref.read(dailyFortuneProvider).valueOrNull,
+      );
     });
   }
 
@@ -289,12 +306,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       context,
     ).routeInformationProvider.value.uri.path;
     final currentIndex = _resolvedCurrentTabIndex(location);
-    final weatherAsync = ref.watch(currentWeatherProvider);
-    final scoreAsync = ref.watch(currentScoreProvider);
-    final fortuneAsync = ref.watch(dailyFortuneProvider);
-    final weather = weatherAsync.valueOrNull;
-    final score = scoreAsync.valueOrNull;
-    final fortune = fortuneAsync.valueOrNull;
+    ref.watch(currentWeatherProvider);
+    ref.watch(currentScoreProvider);
+    ref.watch(dailyFortuneProvider);
 
     ref.listen(currentWeatherProvider, (_, next) {
       final nextWeather = next.valueOrNull;
@@ -346,18 +360,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         );
       });
     });
-
-    if (weather != null && score != null) {
-      ref.watch(currentPositionProvider).whenData((position) {
-        _scheduleWidgetSync(
-          weather: weather,
-          score: score,
-          latitude: position.lat,
-          longitude: position.lon,
-          fortune: fortune,
-        );
-      });
-    }
 
     // Android 13+ predictive back API(OnBackInvokedCallback) 활성화 시
     // BackButtonListener는 이벤트를 받지 못함 → PopScope 사용 필수.
