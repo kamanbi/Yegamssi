@@ -1,7 +1,7 @@
 name: yegamssi
 description: "예감씨 - 날씨·활동점수·운세 기반 행동 판단 앱"
 publish_to: "none"
-version: 1.1.12+44
+version: 1.1.13+45
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
