@@ -21,7 +21,7 @@ class AppRefreshController {
     _ref.invalidate(currentScoreProvider);
 
     final position = await _ref.read(currentPositionProvider.future);
-    final repo = _ref.read(weatherRepositoryProvider);
+    final repo = await _ref.read(weatherRepositoryProvider.future);
     final cachedWeather = await WeatherCacheStore.load();
     final result = await repo.getCurrentWeather(
       lat: position.lat,

@@ -82,7 +82,7 @@ Stream<WeatherEntity> selectedLocationWeather(
     yield cachedWeather;
   }
 
-  final repo = ref.watch(weatherRepositoryProvider);
+  final repo = await ref.watch(weatherRepositoryProvider.future);
   final result = await repo.getCurrentWeather(
     lat: location.lat,
     lon: location.lon,

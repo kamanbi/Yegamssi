@@ -30,7 +30,7 @@ jobs:
           cat <<EOF > .env
           KMA_API_KEY=${{ secrets.KMA_API_KEY }}
           AIRKOREA_API_KEY=${{ secrets.AIRKOREA_API_KEY }}
-          OPENWEATHER_API_KEY=
+          OPENWEATHER_API_KEY=${{ secrets.OPENWEATHER_API_KEY }}
           SUPABASE_URL=${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
           ADMOB_APP_ID=${{ secrets.ADMOB_APP_ID }}

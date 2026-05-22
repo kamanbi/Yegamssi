@@ -4,11 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/locale/country_code.dart';
+import '../../../core/locale/country_resolver.dart';
 import '../../../core/storage/weather_cache_store.dart';
 import '../../../core/utils/location_provider.dart';
 import '../data/repositories/weather_repository_impl.dart';
 import '../data/sources/fallback_weather_data_source.dart';
 import '../data/sources/kma_data_source.dart';
+import '../data/sources/noaa_data_source.dart';
+import '../data/sources/openweather_data_source.dart';
 import '../domain/entities/weather_entity.dart';
 import '../domain/repositories/weather_repository.dart';
 
@@ -19,8 +23,18 @@ const Duration _weatherAutoRefreshInterval = Duration(minutes: 15);
 DateTime? _lastPassiveWeatherRefreshAt;
 
 @Riverpod(keepAlive: true)
-WeatherRepository weatherRepository(Ref ref) {
-  return WeatherRepositoryImpl(FallbackWeatherDataSource([KmaDataSource()]));
+Future<WeatherRepository> weatherRepository(Ref ref) async {
+  final country = await ref.watch(resolvedCountryProvider.future);
+  final source = switch (country) {
+    CountryCode.kr => FallbackWeatherDataSource([KmaDataSource()]),
+    CountryCode.us => FallbackWeatherDataSource([
+        NoaaDataSource(),
+        OpenWeatherDataSource(),
+      ]),
+    _ => FallbackWeatherDataSource([OpenWeatherDataSource()]),
+  };
+  debugPrint('[Weather] repository country=${country.isoCode}');
+  return WeatherRepositoryImpl(source);
 }
 
 @Riverpod(keepAlive: true)
@@ -43,7 +57,7 @@ Future<WeatherEntity> currentWeather(Ref ref) async {
   }
 
   final position = await ref.watch(currentPositionProvider.future);
-  final repo = ref.watch(weatherRepositoryProvider);
+  final repo = await ref.watch(weatherRepositoryProvider.future);
   final result = await repo.getCurrentWeather(
     lat: position.lat,
     lon: position.lon,
@@ -80,7 +94,7 @@ void _refreshWeatherInBackground(Ref ref, WeatherEntity cachedWeather) {
   unawaited(() async {
     try {
       final position = await ref.read(currentPositionProvider.future);
-      final repo = ref.read(weatherRepositoryProvider);
+      final repo = await ref.read(weatherRepositoryProvider.future);
       final result = await repo.getCurrentWeather(
         lat: position.lat,
         lon: position.lon,
@@ -120,7 +134,7 @@ class WeatherNotifier extends _$WeatherNotifier {
   Future<void> fetch({required double lat, required double lon}) async {
     state = const AsyncValue.loading();
     final cachedWeather = await WeatherCacheStore.load();
-    final repo = ref.read(weatherRepositoryProvider);
+    final repo = await ref.read(weatherRepositoryProvider.future);
     final result = await repo.getCurrentWeather(lat: lat, lon: lon);
     if (result.error != null) {
       if (cachedWeather != null) {
