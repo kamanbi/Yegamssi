@@ -7,6 +7,7 @@ import '../../../core/locale/country_resolver.dart';
 import '../../weather/presentation/weather_provider.dart';
 import '../domain/calculators/global_score_calculator.dart';
 import '../domain/calculators/kr_score_calculator.dart';
+import '../domain/calculators/us_score_calculator.dart';
 import '../domain/entities/activity_score.dart';
 
 part 'score_provider.g.dart';
@@ -17,9 +18,9 @@ part 'score_provider.g.dart';
 Future<ActivityScore> currentScore(Ref ref) async {
   final weather = await ref.watch(currentWeatherProvider.future);
   final country = await ref.watch(resolvedCountryProvider.future);
-  // US는 Phase 2에서 UsScoreCalculator로 교체 예정
   final calculator = switch (country) {
     CountryCode.kr => const KrScoreCalculator(),
+    CountryCode.us => const UsScoreCalculator(),
     _ => const GlobalScoreCalculator(),
   };
   final score = calculator.calculate(weather);
