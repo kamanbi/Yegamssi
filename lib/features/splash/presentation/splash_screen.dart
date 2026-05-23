@@ -128,8 +128,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   Future<void> _warmupSnapshot() async {
     try {
-      ref.invalidate(dailyFortuneProvider);
-
       final profile = await ref.read(userProfileNotifierProvider.future);
       if (profile == null) return; // 프로필 없음 → 온보딩으로 이동, 갱신 불필요
 
