@@ -85,7 +85,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     await _showReleaseNoticeIfNeeded();
     if (!mounted) return;
 
-    final profile = ref.read(userProfileNotifierProvider).valueOrNull;
+    // provider 상태와 무관하게 repository에서 직접 읽어 라우팅 결정
+    final profile = ref.read(userProfileNotifierProvider).valueOrNull
+        ?? await ref.read(userProfileNotifierProvider.future);
+    if (!mounted) return;
     context.go(profile != null ? AppRoutes.home : AppRoutes.onboarding);
   }
 
