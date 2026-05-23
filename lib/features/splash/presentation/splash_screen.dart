@@ -48,6 +48,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       ),
     );
 
+    // 애니메이션과 동시에 데이터 갱신 시작 (3초 동안 병렬 처리)
+    _warmupFuture = _warmupSnapshot();
+
     _controller.forward();
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) {
@@ -71,28 +74,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       if (!mounted) return;
     }
 
-    final profileState = ref.read(userProfileNotifierProvider);
-    if (profileState.isLoading) {
-      await Future.any([
-        ref.read(userProfileNotifierProvider.future),
-        Future.delayed(const Duration(seconds: 2)),
-      ]).catchError((_) {});
-    }
-    if (!mounted) return;
-
-    final profile = ref.read(userProfileNotifierProvider).valueOrNull;
-    if (profile != null) {
-      final warmupFuture = _warmupFuture ??= _warmupSnapshot();
-      await Future.any([
-        warmupFuture,
-        Future.delayed(const Duration(seconds: 2)),
-      ]).catchError((_) {});
-    }
+    // initState에서 이미 시작된 warmup 완료 대기 (최대 1초)
+    // 3초 애니메이션 동안 대부분 완료됨
+    await Future.any([
+      _warmupFuture ?? Future.value(),
+      Future.delayed(const Duration(seconds: 1)),
+    ]).catchError((_) {});
     if (!mounted) return;
 
     await _showReleaseNoticeIfNeeded();
     if (!mounted) return;
 
+    final profile = ref.read(userProfileNotifierProvider).valueOrNull;
     context.go(profile != null ? AppRoutes.home : AppRoutes.onboarding);
   }
 
@@ -138,17 +131,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       ref.invalidate(dailyFortuneProvider);
 
       final profile = await ref.read(userProfileNotifierProvider.future);
+      if (profile == null) return; // 프로필 없음 → 온보딩으로 이동, 갱신 불필요
+
       final position = await ref.read(currentPositionProvider.future);
-      final weather = await ref.read(currentWeatherProvider.future);
-      final score = await ref.read(currentScoreProvider.future);
-      FortuneResult? fortune;
-      if (profile != null) {
-        try {
-          fortune = await ref.read(dailyFortuneProvider.future);
-        } catch (_) {
-          fortune = null;
-        }
-      }
+
+      // 날씨·점수·운세 동시 시작 (Riverpod가 의존성 순서 자동 관리)
+      final weatherFuture = ref.read(currentWeatherProvider.future);
+      final scoreFuture = ref.read(currentScoreProvider.future);
+      final fortuneFuture = ref
+          .read(dailyFortuneProvider.future)
+          .then<FortuneResult?>((v) => v)
+          .catchError((_) => null as FortuneResult?);
+
+      final weather = await weatherFuture;
+      final score = await scoreFuture;
+      final fortune = await fortuneFuture;
 
       await syncWidgetSnapshot(
         weather: weather,
