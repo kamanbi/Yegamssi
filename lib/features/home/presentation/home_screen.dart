@@ -12,6 +12,7 @@ import '../../../core/design/app_spacing.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/utils/location_provider.dart';
 import '../../../core/widget_install/widget_install_prompt.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../fortune/domain/entities/fortune_result.dart';
 import '../../fortune/presentation/fortune_provider.dart';
 import '../../score/domain/entities/activity_score.dart';
@@ -188,6 +189,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
 
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       final shouldExit =
           await showDialog<bool>(
             context: context,
@@ -197,18 +199,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 borderRadius: AppRadius.card,
                 side: BorderSide(color: AppColors.glassBorder),
               ),
-              title: const Text('앱 종료'),
-              content: const Text('예감씨를 종료하시겠습니까?'),
+              title: Text(l10n.appExitTitle),
+              content: Text(l10n.appExitMessage),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text('취소'),
+                  child: Text(l10n.cancel),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text(
-                    '종료',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.exit,
+                    style: const TextStyle(
                       color: AppColors.gold,
                       fontWeight: FontWeight.w700,
                     ),
@@ -458,6 +460,7 @@ class _NavigationTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final label = _labelFor(context, item.route);
 
     return Material(
       color: Colors.transparent,
@@ -485,7 +488,7 @@ class _NavigationTab extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                item.label,
+                label,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: isSelected ? colorScheme.primary : AppColors.textMuted,
@@ -497,6 +500,17 @@ class _NavigationTab extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _labelFor(BuildContext context, String route) {
+    final l10n = AppLocalizations.of(context);
+    return switch (route) {
+      AppRoutes.weather => l10n.tabWeather,
+      AppRoutes.score => l10n.tabScore,
+      AppRoutes.fortune => l10n.tabFortune,
+      AppRoutes.settings => l10n.tabSettings,
+      _ => l10n.tabHome,
+    };
   }
 }
 
@@ -548,13 +562,14 @@ class _MannerAdBannerState extends State<_MannerAdBanner> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (!_isLoaded || _bannerAd == null) {
       return Container(
         width: double.infinity,
         height: 50,
         alignment: Alignment.center,
         child: Text(
-          '광고 로딩 중...',
+          l10n.loadingAd,
           style: Theme.of(
             context,
           ).textTheme.labelSmall?.copyWith(color: Colors.white38),

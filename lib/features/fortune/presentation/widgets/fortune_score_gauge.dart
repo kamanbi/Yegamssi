@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class FortuneScoreGauge extends StatelessWidget {
   const FortuneScoreGauge({super.key, required this.score});
@@ -11,6 +12,8 @@ class FortuneScoreGauge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = _color;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -22,7 +25,7 @@ class FortuneScoreGauge extends StatelessWidget {
             children: [
               CustomPaint(
                 size: const Size(72, 72),
-                painter: _FortuneGaugePainter(score: score, color: _color),
+                painter: _FortuneGaugePainter(score: score, color: color),
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -30,7 +33,7 @@ class FortuneScoreGauge extends StatelessWidget {
                   Text(
                     '$score',
                     style: TextStyle(
-                      color: _color,
+                      color: color,
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                       height: 1.0,
@@ -38,7 +41,7 @@ class FortuneScoreGauge extends StatelessWidget {
                   ),
                   Text(
                     '/ 100',
-                    style: TextStyle(color: _color.withAlpha(180), fontSize: 9),
+                    style: TextStyle(color: color.withAlpha(180), fontSize: 9),
                   ),
                 ],
               ),
@@ -47,9 +50,9 @@ class FortuneScoreGauge extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          _label,
+          _label(AppLocalizations.of(context)),
           style: TextStyle(
-            color: _color,
+            color: color,
             fontSize: 11,
             fontWeight: FontWeight.w600,
           ),
@@ -65,11 +68,11 @@ class FortuneScoreGauge extends StatelessWidget {
     return AppColors.scorePoor;
   }
 
-  String get _label {
-    if (score >= 75) return '매우 좋음';
-    if (score >= 50) return '좋음';
-    if (score >= 25) return '보통';
-    return '주의';
+  String _label(AppLocalizations l10n) {
+    if (score >= 75) return l10n.scoreTierExcellent;
+    if (score >= 50) return l10n.scoreTierGood;
+    if (score >= 25) return l10n.scoreTierFair;
+    return l10n.scoreTierPoor;
   }
 }
 
@@ -78,8 +81,8 @@ class _FortuneGaugePainter extends CustomPainter {
   final int score;
   final Color color;
 
-  static const _startAngle = math.pi * 0.75; // 135°
-  static const _totalSweep = math.pi * 1.5; // 270°
+  static const _startAngle = math.pi * 0.75;
+  static const _totalSweep = math.pi * 1.5;
   static const _strokeWidth = 8.0;
 
   @override
@@ -88,7 +91,6 @@ class _FortuneGaugePainter extends CustomPainter {
     final radius = size.width * 0.42;
     final rect = Rect.fromCircle(center: center, radius: radius);
 
-    // 1. Glow layer behind arc (blurred)
     if (score > 0) {
       final sweep = _totalSweep * (score.clamp(0, 100) / 100);
       canvas.drawArc(
@@ -105,7 +107,6 @@ class _FortuneGaugePainter extends CustomPainter {
       );
     }
 
-    // 2. Background groove (dark shadow underneath)
     canvas.drawArc(
       rect,
       _startAngle,
@@ -118,7 +119,6 @@ class _FortuneGaugePainter extends CustomPainter {
         ..strokeCap = StrokeCap.round,
     );
 
-    // 3. Background track
     canvas.drawArc(
       rect,
       _startAngle,
@@ -131,7 +131,6 @@ class _FortuneGaugePainter extends CustomPainter {
         ..strokeCap = StrokeCap.round,
     );
 
-    // 4. Score arc with gradient
     if (score > 0) {
       final sweep = _totalSweep * (score.clamp(0, 100) / 100);
       final gradient = SweepGradient(
@@ -151,7 +150,6 @@ class _FortuneGaugePainter extends CustomPainter {
           ..strokeCap = StrokeCap.round,
       );
 
-      // 5. End cap highlight
       final endAngle = _startAngle + sweep;
       final capCenter = Offset(
         center.dx + radius * math.cos(endAngle),

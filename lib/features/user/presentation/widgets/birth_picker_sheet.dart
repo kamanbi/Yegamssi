@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/user_profile.dart';
 
 class BirthPickerResult {
@@ -22,6 +23,7 @@ class BirthPickerSheet {
     BuildContext context, {
     required DateTime initialDate,
   }) async {
+    final l10n = AppLocalizations.of(context);
     final now = DateTime.now();
     var selectedDate = _normalizeDate(
       initialDate.isAfter(now) ? now : initialDate,
@@ -33,7 +35,7 @@ class BirthPickerSheet {
       isScrollControlled: true,
       builder: (sheetContext) {
         return _SheetScaffold(
-          title: '생년월일',
+          title: l10n.birthDate,
           onConfirm: () => Navigator.of(sheetContext).pop(selectedDate),
           child: CupertinoTheme(
             data: const CupertinoThemeData(brightness: Brightness.dark),
@@ -59,6 +61,7 @@ class BirthPickerSheet {
     BuildContext context, {
     required int initialHour,
   }) async {
+    final l10n = AppLocalizations.of(context);
     final options = _hourOptions;
     final normalizedHour = options.contains(initialHour)
         ? initialHour
@@ -71,7 +74,7 @@ class BirthPickerSheet {
       isScrollControlled: true,
       builder: (sheetContext) {
         return _SheetScaffold(
-          title: '생시',
+          title: l10n.birthHour,
           onConfirm: () =>
               Navigator.of(sheetContext).pop(options[selectedIndex]),
           child: CupertinoTheme(
@@ -90,7 +93,7 @@ class BirthPickerSheet {
                     .map(
                       (hour) => Center(
                         child: Text(
-                          _hourLabel(hour),
+                          _hourLabel(l10n, hour),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -143,11 +146,11 @@ class BirthPickerSheet {
     ).where((hour) => hour != UserProfile.unknownBirthHour),
   ];
 
-  static String _hourLabel(int hour) {
+  static String _hourLabel(AppLocalizations l10n, int hour) {
     if (hour == UserProfile.unknownBirthHour) {
-      return '모름 (정오 기준)';
+      return l10n.birthUnknownNoonShort;
     }
-    return '$hour시';
+    return l10n.hourLabel(hour);
   }
 }
 
@@ -164,6 +167,8 @@ class _SheetScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return SafeArea(
       top: false,
       child: Container(
@@ -197,16 +202,16 @@ class _SheetScaffold extends StatelessWidget {
                 const Spacer(),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    '취소',
-                    style: TextStyle(color: AppColors.textMuted),
+                  child: Text(
+                    l10n.cancel,
+                    style: const TextStyle(color: AppColors.textMuted),
                   ),
                 ),
                 TextButton(
                   onPressed: onConfirm,
-                  child: const Text(
-                    '확인',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.confirm,
+                    style: const TextStyle(
                       color: AppColors.gold,
                       fontWeight: FontWeight.w700,
                     ),

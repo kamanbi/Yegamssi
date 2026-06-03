@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../refresh/app_refresh_controller.dart';
 
 class HeaderRefreshButton extends ConsumerStatefulWidget {
@@ -26,8 +27,9 @@ class _HeaderRefreshButtonState extends ConsumerState<HeaderRefreshButton> {
       if (!mounted) {
         return;
       }
+      final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('새로고침에 실패했습니다: $error')),
+        SnackBar(content: Text(l10n.refreshFailed(error.toString()))),
       );
     } finally {
       if (mounted) {
@@ -38,9 +40,10 @@ class _HeaderRefreshButtonState extends ConsumerState<HeaderRefreshButton> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return IconButton(
       onPressed: _refresh,
-      tooltip: '새로고침',
+      tooltip: l10n.refresh,
       icon: _isRefreshing
           ? const SizedBox(
               width: 20,

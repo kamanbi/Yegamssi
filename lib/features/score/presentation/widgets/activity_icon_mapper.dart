@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/score_tier.dart';
 
 class ActivityVisualSpec {
@@ -22,29 +23,39 @@ class ActivityIconMapper {
   static ActivityVisualSpec specFor(ScoreTier tier) {
     return switch (tier) {
       ScoreTier.excellent => const ActivityVisualSpec(
-          icon: Icons.directions_run_rounded,
-          color: Color(0xFF62E49B),
-          label: '야외활동 추천',
-          widgetSymbol: '🏃',
-        ),
+        icon: Icons.directions_run_rounded,
+        color: Color(0xFF62E49B),
+        label: 'Outdoor activity recommended',
+        widgetSymbol: 'RUN',
+      ),
       ScoreTier.good => const ActivityVisualSpec(
-          icon: Icons.hiking_rounded,
-          color: Color(0xFF8EE086),
-          label: '가벼운 활동 적합',
-          widgetSymbol: '🚶',
-        ),
+        icon: Icons.hiking_rounded,
+        color: Color(0xFF8EE086),
+        label: 'Light activity fits',
+        widgetSymbol: 'WALK',
+      ),
       ScoreTier.fair => const ActivityVisualSpec(
-          icon: Icons.shield_moon_rounded,
-          color: Color(0xFFFFD166),
-          label: '주의가 필요한 날',
-          widgetSymbol: '⚠',
-        ),
+        icon: Icons.shield_moon_rounded,
+        color: Color(0xFFFFD166),
+        label: 'Caution needed',
+        widgetSymbol: 'CAUTION',
+      ),
       ScoreTier.poor => const ActivityVisualSpec(
-          icon: Icons.weekend_rounded,
-          color: Color(0xFFFF8A80),
-          label: '실내 활동 권장',
-          widgetSymbol: '🛋',
-        ),
+        icon: Icons.weekend_rounded,
+        color: Color(0xFFFF8A80),
+        label: 'Indoor activity recommended',
+        widgetSymbol: 'INDOOR',
+      ),
+    };
+  }
+
+  static String localizedLabelFor(BuildContext context, ScoreTier tier) {
+    final l10n = AppLocalizations.of(context);
+    return switch (tier) {
+      ScoreTier.excellent => l10n.activityRecommendOutdoor,
+      ScoreTier.good => l10n.activityRecommendLight,
+      ScoreTier.fair => l10n.activityRecommendCaution,
+      ScoreTier.poor => l10n.activityRecommendIndoor,
     };
   }
 }

@@ -39,12 +39,20 @@ class FortuneRepositoryImpl implements FortuneRepository {
           weatherOheng: weatherOheng,
         );
 
-        final fragments = await _source.fetchWithFallback(
+        var fragments = await _source.fetchWithFallback(
           category: cat,
           baseCode: code,
           selectedTableName: selectedTableName,
           baseTableName: baseTableName,
         );
+        if (fragments.isEmpty && selectedTableName != baseTableName) {
+          fragments = await _source.fetchWithFallback(
+            category: cat,
+            baseCode: code,
+            selectedTableName: baseTableName,
+            baseTableName: baseTableName,
+          );
+        }
 
         // score를 시드에 포함 → 같은 티어 내에서도 점수별 다른 조각 선택
         final seed =

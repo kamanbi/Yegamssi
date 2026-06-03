@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/saved_location.dart';
 import '../weather_location_provider.dart';
 
@@ -15,6 +16,7 @@ class LocationDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locationState = ref.watch(weatherLocationNotifierProvider);
     final selectedLocation = locationState.location;
+    final l10n = AppLocalizations.of(context);
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -24,7 +26,7 @@ class LocationDropdown extends ConsumerWidget {
         children: [
           Flexible(
             child: Text(
-              selectedLocation?.name ?? '현재 위치',
+              selectedLocation?.name ?? l10n.locationCurrent,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: AppColors.textPrimary,
@@ -45,10 +47,11 @@ class LocationDropdown extends ConsumerWidget {
   }
 
   void _showTopLocationMenu(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     showGeneralDialog<void>(
       context: context,
       barrierDismissible: true,
-      barrierLabel: '위치 선택 닫기',
+      barrierLabel: l10n.locationSelectClose,
       barrierColor: Colors.transparent,
       transitionDuration: const Duration(milliseconds: 160),
       pageBuilder: (dialogContext, _, __) {
@@ -80,20 +83,22 @@ class LocationDropdown extends ConsumerWidget {
   }
 
   void _showAddFavoriteDialog(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     showDialog<void>(
       context: context,
       builder: (_) => _AddFavoriteDialog(
         onAdd: (location) async {
-          final success =
-              await ref.read(favoriteLocationsProvider.notifier).add(location);
+          final success = await ref
+              .read(favoriteLocationsProvider.notifier)
+              .add(location);
           if (!context.mounted) return;
           Navigator.of(context, rootNavigator: true).pop();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 success
-                    ? '${location.name} 추가되었습니다'
-                    : '최대 5개까지 추가 가능합니다',
+                    ? l10n.locationAdded(location.name)
+                    : l10n.locationFavoriteLimit,
               ),
               duration: const Duration(seconds: 2),
             ),
@@ -119,6 +124,7 @@ class _TopLocationMenu extends ConsumerWidget {
     final favoritesAsync = ref.watch(favoriteLocationsProvider);
     final favorites = favoritesAsync.valueOrNull ?? [];
     final selectedLocation = locationState.location;
+    final l10n = AppLocalizations.of(context);
 
     return SafeArea(
       child: Align(
@@ -145,7 +151,7 @@ class _TopLocationMenu extends ConsumerWidget {
                   children: [
                     _LocationMenuTile(
                       icon: Icons.my_location_rounded,
-                      label: '현재 위치',
+                      label: l10n.locationCurrent,
                       selected: selectedLocation == null,
                       onTap: () {
                         ref
@@ -184,7 +190,9 @@ class _TopLocationMenu extends ConsumerWidget {
                     const _MenuDivider(),
                     _LocationMenuTile(
                       icon: Icons.add_rounded,
-                      label: favorites.length >= 5 ? '즐겨찾기 가득 참' : '즐겨찾기 추가',
+                      label: favorites.length >= 5
+                          ? l10n.locationFavoriteFull
+                          : l10n.locationFavoriteAdd,
                       enabled: favorites.length < 5,
                       onTap: favorites.length < 5 ? onAddFavorite : null,
                     ),
@@ -306,11 +314,13 @@ class _AddFavoriteDialogState extends ConsumerState<_AddFavoriteDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return AlertDialog(
       backgroundColor: const Color(0xFF1E2640),
-      title: const Text(
-        '지역 검색',
-        style: TextStyle(
+      title: Text(
+        l10n.locationSearchTitle,
+        style: const TextStyle(
           color: AppColors.textPrimary,
           fontSize: 16,
           fontWeight: FontWeight.w600,
@@ -326,7 +336,7 @@ class _AddFavoriteDialogState extends ConsumerState<_AddFavoriteDialog> {
               autofocus: true,
               style: const TextStyle(color: AppColors.textPrimary),
               decoration: InputDecoration(
-                hintText: '예: 서울, 부산, Tokyo',
+                hintText: l10n.locationSearchHint,
                 hintStyle: const TextStyle(color: AppColors.textMuted),
                 filled: true,
                 fillColor: Colors.white.withAlpha(15),
@@ -395,9 +405,12 @@ class _AddFavoriteDialogState extends ConsumerState<_AddFavoriteDialog> {
               ),
             ] else if (!_searching && _controller.text.isNotEmpty) ...[
               const SizedBox(height: 12),
-              const Text(
-                '검색 결과가 없습니다',
-                style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+              Text(
+                l10n.locationSearchEmpty,
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 13,
+                ),
               ),
             ],
           ],
@@ -406,11 +419,11 @@ class _AddFavoriteDialogState extends ConsumerState<_AddFavoriteDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('닫기'),
+          child: Text(l10n.close),
         ),
         TextButton(
           onPressed: () => _search(_controller.text),
-          child: const Text('검색'),
+          child: Text(l10n.search),
         ),
       ],
     );

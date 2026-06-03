@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../constants/app_colors.dart';
 import '../storage/local_storage.dart';
 
@@ -52,25 +53,22 @@ class WidgetInstallPromptController {
     BuildContext context, {
     required String handledKey,
   }) async {
+    final l10n = AppLocalizations.of(context);
     final shouldInstall =
         await showDialog<bool>(
           context: context,
           builder: (dialogContext) {
             return AlertDialog(
-              title: const Text(
-                '\uC608\uAC10\uC528 \uC704\uC82F\uC744 \uCD94\uAC00\uD574\uBCF4\uC138\uC694',
-              ),
-              content: const Text(
-                '\uD648 \uD654\uBA74\uC5D0\uC11C \uB0A0\uC528, \uAE30\uC628, \uC57C\uC678 \uC810\uC218, \uC6B4\uC138\uB97C \uBC14\uB85C \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.',
-              ),
+              title: Text(l10n.widgetInstallTitle),
+              content: Text(l10n.widgetInstallMessage),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text('\uB098\uC911\uC5D0'),
+                  child: Text(l10n.later),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text('\uC704\uC82F \uC124\uCE58'),
+                  child: Text(l10n.widgetInstallAction),
                 ),
               ],
             );
@@ -89,10 +87,8 @@ class WidgetInstallPromptController {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          '\uD648 \uD654\uBA74\uC744 \uAE38\uAC8C \uB20C\uB7EC \uC608\uAC10\uC528 \uC704\uC82F\uC744 \uCD94\uAC00\uD574 \uC8FC\uC138\uC694.',
-        ),
+      SnackBar(
+        content: Text(l10n.widgetInstallManual),
         backgroundColor: AppColors.darkSurface,
       ),
     );

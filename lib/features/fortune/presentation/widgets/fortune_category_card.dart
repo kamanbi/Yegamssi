@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/design/app_spacing.dart';
 import '../../../../core/widgets/premium_card.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/oheng.dart';
 
 class FortuneCategoryCard extends StatelessWidget {
@@ -22,8 +23,9 @@ class FortuneCategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
     final accent = _scoreColor(score);
-    final resolvedMessage = message.isEmpty ? '분석 중입니다.' : message;
+    final resolvedMessage = message.isEmpty ? l10n.fortuneAnalyzing : message;
 
     return PremiumCard(
       child: Column(
@@ -38,16 +40,12 @@ class FortuneCategoryCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: colorScheme.primary.withAlpha(18),
                 ),
-                child: Icon(
-                  _icon,
-                  color: colorScheme.primary,
-                  size: 20,
-                ),
+                child: Icon(_icon, color: colorScheme.primary, size: 20),
               ),
               const SizedBox(width: AppSpacing.x1),
               Expanded(
                 child: Text(
-                  category.korean,
+                  _categoryLabel(l10n, category),
                   style: AppTextStyles.titleLarge.copyWith(
                     color: AppColors.title(brightness),
                   ),
@@ -64,10 +62,8 @@ class FortuneCategoryCard extends StatelessWidget {
                   border: Border.all(color: accent.withAlpha(70)),
                 ),
                 child: Text(
-                  '$score점',
-                  style: AppTextStyles.labelLarge.copyWith(
-                    color: accent,
-                  ),
+                  l10n.scorePointUnit(score),
+                  style: AppTextStyles.labelLarge.copyWith(color: accent),
                 ),
               ),
             ],
@@ -93,13 +89,24 @@ class FortuneCategoryCard extends StatelessWidget {
   }
 
   IconData get _icon => switch (category) {
-        FortuneCategory.overall => Icons.auto_awesome_rounded,
-        FortuneCategory.money => Icons.account_balance_wallet_rounded,
-        FortuneCategory.love => Icons.favorite_rounded,
-        FortuneCategory.work => Icons.work_rounded,
-        FortuneCategory.health => Icons.favorite_border_rounded,
-        FortuneCategory.decision => Icons.lightbulb_rounded,
-      };
+    FortuneCategory.overall => Icons.auto_awesome_rounded,
+    FortuneCategory.money => Icons.account_balance_wallet_rounded,
+    FortuneCategory.love => Icons.favorite_rounded,
+    FortuneCategory.work => Icons.work_rounded,
+    FortuneCategory.health => Icons.favorite_border_rounded,
+    FortuneCategory.decision => Icons.lightbulb_rounded,
+  };
+
+  String _categoryLabel(AppLocalizations l10n, FortuneCategory category) {
+    return switch (category) {
+      FortuneCategory.overall => l10n.fortuneOverall,
+      FortuneCategory.money => l10n.fortuneCategoryMoney,
+      FortuneCategory.love => l10n.fortuneCategoryLove,
+      FortuneCategory.work => l10n.fortuneCategoryWork,
+      FortuneCategory.health => l10n.fortuneCategoryHealth,
+      FortuneCategory.decision => l10n.fortuneCategoryDecision,
+    };
+  }
 
   Color _scoreColor(int value) {
     if (value >= 75) return AppColors.scoreExcellent;

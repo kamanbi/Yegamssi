@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/glassmorphism.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../user/domain/entities/user_profile.dart';
 import '../../user/presentation/user_profile_provider.dart';
 import '../../user/presentation/widgets/birth_picker_sheet.dart';
@@ -52,12 +53,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       return;
     }
 
-    final profile = UserProfile(
-      birthDate: selectedDate,
-      birthHour: _selectedHour,
-    );
-
-    await ref.read(userProfileNotifierProvider.notifier).save(profile);
+    await ref
+        .read(userProfileNotifierProvider.notifier)
+        .save(UserProfile(birthDate: selectedDate, birthHour: _selectedHour));
     if (mounted) {
       context.go(AppRoutes.home);
     }
@@ -65,6 +63,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -81,19 +81,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 60),
-                const Text(
-                  '예감씨',
-                  style: TextStyle(
+                Text(
+                  l10n.onboardingTitle,
+                  style: const TextStyle(
                     color: AppColors.gold,
                     fontSize: 32,
                     fontWeight: FontWeight.w700,
-                    letterSpacing: -1,
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  '생년월일과 생시를 입력하면\n오늘의 운세를 알려드릴게요.',
-                  style: TextStyle(
+                Text(
+                  l10n.onboardingSubtitle,
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 16,
                     height: 1.5,
@@ -108,9 +107,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          '생년월일',
-                          style: TextStyle(
+                        Text(
+                          l10n.birthDate,
+                          style: const TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 13,
                           ),
@@ -127,8 +126,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             Expanded(
                               child: Text(
                                 _selectedDate == null
-                                    ? '날짜를 선택하세요'
-                                    : _formatDate(_selectedDate!),
+                                    ? l10n.birthSelectDate
+                                    : _formatDate(l10n, _selectedDate!),
                                 style: TextStyle(
                                   color: _selectedDate == null
                                       ? AppColors.textMuted
@@ -157,9 +156,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          '생시 (선택)',
-                          style: TextStyle(
+                        Text(
+                          l10n.birthHourOptional,
+                          style: const TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 13,
                           ),
@@ -175,7 +174,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                _formatHour(_selectedHour),
+                                _formatHour(l10n, _selectedHour),
                                 style: const TextStyle(
                                   color: AppColors.textPrimary,
                                   fontSize: 18,
@@ -207,9 +206,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         borderRadius: BorderRadius.circular(14),
                       ),
                     ),
-                    child: const Text(
-                      '시작하기',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.onboardingStart,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
@@ -225,14 +224,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     );
   }
 
-  String _formatDate(DateTime value) {
-    return '${value.year}년 ${value.month}월 ${value.day}일';
+  String _formatDate(AppLocalizations l10n, DateTime value) {
+    return l10n.dateYmd(value.year, value.month, value.day);
   }
 
-  String _formatHour(int hour) {
+  String _formatHour(AppLocalizations l10n, int hour) {
     if (hour == UserProfile.unknownBirthHour) {
-      return '모름 (정오 기준 계산)';
+      return l10n.birthUnknownNoon;
     }
-    return '$hour시';
+    return l10n.hourLabel(hour);
   }
 }

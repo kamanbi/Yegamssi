@@ -14,7 +14,10 @@ enum FortuneTone {
   final String tableSuffix;
 
   String tableNameForLang(String lang) {
-    final supportedLang = lang == 'ko' ? lang : 'ko';
+    final supportedLang = switch (lang) {
+      'ko' || 'en' || 'ja' => lang,
+      _ => 'ko',
+    };
     final baseTableName = 'fortune_$supportedLang';
     if (tableSuffix.isEmpty) {
       return baseTableName;

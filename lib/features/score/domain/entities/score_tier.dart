@@ -15,10 +15,10 @@ extension ScoreTierExtension on ScoreTier {
 
   String get label {
     return switch (this) {
-      ScoreTier.excellent => '최적',
-      ScoreTier.good      => '좋음',
-      ScoreTier.fair      => '보통',
-      ScoreTier.poor      => '주의',
+      ScoreTier.excellent => 'Excellent',
+      ScoreTier.good => 'Good',
+      ScoreTier.fair => 'Fair',
+      ScoreTier.poor => 'Caution',
     };
   }
 }

@@ -16,6 +16,7 @@ import '../../../core/router/app_routes.dart';
 import '../../../core/utils/date_format_helper.dart';
 import '../../../core/widgets/app_buttons.dart';
 import '../../../core/widgets/premium_card.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/entities/fortune_result.dart';
 import '../domain/entities/oheng.dart';
 import 'fortune_provider.dart';
@@ -27,23 +28,24 @@ class FortuneScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fortuneAsync = ref.watch(dailyFortuneProvider);
-
-    // stale-while-revalidate: 슬롯 경계·재조회 중에도 이전 데이터 즉시 표시
     final stale = fortuneAsync.valueOrNull;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: fortuneAsync.when(
-          loading: () =>
-              stale != null ? _FortuneDataView(fortune: stale) : const _LoadingView(),
+          loading: () => stale != null
+              ? _FortuneDataView(fortune: stale)
+              : const _LoadingView(),
           error: (error, _) {
             if (error is FortuneNoProfileException) {
               return _NoProfileView(
                 onTap: () => context.go(AppRoutes.onboarding),
               );
             }
-            return stale != null ? _FortuneDataView(fortune: stale) : const _ErrorView();
+            return stale != null
+                ? _FortuneDataView(fortune: stale)
+                : const _ErrorView();
           },
           data: (fortune) => _FortuneDataView(fortune: fortune),
         ),
@@ -75,6 +77,7 @@ class _NoProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
 
     return Center(
       child: Padding(
@@ -85,21 +88,21 @@ class _NoProfileView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '운세를 보려면 출생 정보가 필요합니다',
+                l10n.fortuneNeedProfileTitle,
                 style: AppTextStyles.headlineMedium.copyWith(
                   color: AppColors.title(brightness),
                 ),
               ),
               const SizedBox(height: AppSpacing.x1),
               Text(
-                '생년월일과 생시를 입력하면 오늘의 운세를 조용한 톤으로 정리해 드립니다.',
+                l10n.fortuneNeedProfileMessage,
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.body(brightness),
                 ),
               ),
               const SizedBox(height: AppSpacing.x3),
               AppPrimaryButton(
-                label: '출생 정보 입력하기',
+                label: l10n.fortuneBirthInputAction,
                 onPressed: onTap,
                 icon: Icons.arrow_forward_rounded,
               ),
@@ -116,13 +119,14 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final l10n = AppLocalizations.of(context);
+    return Center(
       child: Padding(
         padding: AppSpacing.screen,
         child: PremiumCard(
           child: _SectionMessage(
-            title: '운세를 불러오지 못했습니다',
-            message: '잠시 뒤 다시 시도해 주세요.',
+            title: l10n.fortuneLoadFailedTitle,
+            message: l10n.fortuneLoadFailedMessage,
           ),
         ),
       ),
@@ -148,6 +152,7 @@ class _FortuneDataViewState extends State<_FortuneDataView> {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
     final fortune = widget.fortune;
 
     return ListView(
@@ -166,14 +171,14 @@ class _FortuneDataViewState extends State<_FortuneDataView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${AppDateFormat.format(fortune.date)} · ${fortune.slot.label}',
+                    '${AppDateFormat.format(fortune.date)} · ${_slotLabel(l10n, fortune.slot)}',
                     style: AppTextStyles.labelMedium.copyWith(
                       color: AppColors.body(brightness),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.x1),
                   Text(
-                    '오늘의 운세',
+                    l10n.fortuneTitle,
                     style: AppTextStyles.headlineLarge.copyWith(
                       color: AppColors.title(brightness),
                     ),
@@ -205,12 +210,13 @@ class _FortuneDataViewState extends State<_FortuneDataView> {
   Future<void> _captureFortuneCards() async {
     if (_isCapturing) return;
 
+    final l10n = AppLocalizations.of(context);
     setState(() => _isCapturing = true);
     OverlayEntry? captureEntry;
     try {
       final overlay = Overlay.maybeOf(context, rootOverlay: true);
       if (overlay == null) {
-        throw StateError('캡처 화면을 준비하지 못했습니다.');
+        throw StateError('Capture overlay is not ready.');
       }
 
       final captureBoundaryKey = GlobalKey();
@@ -249,14 +255,14 @@ class _FortuneDataViewState extends State<_FortuneDataView> {
           captureBoundaryKey.currentContext?.findRenderObject()
               as RenderRepaintBoundary?;
       if (boundary == null) {
-        throw StateError('캡처 영역을 찾지 못했습니다.');
+        throw StateError('Capture boundary was not found.');
       }
 
       final image = await boundary.toImage(pixelRatio: pixelRatio);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       final pngBytes = byteData?.buffer.asUint8List();
       if (pngBytes == null || pngBytes.isEmpty) {
-        throw StateError('캡처 이미지 생성에 실패했습니다.');
+        throw StateError('Capture image generation failed.');
       }
 
       final savedPath = await CaptureStorage.savePng(
@@ -268,21 +274,21 @@ class _FortuneDataViewState extends State<_FortuneDataView> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            savedPath == null ? '운세 카드 캡처를 저장했습니다.' : '운세 카드 캡처 저장 완료',
+            savedPath == null
+                ? l10n.fortuneCaptureSaved
+                : l10n.fortuneCaptureSaveDone,
           ),
           action: SnackBarAction(
-            label: '폴더 열기',
-            onPressed: () {
-              CaptureStorage.openCaptureFolder();
-            },
+            label: l10n.fortuneOpenFolder,
+            onPressed: CaptureStorage.openCaptureFolder,
           ),
         ),
       );
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('캡처에 실패했습니다: $error')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.fortuneCaptureFailed(error.toString()))),
+      );
     } finally {
       captureEntry?.remove();
       if (mounted) {
@@ -341,6 +347,7 @@ class _FortuneCaptureButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -349,7 +356,7 @@ class _FortuneCaptureButton extends StatelessWidget {
         border: Border.all(color: AppColors.border(brightness)),
       ),
       child: IconButton(
-        tooltip: '운세 카드 캡처',
+        tooltip: l10n.fortuneCaptureTooltip,
         visualDensity: VisualDensity.compact,
         onPressed: onPressed,
         icon: isCapturing
@@ -375,6 +382,7 @@ class _FortuneCapturePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -397,7 +405,7 @@ class _FortuneCapturePage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '${AppDateFormat.format(fortune.date)} · ${fortune.slot.label}',
+                    '${AppDateFormat.format(fortune.date)} · ${_slotLabel(l10n, fortune.slot)}',
                     style: AppTextStyles.labelMedium.copyWith(
                       color: AppColors.body(brightness),
                     ),
@@ -408,7 +416,7 @@ class _FortuneCapturePage extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.x2),
             Text(
-              '오늘의 운세',
+              l10n.fortuneTitle,
               style: AppTextStyles.headlineLarge.copyWith(
                 color: AppColors.title(brightness),
               ),
@@ -431,6 +439,7 @@ class _FortuneContentSections extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,7 +447,7 @@ class _FortuneContentSections extends StatelessWidget {
         _FortuneOverviewCard(fortune: fortune, captureButton: captureButton),
         const SizedBox(height: AppSpacing.x3),
         Text(
-          '카테고리별 해석',
+          l10n.fortuneCategoryAnalysis,
           style: AppTextStyles.titleLarge.copyWith(
             color: AppColors.title(brightness),
           ),
@@ -489,6 +498,7 @@ class _FortuneOverviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
     final score = fortune.scores[FortuneCategory.overall] ?? 50;
     final message = fortune.messages[FortuneCategory.overall] ?? '';
     final accent = _scoreColor(score);
@@ -501,7 +511,7 @@ class _FortuneOverviewCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                '종합 운세',
+                l10n.fortuneOverall,
                 style: AppTextStyles.titleLarge.copyWith(
                   color: AppColors.title(brightness),
                 ),
@@ -518,7 +528,7 @@ class _FortuneOverviewCard extends StatelessWidget {
                   border: Border.all(color: accent.withAlpha(70)),
                 ),
                 child: Text(
-                  '$score점',
+                  l10n.scorePointUnit(score),
                   style: AppTextStyles.labelLarge.copyWith(color: accent),
                 ),
               ),
@@ -565,15 +575,16 @@ class _LuckyFortuneChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final luckyNumber = _luckyNumberFor(fortune, score);
-    final luckyColor = _luckyColorFor(_dominantOheng(fortune.ohengRatio));
+    final luckyColor = _luckyColorFor(l10n, _dominantOheng(fortune.ohengRatio));
 
     return Wrap(
       spacing: AppSpacing.x1,
       runSpacing: AppSpacing.x1,
       children: [
         _LuckyPill(
-          label: '행운 숫자',
+          label: l10n.fortuneLuckyNumber,
           child: Text(
             '$luckyNumber',
             style: AppTextStyles.labelLarge.copyWith(
@@ -582,7 +593,7 @@ class _LuckyFortuneChips extends StatelessWidget {
           ),
         ),
         _LuckyPill(
-          label: '행운 색상',
+          label: l10n.fortuneLuckyColor,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -659,6 +670,7 @@ class _OhengSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
 
     return PremiumCard(
       tone: PremiumCardTone.muted,
@@ -666,14 +678,14 @@ class _OhengSummaryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '오행 균형',
+            l10n.fortuneOhengBalance,
             style: AppTextStyles.titleLarge.copyWith(
               color: AppColors.title(brightness),
             ),
           ),
           const SizedBox(height: AppSpacing.x1),
           Text(
-            '오늘의 감정 흐름을 참고하는 보조 지표입니다.',
+            l10n.fortuneOhengDescription,
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.body(brightness),
             ),
@@ -705,13 +717,14 @@ class _OhengRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
 
     return Row(
       children: [
         SizedBox(
           width: 68,
           child: Text(
-            oheng.korean,
+            _ohengLabel(l10n, oheng),
             style: AppTextStyles.labelLarge.copyWith(
               color: AppColors.title(brightness),
             ),
@@ -771,6 +784,23 @@ class _SectionMessage extends StatelessWidget {
   }
 }
 
+String _slotLabel(AppLocalizations l10n, TimeSlot slot) {
+  return switch (slot) {
+    TimeSlot.morning => l10n.fortuneTimeMorning,
+    TimeSlot.afternoon => l10n.fortuneTimeAfternoon,
+  };
+}
+
+String _ohengLabel(AppLocalizations l10n, Oheng oheng) {
+  return switch (oheng) {
+    Oheng.mok => l10n.ohengMok,
+    Oheng.hwa => l10n.ohengHwa,
+    Oheng.to => l10n.ohengTo,
+    Oheng.geum => l10n.ohengGeum,
+    Oheng.su => l10n.ohengSu,
+  };
+}
+
 Color _scoreColor(int score) {
   if (score >= 75) return AppColors.scoreExcellent;
   if (score >= 50) return AppColors.scoreGood;
@@ -801,13 +831,28 @@ Oheng _dominantOheng(Map<Oheng, double> ratios) {
   return bestOheng;
 }
 
-_LuckyColorInfo _luckyColorFor(Oheng oheng) {
+_LuckyColorInfo _luckyColorFor(AppLocalizations l10n, Oheng oheng) {
   return switch (oheng) {
-    Oheng.mok => const _LuckyColorInfo(name: '초록', color: Color(0xFF79C68A)),
-    Oheng.hwa => const _LuckyColorInfo(name: '코랄', color: Color(0xFFE68A80)),
-    Oheng.to => const _LuckyColorInfo(name: '골드', color: Color(0xFFD6B168)),
-    Oheng.geum => const _LuckyColorInfo(name: '실버', color: Color(0xFFB8C3D6)),
-    Oheng.su => const _LuckyColorInfo(name: '하늘색', color: Color(0xFF7DAFE8)),
+    Oheng.mok => _LuckyColorInfo(
+      name: l10n.luckyColorGreen,
+      color: const Color(0xFF79C68A),
+    ),
+    Oheng.hwa => _LuckyColorInfo(
+      name: l10n.luckyColorCoral,
+      color: const Color(0xFFE68A80),
+    ),
+    Oheng.to => _LuckyColorInfo(
+      name: l10n.luckyColorGold,
+      color: const Color(0xFFD6B168),
+    ),
+    Oheng.geum => _LuckyColorInfo(
+      name: l10n.luckyColorSilver,
+      color: const Color(0xFFB8C3D6),
+    ),
+    Oheng.su => _LuckyColorInfo(
+      name: l10n.luckyColorSky,
+      color: const Color(0xFF7DAFE8),
+    ),
   };
 }
 

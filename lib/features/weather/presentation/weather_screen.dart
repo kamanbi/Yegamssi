@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/glassmorphism.dart';
 import '../../../core/utils/date_format_helper.dart';
 import '../../../core/widgets/header_refresh_button.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/entities/weather_entity.dart';
 import 'weather_location_provider.dart';
 import 'weather_provider.dart';
@@ -41,15 +42,16 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final l10n = AppLocalizations.of(context);
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(color: Colors.white),
-          SizedBox(height: 16),
+          const CircularProgressIndicator(color: Colors.white),
+          const SizedBox(height: 16),
           Text(
-            '날씨 정보를 불러오는 중...',
-            style: TextStyle(color: AppColors.textSecondary),
+            l10n.weatherLoading,
+            style: const TextStyle(color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -64,6 +66,7 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -77,9 +80,9 @@ class _ErrorView extends StatelessWidget {
                 size: 48,
               ),
               const SizedBox(height: 12),
-              const Text(
-                '날씨 정보를 가져올 수 없습니다',
-                style: TextStyle(
+              Text(
+                l10n.weatherErrorTitle,
+                style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -119,14 +122,17 @@ class _WeatherContent extends StatelessWidget {
         _DetailGrid(weather: weather),
         if (weather.hourlyForecasts.isNotEmpty) ...[
           const SizedBox(height: 20),
-          const _SectionTitle(title: '시간별 예보', icon: Icons.access_time_rounded),
+          _SectionTitle(
+            title: AppLocalizations.of(context).weatherHourlyForecast,
+            icon: Icons.access_time_rounded,
+          ),
           const SizedBox(height: 10),
           _HourlyForecastCard(forecasts: weather.hourlyForecasts),
         ],
         if (weather.dailyForecasts.isNotEmpty) ...[
           const SizedBox(height: 20),
-          const _SectionTitle(
-            title: '주간 예보',
+          _SectionTitle(
+            title: AppLocalizations.of(context).weatherWeeklyForecast,
             icon: Icons.calendar_today_rounded,
           ),
           const SizedBox(height: 10),
@@ -187,6 +193,7 @@ class _CountdownBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return GestureDetector(
       onTap: () => ref.read(weatherLocationNotifierProvider.notifier).reset(),
       child: Row(
@@ -198,7 +205,7 @@ class _CountdownBanner extends ConsumerWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            '$seconds초 후 현재 위치로 돌아갑니다',
+            l10n.weatherReturnCurrentLocation(seconds),
             style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
           ),
         ],
@@ -214,6 +221,7 @@ class _MainWeatherCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return GlassCard(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
       child: Column(
@@ -277,7 +285,9 @@ class _MainWeatherCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '체감 ${weather.feelsLikeCelsius.round()}°C',
+                      l10n.weatherFeelsLike(
+                        weather.feelsLikeCelsius.round().toString(),
+                      ),
                       style: const TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 14,
@@ -286,7 +296,9 @@ class _MainWeatherCard extends StatelessWidget {
                     if (_hasPrecipitation(weather.precipitationAmountMm)) ...[
                       const SizedBox(height: 8),
                       Text(
-                        '강수량 ${_formatPrecipitation(weather.precipitationAmountMm)}',
+                        l10n.weatherPrecipitationAmount(
+                          _formatPrecipitation(weather.precipitationAmountMm),
+                        ),
                         style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 13,
@@ -305,7 +317,8 @@ class _MainWeatherCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    WeatherIconMapper.labelFor(
+                    WeatherIconMapper.localizedLabelFor(
+                      context,
                       weather.condition,
                       isNight: _isNightByHour(DateTime.now()),
                     ),
@@ -335,6 +348,7 @@ class _DetailGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         Row(
@@ -343,7 +357,7 @@ class _DetailGrid extends StatelessWidget {
               child: _DetailCard(
                 icon: Icons.water_drop_rounded,
                 iconColor: const Color(0xFF64B5F6),
-                label: '습도',
+                label: l10n.weatherHumidityLabel,
                 value: '${weather.humidity}%',
               ),
             ),
@@ -352,7 +366,7 @@ class _DetailGrid extends StatelessWidget {
               child: _DetailCard(
                 icon: Icons.air_rounded,
                 iconColor: const Color(0xFF80CBC4),
-                label: '풍속',
+                label: l10n.weatherWindSpeedLabel,
                 value: '${weather.windSpeedMs.toStringAsFixed(1)}m/s',
               ),
             ),
@@ -366,7 +380,7 @@ class _DetailGrid extends StatelessWidget {
                 icon: Icons.wb_sunny_outlined,
                 iconColor: const Color(0xFFFFB74D),
                 label: 'UV',
-                value: _uvLabel(weather.uvIndex),
+                value: _uvLabel(l10n, weather.uvIndex),
               ),
             ),
             const SizedBox(width: 8),
@@ -374,7 +388,7 @@ class _DetailGrid extends StatelessWidget {
               child: _DetailCard(
                 icon: Icons.umbrella_rounded,
                 iconColor: const Color(0xFF90CAF9),
-                label: '강수',
+                label: l10n.weatherPrecipitationLabel,
                 value: '${(weather.precipProbability * 100).round()}%',
               ),
             ),
@@ -389,7 +403,7 @@ class _DetailGrid extends StatelessWidget {
                   child: _DetailCard(
                     icon: Icons.masks_rounded,
                     iconColor: const Color(0xFFCE93D8),
-                    label: '미세먼지',
+                    label: l10n.weatherDustPm10,
                     value: '${weather.pm10!.round()}',
                   ),
                 ),
@@ -400,7 +414,7 @@ class _DetailGrid extends StatelessWidget {
                   child: _DetailCard(
                     icon: Icons.blur_circular_rounded,
                     iconColor: const Color(0xFFEF9A9A),
-                    label: '초미세',
+                    label: l10n.weatherDustPm25,
                     value: '${weather.pm25!.round()}',
                   ),
                 ),
@@ -411,12 +425,12 @@ class _DetailGrid extends StatelessWidget {
     );
   }
 
-  String _uvLabel(int uvIndex) {
-    if (uvIndex >= 11) return '$uvIndex 매우높음';
-    if (uvIndex >= 8) return '$uvIndex 높음';
-    if (uvIndex >= 6) return '$uvIndex 약간높음';
-    if (uvIndex >= 3) return '$uvIndex 보통';
-    return '$uvIndex 낮음';
+  String _uvLabel(AppLocalizations l10n, int uvIndex) {
+    if (uvIndex >= 11) return l10n.weatherUvVeryHigh(uvIndex);
+    if (uvIndex >= 8) return l10n.weatherUvHigh(uvIndex);
+    if (uvIndex >= 6) return l10n.weatherUvModerateHigh(uvIndex);
+    if (uvIndex >= 3) return l10n.weatherUvModerate(uvIndex);
+    return l10n.weatherUvLow(uvIndex);
   }
 }
 
@@ -453,6 +467,7 @@ class _HourlyForecastCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final limited = forecasts.take(24).toList();
+    final l10n = AppLocalizations.of(context);
     return GlassCard(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: SizedBox(
@@ -477,7 +492,9 @@ class _HourlyForecastCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${forecast.time.hour.toString().padLeft(2, '0')}시',
+                    l10n.weatherHour(
+                      forecast.time.hour.toString().padLeft(2, '0'),
+                    ),
                     style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 11,
@@ -514,6 +531,7 @@ class _DailyForecastList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: forecasts.map((forecast) {
         final weekday = AppDateFormat.weekdayLabel(forecast.date);
@@ -532,7 +550,7 @@ class _DailyForecastList extends StatelessWidget {
                       width: 98,
                       child: Text(
                         isToday
-                            ? '오늘'
+                            ? l10n.weatherToday
                             : '${forecast.date.month}/${forecast.date.day} ($weekday)',
                         style: TextStyle(
                           color: isToday
@@ -590,7 +608,7 @@ class _DailyForecastList extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _DayPartForecastChip(
-                        label: '오전',
+                        label: l10n.weatherAm,
                         condition: forecast.amCondition ?? forecast.condition,
                         temperature: forecast.amTempCelsius ?? forecast.tempMin,
                       ),
@@ -598,7 +616,7 @@ class _DailyForecastList extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: _DayPartForecastChip(
-                        label: '오후',
+                        label: l10n.weatherPm,
                         condition: forecast.pmCondition ?? forecast.condition,
                         temperature: forecast.pmTempCelsius ?? forecast.tempMax,
                       ),

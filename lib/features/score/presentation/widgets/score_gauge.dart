@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/score_tier.dart';
 
-/// 프리미엄 수평 존 게이지
 class ScoreGauge extends StatelessWidget {
   const ScoreGauge({super.key, required this.score, required this.tier});
 
@@ -13,9 +13,10 @@ class ScoreGauge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _color;
+    final l10n = AppLocalizations.of(context);
+
     return Column(
       children: [
-        // ── 점수 숫자 ──
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -26,7 +27,7 @@ class ScoreGauge extends StatelessWidget {
                 color: color,
                 fontSize: 72,
                 fontWeight: FontWeight.w200,
-                height: 1.0,
+                height: 1,
               ),
             ),
             Padding(
@@ -43,9 +44,8 @@ class ScoreGauge extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 6),
-        // ── 티어 라벨 ──
         Text(
-          tier.label,
+          _tierLabel(l10n, tier),
           style: TextStyle(
             color: color,
             fontSize: 14,
@@ -54,7 +54,6 @@ class ScoreGauge extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        // ── 수평 존 바 ──
         SizedBox(
           height: 22,
           child: CustomPaint(
@@ -63,37 +62,12 @@ class ScoreGauge extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        // ── 존 라벨 ──
-        const Row(
+        Row(
           children: [
-            Expanded(
-              child: Text(
-                '주의',
-                style: TextStyle(color: AppColors.textMuted, fontSize: 10),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(
-              child: Text(
-                '보통',
-                style: TextStyle(color: AppColors.textMuted, fontSize: 10),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(
-              child: Text(
-                '좋음',
-                style: TextStyle(color: AppColors.textMuted, fontSize: 10),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(
-              child: Text(
-                '매우 좋음',
-                style: TextStyle(color: AppColors.textMuted, fontSize: 10),
-                textAlign: TextAlign.center,
-              ),
-            ),
+            _ZoneLabel(text: l10n.scoreTierPoor),
+            _ZoneLabel(text: l10n.scoreTierFair),
+            _ZoneLabel(text: l10n.scoreTierGood),
+            _ZoneLabel(text: l10n.scoreTierExcellent),
           ],
         ),
       ],
@@ -106,52 +80,77 @@ class ScoreGauge extends StatelessWidget {
     if (score >= 25) return AppColors.scoreFair;
     return AppColors.scorePoor;
   }
+
+  String _tierLabel(AppLocalizations l10n, ScoreTier tier) {
+    return switch (tier) {
+      ScoreTier.excellent => l10n.scoreTierExcellent,
+      ScoreTier.good => l10n.scoreTierGood,
+      ScoreTier.fair => l10n.scoreTierFair,
+      ScoreTier.poor => l10n.scoreTierPoor,
+    };
+  }
+}
+
+class _ZoneLabel extends StatelessWidget {
+  const _ZoneLabel({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Text(
+        text,
+        style: const TextStyle(color: AppColors.textMuted, fontSize: 10),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 }
 
 class _ZoneGaugePainter extends CustomPainter {
   const _ZoneGaugePainter({required this.score});
+
   final int score;
 
   static const _zoneColors = [
-    AppColors.scorePoor, // D: 0~25
-    AppColors.scoreFair, // C: 25~50
-    AppColors.scoreGood, // B: 50~75
-    AppColors.scoreExcellent, // A: 75~100
+    AppColors.scorePoor,
+    AppColors.scoreFair,
+    AppColors.scoreGood,
+    AppColors.scoreExcellent,
   ];
 
   @override
   void paint(Canvas canvas, Size size) {
-    final r = size.height / 2;
-    final w = size.width;
+    final radius = size.height / 2;
+    final width = size.width;
 
-    // ── 1. 배경 (어두운 홈) ──
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, w, size.height),
-        Radius.circular(r),
+        Rect.fromLTWH(0, 0, width, size.height),
+        Radius.circular(radius),
       ),
       Paint()..color = Colors.black.withAlpha(70),
     );
 
-    // ── 2. 존 배경 (연한 색) ──
-    for (int i = 0; i < 4; i++) {
-      final x1 = w * i / 4;
-      final x2 = w * (i + 1) / 4;
-      final col = _zoneColors[i];
-
+    for (var index = 0; index < 4; index++) {
+      final left = width * index / 4;
+      final right = width * (index + 1) / 4;
       final rrect = RRect.fromRectAndCorners(
-        Rect.fromLTRB(x1, 0, x2, size.height),
-        topLeft: Radius.circular(i == 0 ? r : 0),
-        bottomLeft: Radius.circular(i == 0 ? r : 0),
-        topRight: Radius.circular(i == 3 ? r : 0),
-        bottomRight: Radius.circular(i == 3 ? r : 0),
+        Rect.fromLTRB(left, 0, right, size.height),
+        topLeft: Radius.circular(index == 0 ? radius : 0),
+        bottomLeft: Radius.circular(index == 0 ? radius : 0),
+        topRight: Radius.circular(index == 3 ? radius : 0),
+        bottomRight: Radius.circular(index == 3 ? radius : 0),
       );
-      canvas.drawRRect(rrect, Paint()..color = col.withAlpha(45));
+      canvas.drawRRect(
+        rrect,
+        Paint()..color = _zoneColors[index].withAlpha(45),
+      );
     }
 
-    // ── 3. 존 구분선 ──
-    for (final pct in [0.25, 0.5, 0.75]) {
-      final x = w * pct;
+    for (final percent in [0.25, 0.5, 0.75]) {
+      final x = width * percent;
       canvas.drawLine(
         Offset(x, 2),
         Offset(x, size.height - 2),
@@ -161,69 +160,59 @@ class _ZoneGaugePainter extends CustomPainter {
       );
     }
 
-    // ── 4. 채워진 부분 (점수까지) ──
-    if (score > 0) {
-      final fillX = w * score.clamp(0, 100) / 100;
+    if (score <= 0) return;
 
-      // 글로우
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(0, -3, fillX, size.height + 6),
-          Radius.circular(r + 3),
+    final fillWidth = width * score.clamp(0, 100) / 100;
+    final zoneColor = _zoneColors[_zoneIndex];
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, -3, fillWidth, size.height + 6),
+        Radius.circular(radius + 3),
+      ),
+      Paint()
+        ..color = zoneColor.withAlpha(60)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+    );
+
+    final gradient = LinearGradient(
+      colors: [
+        AppColors.scorePoor.withAlpha(210),
+        AppColors.scoreFair.withAlpha(210),
+        AppColors.scoreGood.withAlpha(210),
+        AppColors.scoreExcellent.withAlpha(210),
+      ],
+      stops: const [0, 0.33, 0.66, 1],
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, fillWidth, size.height),
+        Radius.circular(radius),
+      ),
+      Paint()
+        ..shader = gradient.createShader(
+          Rect.fromLTWH(0, 0, width, size.height),
         ),
-        Paint()
-          ..color = _zoneColors[_zoneIndex].withAlpha(60)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
-      );
+    );
 
-      // 그라데이션 채움
-      final gradient = LinearGradient(
-        colors: [
-          AppColors.scorePoor.withAlpha(210),
-          AppColors.scoreFair.withAlpha(210),
-          AppColors.scoreGood.withAlpha(210),
-          AppColors.scoreExcellent.withAlpha(210),
-        ],
-        stops: const [0.0, 0.33, 0.66, 1.0],
-      );
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(0, 0, fillX, size.height),
-          Radius.circular(r),
-        ),
-        Paint()
-          ..shader = gradient.createShader(Rect.fromLTWH(0, 0, w, size.height)),
-      );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, fillWidth, size.height * 0.45),
+        Radius.circular(radius),
+      ),
+      Paint()..color = Colors.white.withAlpha(55),
+    );
 
-      // 상단 광택
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(0, 0, fillX, size.height * 0.45),
-          Radius.circular(r),
-        ),
-        Paint()..color = Colors.white.withAlpha(55),
-      );
-
-      // ── 5. 포인터 ──
-      final px = fillX;
-      final py = size.height / 2;
-      // 외부 글로우
-      canvas.drawCircle(
-        Offset(px, py),
-        r + 5,
-        Paint()
-          ..color = _zoneColors[_zoneIndex].withAlpha(90)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
-      );
-      // 흰 원
-      canvas.drawCircle(Offset(px, py), r + 1, Paint()..color = Colors.white);
-      // 내부 색상 원
-      canvas.drawCircle(
-        Offset(px, py),
-        r * 0.6,
-        Paint()..color = _zoneColors[_zoneIndex],
-      );
-    }
+    final point = Offset(fillWidth, size.height / 2);
+    canvas.drawCircle(
+      point,
+      radius + 5,
+      Paint()
+        ..color = zoneColor.withAlpha(90)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+    );
+    canvas.drawCircle(point, radius + 1, Paint()..color = Colors.white);
+    canvas.drawCircle(point, radius * 0.6, Paint()..color = zoneColor);
   }
 
   int get _zoneIndex {
@@ -234,5 +223,6 @@ class _ZoneGaugePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_ZoneGaugePainter old) => old.score != score;
+  bool shouldRepaint(_ZoneGaugePainter oldDelegate) =>
+      oldDelegate.score != score;
 }

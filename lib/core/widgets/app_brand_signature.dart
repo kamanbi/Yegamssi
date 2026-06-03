@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+
 class AppBrandSignature extends StatelessWidget {
   const AppBrandSignature({super.key, this.width = 88, this.opacity = 0.86});
 
@@ -18,13 +20,12 @@ class AppBrandSignature extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  '예감씨',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context).appName,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    letterSpacing: -1.5,
                     shadows: [
                       Shadow(
                         color: Color(0x66000000),

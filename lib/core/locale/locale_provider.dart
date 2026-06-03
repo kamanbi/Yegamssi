@@ -45,8 +45,7 @@ class AppLanguageNotifier extends _$AppLanguageNotifier {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getString(_langKey);
     if (saved != null) {
-      final lang =
-          AppLanguage.values.where((e) => e.name == saved).firstOrNull;
+      final lang = AppLanguage.values.where((e) => e.name == saved).firstOrNull;
       if (lang != null) state = lang;
     }
   }
@@ -55,5 +54,6 @@ class AppLanguageNotifier extends _$AppLanguageNotifier {
     state = lang;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_langKey, lang.name);
+    await prefs.setString(_localeKey, lang.name);
   }
 }

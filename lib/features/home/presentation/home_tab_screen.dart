@@ -5,10 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/design/app_spacing.dart';
+import '../../../core/locale/country_code.dart';
+import '../../../core/locale/locale_provider.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/utils/date_format_helper.dart';
 import '../../../core/widgets/header_refresh_button.dart';
 import '../../../core/widgets/premium_card.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../fortune/domain/entities/fortune_result.dart';
 import '../../fortune/domain/entities/oheng.dart';
 import '../../fortune/presentation/fortune_provider.dart';
@@ -63,6 +66,7 @@ class _HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
+    final l10n = AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +77,7 @@ class _HomeHeader extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.x1),
         Text(
-          '오늘의 날씨와 예감',
+          l10n.homeHeadline,
           style: AppTextStyles.headlineLarge.copyWith(color: titleColor),
         ),
       ],
@@ -81,22 +85,83 @@ class _HomeHeader extends StatelessWidget {
   }
 }
 
-class _HomeHeaderSection extends StatelessWidget {
+class _HomeHeaderSection extends ConsumerWidget {
   const _HomeHeaderSection({required this.titleColor, required this.bodyColor});
 
   final Color titleColor;
   final Color bodyColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
           child: _HomeHeader(titleColor: titleColor, bodyColor: bodyColor),
         ),
+        const SizedBox(width: AppSpacing.x1),
+        _HomeLanguageSelector(ref: ref),
+        const SizedBox(width: AppSpacing.x1),
         const HeaderRefreshButton(),
       ],
+    );
+  }
+}
+
+class _HomeLanguageSelector extends StatelessWidget {
+  const _HomeLanguageSelector({required this.ref});
+
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedLanguage = ref.watch(appLanguageNotifierProvider);
+
+    return PopupMenuButton<AppLanguage>(
+      tooltip: AppLocalizations.of(context).settingsLanguage,
+      onSelected: (language) =>
+          ref.read(appLanguageNotifierProvider.notifier).setLanguage(language),
+      itemBuilder: (context) => [
+        for (final language in AppLanguage.values)
+          PopupMenuItem(
+            value: language,
+            child: Row(
+              children: [
+                SizedBox(width: 32, child: Text(language.shortLabel)),
+                const SizedBox(width: AppSpacing.x1),
+                Text(language.displayName),
+              ],
+            ),
+          ),
+      ],
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white.withAlpha(18),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: Colors.white.withAlpha(28)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.language_rounded,
+                size: 16,
+                color: AppColors.textSecondary,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                selectedLanguage.shortLabel,
+                style: AppTextStyles.labelMedium.copyWith(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -112,18 +177,19 @@ class _CurrentWeatherSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return weatherAsync.when(
-      loading: () => const HeroGlassCard(
+      loading: () => HeroGlassCard(
         child: _AsyncStatusView(
-          title: '현재 날씨를 불러오는 중',
-          message: '위치와 날씨 정보를 준비하고 있습니다.',
+          title: l10n.homeWeatherLoadingTitle,
+          message: l10n.homeWeatherLoadingMessage,
         ),
       ),
       error: (_, __) => HeroGlassCard(
         child: _AsyncStatusView(
-          title: '현재 날씨를 불러오지 못했습니다',
-          message: '날씨 화면으로 이동해 다시 확인해 주세요.',
-          actionLabel: '날씨 보기',
+          title: l10n.homeWeatherErrorTitle,
+          message: l10n.homeWeatherErrorMessage,
+          actionLabel: l10n.homeWeatherAction,
           onTap: () => _goToWeather(context),
         ),
       ),
@@ -154,7 +220,11 @@ class _CurrentWeatherSection extends StatelessWidget {
                           ),
                           const SizedBox(height: AppSpacing.x1),
                           Text(
-                            WeatherIconMapper.labelFor(weather.condition),
+                            WeatherIconMapper.localizedLabelFor(
+                              context,
+                              weather.condition,
+                              isNight: weather.isNight,
+                            ),
                             style: AppTextStyles.bodyMedium.copyWith(
                               color: Colors.white.withAlpha(220),
                             ),
@@ -171,7 +241,9 @@ class _CurrentWeatherSection extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 12),
                                 child: Text(
-                                  '체감 ${weather.feelsLikeCelsius.round()}°',
+                                  l10n.weatherFeelsLikeShort(
+                                    weather.feelsLikeCelsius.round().toString(),
+                                  ),
                                   style: AppTextStyles.bodyMedium,
                                 ),
                               ),
@@ -193,19 +265,23 @@ class _CurrentWeatherSection extends StatelessWidget {
                   spacing: AppSpacing.x1,
                   runSpacing: AppSpacing.x1,
                   children: [
-                    _MetricChip(label: '습도', value: '${weather.humidity}%'),
                     _MetricChip(
-                      label: '바람',
+                      label: l10n.weatherHumidityLabel,
+                      value: '${weather.humidity}%',
+                    ),
+                    _MetricChip(
+                      label: l10n.weatherWindLabel,
                       value: '${weather.windSpeedMs.toStringAsFixed(1)}m/s',
                     ),
                     _MetricChip(
-                      label: '강수',
+                      label: l10n.weatherPrecipitationLabel,
                       value: '${(weather.precipProbability * 100).round()}%',
                     ),
                     if (score != null && activitySpec != null)
                       _MetricChip(
-                        label: '야외 점수',
-                        value: '${score.score}점 ${activitySpec.label}',
+                        label: l10n.scoreLabel,
+                        value:
+                            '${l10n.scorePointUnit(score.score)} ${ActivityIconMapper.localizedLabelFor(context, score.tier)}',
                         icon: activitySpec.icon,
                       ),
                   ],
@@ -229,17 +305,18 @@ class _FortuneHeadlineSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return PremiumCard(
       tone: PremiumCardTone.accent,
       child: fortuneAsync.when(
-        loading: () => const _AsyncStatusView(
-          title: '오늘의 운세를 준비하는 중',
-          message: '한 줄 요약을 곧 보여드릴게요.',
+        loading: () => _AsyncStatusView(
+          title: l10n.homeFortuneLoadingTitle,
+          message: l10n.homeFortuneLoadingMessage,
         ),
         error: (_, __) => _AsyncStatusView(
-          title: '운세를 아직 준비하지 못했습니다',
-          message: '프로필을 확인하고 운세 화면에서 다시 확인해 주세요.',
-          actionLabel: '운세 보기',
+          title: l10n.homeFortuneErrorTitle,
+          message: l10n.homeFortuneErrorMessage,
+          actionLabel: l10n.homeFortuneAction,
           onTap: () => context.go(AppRoutes.fortune),
         ),
         data: (fortune) {
@@ -252,7 +329,7 @@ class _FortuneHeadlineSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '오늘의 한 줄 운세',
+                  l10n.homeFortuneHeadline,
                   style: AppTextStyles.titleMedium.copyWith(
                     color: AppColors.title(Theme.of(context).brightness),
                   ),

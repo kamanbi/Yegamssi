@@ -6,6 +6,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/design/app_spacing.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/widgets/premium_card.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../fortune/domain/entities/fortune_tone.dart';
 import '../../fortune/presentation/fortune_tone_provider.dart';
 import '../../user/domain/entities/user_profile.dart';
@@ -21,6 +22,8 @@ class SettingsScreen extends ConsumerWidget {
     final profile = profileAsync.valueOrNull;
     final fortuneTone = ref.watch(fortuneToneProvider);
     final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
+    final toneLabel = _fortuneToneLabel(l10n, fortuneTone);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -28,19 +31,12 @@ class SettingsScreen extends ConsumerWidget {
         child: ListView(
           padding: AppSpacing.screen,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Text(
-                    '설정',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: AppColors.title(brightness),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
+            Text(
+              l10n.tabSettings,
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: AppColors.title(brightness),
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: AppSpacing.x3),
             GestureDetector(
@@ -51,7 +47,7 @@ class SettingsScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '생년월일',
+                      l10n.settingsBirthTitle,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppColors.title(brightness),
                         fontWeight: FontWeight.w700,
@@ -59,7 +55,7 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: AppSpacing.x1),
                     Text(
-                      '운세 계산에 사용하는 생년월일과 생시를 관리합니다.',
+                      l10n.settingsBirthDescription,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.body(brightness),
                       ),
@@ -75,7 +71,9 @@ class SettingsScreen extends ConsumerWidget {
                         const SizedBox(width: AppSpacing.x1),
                         Expanded(
                           child: Text(
-                            profile == null ? '입력하지 않음' : _formatBirth(profile),
+                            profile == null
+                                ? l10n.settingsBirthEmpty
+                                : _formatBirth(l10n, profile),
                             style: Theme.of(context).textTheme.bodyLarge
                                 ?.copyWith(
                                   color: AppColors.title(brightness),
@@ -118,7 +116,7 @@ class SettingsScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '멘트 선택',
+                            l10n.settingsFortuneToneTitle,
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(
                                   color: AppColors.title(brightness),
@@ -127,7 +125,7 @@ class SettingsScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: AppSpacing.x1),
                           Text(
-                            '운세 문구 톤을 ${fortuneTone.label} 스타일로 표시합니다.',
+                            l10n.settingsFortuneToneDescription(toneLabel),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.bodySmall
@@ -146,7 +144,7 @@ class SettingsScreen extends ConsumerWidget {
                         border: Border.all(color: AppColors.gold.withAlpha(84)),
                       ),
                       child: Text(
-                        fortuneTone.label,
+                        toneLabel,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -192,7 +190,7 @@ class SettingsScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '앱 정보',
+                            l10n.settingsAppInfoTitle,
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(
                                   color: AppColors.title(brightness),
@@ -201,7 +199,7 @@ class SettingsScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: AppSpacing.x1),
                           Text(
-                            '홈페이지, 개인정보 처리 안내, 문의 이메일 및 링크를 확인합니다.',
+                            l10n.settingsAppInfoDescription,
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(color: AppColors.body(brightness)),
                           ),
@@ -222,13 +220,13 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  static String _formatBirth(UserProfile profile) {
+  static String _formatBirth(AppLocalizations l10n, UserProfile profile) {
     final date = profile.birthDate;
     final dateLabel =
         '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
     final hourLabel = profile.birthHour == UserProfile.unknownBirthHour
-        ? '미상'
-        : '${profile.birthHour}시';
+        ? l10n.settingsBirthUnknownHour
+        : l10n.settingsHourUnit(profile.birthHour);
     return '$dateLabel $hourLabel';
   }
 
@@ -246,9 +244,7 @@ class SettingsScreen extends ConsumerWidget {
       context,
       initialValue: initialProfile,
     );
-    if (updatedProfile == null) {
-      return;
-    }
+    if (updatedProfile == null) return;
 
     await ref
         .read(userProfileNotifierProvider.notifier)
@@ -273,6 +269,7 @@ class SettingsScreen extends ConsumerWidget {
       transitionDuration: const Duration(milliseconds: 180),
       pageBuilder: (sheetContext, animation, secondaryAnimation) {
         final brightness = Theme.of(sheetContext).brightness;
+        final l10n = AppLocalizations.of(sheetContext);
 
         return SafeArea(
           child: Align(
@@ -296,7 +293,7 @@ class SettingsScreen extends ConsumerWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              '멘트 선택',
+                              l10n.settingsFortuneToneTitle,
                               style: Theme.of(sheetContext).textTheme.titleLarge
                                   ?.copyWith(
                                     color: AppColors.title(brightness),
@@ -314,7 +311,7 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: AppSpacing.x1),
                       Text(
-                        '기본 문구는 유지하고 선택한 스타일 문구를 우선 사용합니다.',
+                        l10n.settingsFortuneToneSheetDescription,
                         style: Theme.of(sheetContext).textTheme.bodySmall
                             ?.copyWith(color: AppColors.body(brightness)),
                       ),
@@ -361,10 +358,7 @@ class SettingsScreen extends ConsumerWidget {
       },
     );
 
-    if (selectedTone == null || selectedTone == currentTone) {
-      return;
-    }
-
+    if (selectedTone == null || selectedTone == currentTone) return;
     await ref.read(fortuneToneProvider.notifier).setTone(selectedTone);
   }
 }
@@ -383,6 +377,7 @@ class _FortuneToneChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final label = _fortuneToneLabel(AppLocalizations.of(context), tone);
 
     return InkWell(
       borderRadius: BorderRadius.circular(18),
@@ -408,7 +403,7 @@ class _FortuneToneChoice extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  tone.label,
+                  label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -433,4 +428,16 @@ class _FortuneToneChoice extends StatelessWidget {
       ),
     );
   }
+}
+
+String _fortuneToneLabel(AppLocalizations l10n, FortuneTone tone) {
+  return switch (tone) {
+    FortuneTone.base => l10n.fortuneToneBase,
+    FortuneTone.humor => l10n.fortuneToneHumor,
+    FortuneTone.tsundere => l10n.fortuneToneTsundere,
+    FortuneTone.cynical => l10n.fortuneToneCynical,
+    FortuneTone.emotional => l10n.fortuneToneEmotional,
+    FortuneTone.historical => l10n.fortuneToneHistorical,
+    FortuneTone.ai => l10n.fortuneToneAi,
+  };
 }

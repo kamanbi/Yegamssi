@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/utils/location_provider.dart';
 import '../../../core/version/app_update_service.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../fortune/domain/entities/fortune_result.dart';
 import '../../fortune/presentation/fortune_provider.dart';
 import '../../score/presentation/score_provider.dart';
@@ -48,7 +49,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       ),
     );
 
-    // 애니메이션과 동시에 데이터 갱신 시작 (3초 동안 병렬 처리)
     _warmupFuture = _warmupSnapshot();
 
     _controller.forward();
@@ -74,8 +74,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       if (!mounted) return;
     }
 
-    // initState에서 이미 시작된 warmup 완료 대기
-    // 3초 애니메이션 동안 병렬 처리됨 → 최대 3초 추가 대기 (캐시 히트 시 즉시 완료)
     await Future.any([
       _warmupFuture ?? Future.value(),
       Future.delayed(const Duration(seconds: 3)),
@@ -85,9 +83,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     await _showReleaseNoticeIfNeeded();
     if (!mounted) return;
 
-    // provider 상태와 무관하게 repository에서 직접 읽어 라우팅 결정
-    final profile = ref.read(userProfileNotifierProvider).valueOrNull
-        ?? await ref.read(userProfileNotifierProvider.future);
+    final profile =
+        ref.read(userProfileNotifierProvider).valueOrNull ??
+        await ref.read(userProfileNotifierProvider.future);
     if (!mounted) return;
     context.go(profile != null ? AppRoutes.home : AppRoutes.onboarding);
   }
@@ -103,23 +101,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) {
+        final l10n = AppLocalizations.of(dialogContext);
         return AlertDialog(
-          title: const Text('예감씨 업데이트 안내'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _ReleaseNoticeItem('운세 멘트 옵션이 추가되었습니다.'),
-              _ReleaseNoticeItem('기본, 유머, 츤데레, 시니컬, 감성, 사극, AI 톤을 선택할 수 있습니다.'),
-              _ReleaseNoticeItem('위젯 갱신 시간이 30분에서 15분으로 변경되었습니다.'),
-              _ReleaseNoticeItem('운세 명리학 로직 일부를 수정했습니다.'),
-              _ReleaseNoticeItem('대기질 정보가 표시되지 않던 오류를 수정했습니다.'),
-            ],
-          ),
+          title: Text(l10n.updateNoticeTitle),
+          content: Text(l10n.updateNewVersionMessage),
           actions: [
             FilledButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('확인'),
+              child: Text(l10n.confirm),
             ),
           ],
         );
@@ -132,11 +121,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   Future<void> _warmupSnapshot() async {
     try {
       final profile = await ref.read(userProfileNotifierProvider.future);
-      if (profile == null) return; // 프로필 없음 → 온보딩으로 이동, 갱신 불필요
-
+      if (profile == null) return;
       final position = await ref.read(currentPositionProvider.future);
 
-      // 날씨·점수·운세 동시 시작 (Riverpod가 의존성 순서 자동 관리)
       final weatherFuture = ref.read(currentWeatherProvider.future);
       final scoreFuture = ref.read(currentScoreProvider.future);
       final fortuneFuture = ref
@@ -171,22 +158,30 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           context: context,
           barrierDismissible: !decision.requiresUpdate,
           builder: (dialogContext) {
+            final l10n = AppLocalizations.of(dialogContext);
             return AlertDialog(
-              title: Text(decision.requiresUpdate ? '업데이트 필요' : '업데이트 안내'),
+              title: Text(
+                decision.requiresUpdate
+                    ? l10n.updateRequiredTitle
+                    : l10n.updateNoticeTitle,
+              ),
               content: Text(
                 decision.requiresUpdate
-                    ? '현재 버전 ${decision.currentVersion}은 더 이상 지원되지 않습니다.\n최신 버전 ${decision.latestVersion}으로 업데이트해 주세요.'
-                    : '새 버전 ${decision.latestVersion}이 준비되었습니다.\n지금 업데이트하시겠어요?',
+                    ? l10n.updateRequiredMessage(
+                        decision.currentVersion,
+                        decision.latestVersion,
+                      )
+                    : l10n.updateAvailableMessage(decision.latestVersion),
               ),
               actions: [
                 if (!decision.requiresUpdate)
                   TextButton(
                     onPressed: () => Navigator.of(dialogContext).pop(false),
-                    child: const Text('나중에'),
+                    child: Text(l10n.later),
                   ),
                 FilledButton(
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text('업데이트'),
+                  child: Text(l10n.updateAction),
                 ),
               ],
             );
@@ -213,17 +208,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         await showDialog<bool>(
           context: context,
           builder: (dialogContext) {
+            final l10n = AppLocalizations.of(dialogContext);
             return AlertDialog(
-              title: const Text('업데이트 안내'),
-              content: const Text('새 버전이 출시되었습니다.\n지금 업데이트하시겠어요?'),
+              title: Text(l10n.updateNoticeTitle),
+              content: Text(l10n.updateNewVersionMessage),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text('나중에'),
+                  child: Text(l10n.later),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text('업데이트'),
+                  child: Text(l10n.updateAction),
                 ),
               ],
             );
@@ -283,26 +279,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             );
           },
         ),
-      ),
-    );
-  }
-}
-
-class _ReleaseNoticeItem extends StatelessWidget {
-  const _ReleaseNoticeItem(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('• '),
-          Expanded(child: Text(text)),
-        ],
       ),
     );
   }

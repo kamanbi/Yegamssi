@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/glassmorphism.dart';
 import '../../../core/utils/date_format_helper.dart';
 import '../../../core/widgets/header_refresh_button.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../weather/presentation/weather_provider.dart';
 import '../domain/entities/activity_score.dart';
 import '../domain/entities/score_tier.dart';
@@ -44,15 +45,16 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final l10n = AppLocalizations.of(context);
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(color: Colors.white),
-          SizedBox(height: 16),
+          const CircularProgressIndicator(color: Colors.white),
+          const SizedBox(height: 16),
           Text(
-            '야외 활동 점수를 계산하는 중...',
-            style: TextStyle(color: AppColors.textSecondary),
+            l10n.scoreLoading,
+            style: const TextStyle(color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -67,6 +69,7 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -80,9 +83,9 @@ class _ErrorView extends StatelessWidget {
                 size: 48,
               ),
               const SizedBox(height: 12),
-              const Text(
-                '점수를 계산할 수 없습니다',
-                style: TextStyle(
+              Text(
+                l10n.scoreErrorTitle,
+                style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -124,6 +127,8 @@ class _ScoreContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       children: [
@@ -142,13 +147,12 @@ class _ScoreContent extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  const Text(
-                    '야외활동 점수',
-                    style: TextStyle(
+                  Text(
+                    l10n.scoreLabel,
+                    style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 26,
                       fontWeight: FontWeight.w700,
-                      letterSpacing: -0.5,
                     ),
                   ),
                 ],
@@ -167,7 +171,7 @@ class _ScoreContent extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                _adviceFor(score.tier),
+                _adviceFor(l10n, score.tier),
                 style: const TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 14,
@@ -192,7 +196,7 @@ class _ScoreContent extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 16),
-        const _SectionLabel(text: '감점 내역'),
+        _SectionLabel(text: l10n.scoreBreakdownTitle),
         const SizedBox(height: 8),
         if (score.breakdown.total > 0)
           GlassCard(
@@ -202,35 +206,35 @@ class _ScoreContent extends StatelessWidget {
                   _BreakdownRow(
                     icon: Icons.umbrella_rounded,
                     iconColor: const Color(0xFF64B5F6),
-                    label: '눈비와 강수',
+                    label: l10n.scoreDeductionRain,
                     deduction: score.breakdown.rainDeduction,
                   ),
                 if (score.breakdown.windDeduction > 0)
                   _BreakdownRow(
                     icon: Icons.air_rounded,
                     iconColor: const Color(0xFF80CBC4),
-                    label: '바람',
+                    label: l10n.scoreDeductionWind,
                     deduction: score.breakdown.windDeduction,
                   ),
                 if (score.breakdown.heatDeduction > 0)
                   _BreakdownRow(
                     icon: Icons.thermostat_rounded,
                     iconColor: const Color(0xFFEF9A9A),
-                    label: '기온',
+                    label: l10n.scoreDeductionTemp,
                     deduction: score.breakdown.heatDeduction,
                   ),
                 if (score.breakdown.dustDeduction > 0)
                   _BreakdownRow(
                     icon: Icons.masks_rounded,
                     iconColor: const Color(0xFFCE93D8),
-                    label: '대기질',
+                    label: l10n.scoreDeductionAir,
                     deduction: score.breakdown.dustDeduction,
                   ),
                 if (score.breakdown.uvDeduction > 0)
                   _BreakdownRow(
                     icon: Icons.wb_sunny_outlined,
                     iconColor: const Color(0xFFFFB74D),
-                    label: '자외선',
+                    label: l10n.scoreDeductionUv,
                     deduction: score.breakdown.uvDeduction,
                     isLast: score.breakdown.ozoneDeduction == 0,
                   ),
@@ -238,7 +242,7 @@ class _ScoreContent extends StatelessWidget {
                   _BreakdownRow(
                     icon: Icons.blur_on_rounded,
                     iconColor: const Color(0xFFA5D6A7),
-                    label: '오존',
+                    label: l10n.scoreDeductionOzone,
                     deduction: score.breakdown.ozoneDeduction,
                     isLast: true,
                   ),
@@ -246,19 +250,19 @@ class _ScoreContent extends StatelessWidget {
             ),
           )
         else
-          const GlassCard(
+          GlassCard(
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.check_circle_rounded,
                   color: AppColors.scoreExcellent,
                   size: 22,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    '감점 요인이 거의 없는 안정적인 야외활동 날씨입니다.',
-                    style: TextStyle(
+                    l10n.scoreNoDeduction,
+                    style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -269,17 +273,21 @@ class _ScoreContent extends StatelessWidget {
             ),
           ),
         const SizedBox(height: 16),
-        const GlassCard(
+        GlassCard(
           backgroundColor: AppColors.glassWhite,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.info_outline_rounded, color: AppColors.gold, size: 18),
-              SizedBox(width: 10),
+              const Icon(
+                Icons.info_outline_rounded,
+                color: AppColors.gold,
+                size: 18,
+              ),
+              const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  '야외활동 점수는 강수, 바람, 체감 기온, 대기질, 자외선 정보를 바탕으로 계산합니다.',
-                  style: TextStyle(
+                  l10n.scoreInfo,
+                  style: const TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12,
                     height: 1.5,
@@ -293,12 +301,12 @@ class _ScoreContent extends StatelessWidget {
     );
   }
 
-  String _adviceFor(ScoreTier tier) {
+  String _adviceFor(AppLocalizations l10n, ScoreTier tier) {
     return switch (tier) {
-      ScoreTier.excellent => '오늘은 야외활동하기 좋은 날입니다.\n가볍게 나가서 컨디션을 올려보세요.',
-      ScoreTier.good => '야외활동은 무난하지만, 바람과 자외선은 한 번 더 확인해 보세요.',
-      ScoreTier.fair => '야외활동은 가능하지만, 준비를 더 잘할수록 편안합니다.',
-      ScoreTier.poor => '오늘은 실내 활동 중심으로 계획하는 편이 더 안전합니다.',
+      ScoreTier.excellent => l10n.scoreAdviceExcellent,
+      ScoreTier.good => l10n.scoreAdviceGood,
+      ScoreTier.fair => l10n.scoreAdviceFair,
+      ScoreTier.poor => l10n.scoreAdvicePoor,
     };
   }
 }
@@ -320,44 +328,51 @@ class _AirQualityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final integratedGrade = _integratedGrade();
+    final l10n = AppLocalizations.of(context);
+    final integratedGrade = _integratedGrade(l10n);
+    final thresholdLabels = [
+      l10n.airGradeGood,
+      l10n.airGradeModerate,
+      l10n.airGradeBad,
+      l10n.airGradeVeryBad,
+    ];
     final metrics = <_AirMetric>[
       if (pm10 != null)
         _AirMetric(
-          title: '미세먼지',
+          title: l10n.weatherDustPm10,
           value: pm10!,
-          unit: '㎍/㎥',
-          grade: _pm10Grade(pm10!),
+          unit: 'μg/m³',
+          grade: _pm10Grade(l10n, pm10!),
           maxValue: 200,
-          thresholdLabels: const ['좋음', '보통', '나쁨', '매우 나쁨'],
+          thresholdLabels: thresholdLabels,
         ),
       if (pm25 != null)
         _AirMetric(
-          title: '초미세먼지',
+          title: l10n.weatherDustPm25,
           value: pm25!,
-          unit: '㎍/㎥',
-          grade: _pm25Grade(pm25!),
+          unit: 'μg/m³',
+          grade: _pm25Grade(l10n, pm25!),
           maxValue: 100,
-          thresholdLabels: const ['좋음', '보통', '나쁨', '매우 나쁨'],
+          thresholdLabels: thresholdLabels,
         ),
       if (o3 != null)
         _AirMetric(
-          title: '오존',
+          title: l10n.scoreDeductionOzone,
           value: o3!,
           unit: 'ppm',
-          grade: _o3Grade(o3!),
+          grade: _o3Grade(l10n, o3!),
           maxValue: 0.2,
-          thresholdLabels: const ['좋음', '보통', '나쁨', '매우 나쁨'],
+          thresholdLabels: thresholdLabels,
           fractionDigits: 3,
         ),
       if (khaiValue != null || khaiGrade != null)
         _AirMetric(
-          title: '통합 대기질',
+          title: l10n.airQualityIntegrated,
           value: khaiValue ?? _khaiValueFromGrade(khaiGrade),
-          unit: '점',
+          unit: l10n.pointUnit,
           grade: integratedGrade,
           maxValue: 250,
-          thresholdLabels: const ['좋음', '보통', '나쁨', '매우 나쁨'],
+          thresholdLabels: thresholdLabels,
         ),
     ];
 
@@ -374,9 +389,9 @@ class _AirQualityCard extends StatelessWidget {
                 size: 20,
               ),
               const SizedBox(width: 8),
-              const Text(
-                '대기질',
-                style: TextStyle(
+              Text(
+                l10n.airQualityTitle,
+                style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
@@ -419,20 +434,20 @@ class _AirQualityCard extends StatelessWidget {
     );
   }
 
-  _AirGrade _integratedGrade() {
+  _AirGrade _integratedGrade(AppLocalizations l10n) {
     if (khaiGrade != null) {
-      return _khaiGrade(khaiGrade!);
+      return _khaiGrade(l10n, khaiGrade!);
     }
     if (pm25 != null) {
-      return _pm25Grade(pm25!);
+      return _pm25Grade(l10n, pm25!);
     }
     if (pm10 != null) {
-      return _pm10Grade(pm10!);
+      return _pm10Grade(l10n, pm10!);
     }
     if (o3 != null) {
-      return _o3Grade(o3!);
+      return _o3Grade(l10n, o3!);
     }
-    return const _AirGrade('정보 없음', AppColors.textMuted);
+    return _AirGrade(l10n.airQualityUnknown, AppColors.textMuted);
   }
 
   double _khaiValueFromGrade(int? grade) {
@@ -445,33 +460,51 @@ class _AirQualityCard extends StatelessWidget {
     };
   }
 
-  _AirGrade _pm10Grade(double value) {
-    if (value <= 30) return const _AirGrade('좋음', Color(0xFF4CAF50));
-    if (value <= 80) return const _AirGrade('보통', Color(0xFFFFC107));
-    if (value <= 150) return const _AirGrade('나쁨', Color(0xFFFF7043));
-    return const _AirGrade('매우 나쁨', Color(0xFFE53935));
+  _AirGrade _pm10Grade(AppLocalizations l10n, double value) {
+    if (value <= 30) {
+      return _AirGrade(l10n.airGradeGood, const Color(0xFF4CAF50));
+    }
+    if (value <= 80) {
+      return _AirGrade(l10n.airGradeModerate, const Color(0xFFFFC107));
+    }
+    if (value <= 150) {
+      return _AirGrade(l10n.airGradeBad, const Color(0xFFFF7043));
+    }
+    return _AirGrade(l10n.airGradeVeryBad, const Color(0xFFE53935));
   }
 
-  _AirGrade _pm25Grade(double value) {
-    if (value <= 15) return const _AirGrade('좋음', Color(0xFF4CAF50));
-    if (value <= 35) return const _AirGrade('보통', Color(0xFFFFC107));
-    if (value <= 75) return const _AirGrade('나쁨', Color(0xFFFF7043));
-    return const _AirGrade('매우 나쁨', Color(0xFFE53935));
+  _AirGrade _pm25Grade(AppLocalizations l10n, double value) {
+    if (value <= 15) {
+      return _AirGrade(l10n.airGradeGood, const Color(0xFF4CAF50));
+    }
+    if (value <= 35) {
+      return _AirGrade(l10n.airGradeModerate, const Color(0xFFFFC107));
+    }
+    if (value <= 75) {
+      return _AirGrade(l10n.airGradeBad, const Color(0xFFFF7043));
+    }
+    return _AirGrade(l10n.airGradeVeryBad, const Color(0xFFE53935));
   }
 
-  _AirGrade _o3Grade(double value) {
-    if (value <= 0.030) return const _AirGrade('좋음', Color(0xFF4CAF50));
-    if (value <= 0.090) return const _AirGrade('보통', Color(0xFFFFC107));
-    if (value <= 0.150) return const _AirGrade('나쁨', Color(0xFFFF7043));
-    return const _AirGrade('매우 나쁨', Color(0xFFE53935));
+  _AirGrade _o3Grade(AppLocalizations l10n, double value) {
+    if (value <= 0.030) {
+      return _AirGrade(l10n.airGradeGood, const Color(0xFF4CAF50));
+    }
+    if (value <= 0.090) {
+      return _AirGrade(l10n.airGradeModerate, const Color(0xFFFFC107));
+    }
+    if (value <= 0.150) {
+      return _AirGrade(l10n.airGradeBad, const Color(0xFFFF7043));
+    }
+    return _AirGrade(l10n.airGradeVeryBad, const Color(0xFFE53935));
   }
 
-  _AirGrade _khaiGrade(int value) {
+  _AirGrade _khaiGrade(AppLocalizations l10n, int value) {
     return switch (value) {
-      1 => const _AirGrade('좋음', Color(0xFF4CAF50)),
-      2 => const _AirGrade('보통', Color(0xFFFFC107)),
-      3 => const _AirGrade('나쁨', Color(0xFFFF7043)),
-      _ => const _AirGrade('매우 나쁨', Color(0xFFE53935)),
+      1 => _AirGrade(l10n.airGradeGood, const Color(0xFF4CAF50)),
+      2 => _AirGrade(l10n.airGradeModerate, const Color(0xFFFFC107)),
+      3 => _AirGrade(l10n.airGradeBad, const Color(0xFFFF7043)),
+      _ => _AirGrade(l10n.airGradeVeryBad, const Color(0xFFE53935)),
     };
   }
 }
