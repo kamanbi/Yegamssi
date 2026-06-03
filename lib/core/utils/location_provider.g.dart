@@ -6,7 +6,7 @@ part of 'location_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentPositionHash() => r'1352af92cdde2a7baac1dd989e273220d0a32fb0';
+String _$currentPositionHash() => r'08d729c2aa07e7ba6b28f309b288bdb5badc8c57';
 
 /// 현재 GPS 위치를 반환하는 provider.
 /// 권한이 없거나 서비스가 꺼져 있으면 서울 좌표를 반환.

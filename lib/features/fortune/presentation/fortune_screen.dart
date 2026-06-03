@@ -28,18 +28,22 @@ class FortuneScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final fortuneAsync = ref.watch(dailyFortuneProvider);
 
+    // stale-while-revalidate: 슬롯 경계·재조회 중에도 이전 데이터 즉시 표시
+    final stale = fortuneAsync.valueOrNull;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: fortuneAsync.when(
-          loading: () => const _LoadingView(),
+          loading: () =>
+              stale != null ? _FortuneDataView(fortune: stale) : const _LoadingView(),
           error: (error, _) {
             if (error is FortuneNoProfileException) {
               return _NoProfileView(
                 onTap: () => context.go(AppRoutes.onboarding),
               );
             }
-            return const _ErrorView();
+            return stale != null ? _FortuneDataView(fortune: stale) : const _ErrorView();
           },
           data: (fortune) => _FortuneDataView(fortune: fortune),
         ),

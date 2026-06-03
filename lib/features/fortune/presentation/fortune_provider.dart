@@ -68,7 +68,10 @@ Future<FortuneResult> dailyFortune(Ref ref) async {
 
   WeatherCondition? weatherCondition;
   try {
-    final weather = await ref.read(currentWeatherProvider.future);
+    // 날씨 대기 최대 2초 — 초과 시 TimeoutException → catch로 넘어가 weatherOheng=null로 운세 즉시 생성
+    final weather = await ref
+        .read(currentWeatherProvider.future)
+        .timeout(const Duration(seconds: 2));
     weatherCondition = weather.condition;
   } catch (_) {}
 

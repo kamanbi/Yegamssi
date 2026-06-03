@@ -13,7 +13,7 @@ Future<UserProfile?> userProfile(Ref ref) async {
   return _repo.load();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UserProfileNotifier extends _$UserProfileNotifier {
   @override
   Future<UserProfile?> build() async {

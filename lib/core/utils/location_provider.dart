@@ -32,7 +32,7 @@ Future<({double lat, double lon})> currentPosition(Ref ref) async {
     final pos = await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.low,
-        timeLimit: Duration(seconds: 10),
+        timeLimit: Duration(seconds: 5),
       ),
     );
     await LocationCacheStore.save(

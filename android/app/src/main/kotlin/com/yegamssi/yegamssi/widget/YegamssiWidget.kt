@@ -7,12 +7,35 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log
 import android.widget.RemoteViews
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.yegamssi.yegamssi.MainActivity
 import com.yegamssi.yegamssi.R
+import com.yegamssi.yegamssi.alarm.AlarmScheduler
+import com.yegamssi.yegamssi.worker.WeatherUpdateWorker
 import es.antonborri.home_widget.HomeWidgetPlugin
 
 class YegamssiWidget : AppWidgetProvider() {
+
+    /** 첫 위젯 추가 시 — 즉시 날씨 갱신 + 15분 알람 등록 */
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+        Log.i(TAG, "Widget enabled — enqueuing initial fetch")
+        enqueueWeatherFetch(context)
+        AlarmScheduler.schedule(context)
+    }
+
+    /** 마지막 위젯 삭제 시 — 불필요한 알람 해제 */
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+        Log.i(TAG, "Widget disabled — cancelling alarm")
+        AlarmScheduler.cancel(context)
+    }
 
     override fun onUpdate(
         context: Context,
@@ -24,7 +47,29 @@ class YegamssiWidget : AppWidgetProvider() {
         }
     }
 
+    private fun enqueueWeatherFetch(context: Context) {
+        try {
+            val request = OneTimeWorkRequestBuilder<WeatherUpdateWorker>()
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build(),
+                )
+                .addTag("widget_init")
+                .build()
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                "widget_init_once",
+                ExistingWorkPolicy.REPLACE,
+                request,
+            )
+            Log.i(TAG, "Initial weather fetch enqueued")
+        } catch (e: Exception) {
+            Log.w(TAG, "Initial weather fetch failed: ${e.message}")
+        }
+    }
+
     companion object {
+        private const val TAG = "YegamssiWidget"
         private const val DEFAULT_WEATHER_CONDITION = "unknown"
         private const val DEFAULT_FORTUNE_SYMBOL = "\u27A1"
         private const val EMPTY_NUMBER = Int.MIN_VALUE

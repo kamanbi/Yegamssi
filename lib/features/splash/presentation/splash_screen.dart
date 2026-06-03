@@ -74,11 +74,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       if (!mounted) return;
     }
 
-    // initState에서 이미 시작된 warmup 완료 대기 (최대 1초)
-    // 3초 애니메이션 동안 대부분 완료됨
+    // initState에서 이미 시작된 warmup 완료 대기
+    // 3초 애니메이션 동안 병렬 처리됨 → 최대 3초 추가 대기 (캐시 히트 시 즉시 완료)
     await Future.any([
       _warmupFuture ?? Future.value(),
-      Future.delayed(const Duration(seconds: 1)),
+      Future.delayed(const Duration(seconds: 3)),
     ]).catchError((_) {});
     if (!mounted) return;
 

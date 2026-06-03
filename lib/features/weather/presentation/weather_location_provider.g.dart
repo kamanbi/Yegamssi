@@ -7,7 +7,7 @@ part of 'weather_location_provider.dart';
 // **************************************************************************
 
 String _$selectedLocationWeatherHash() =>
-    r'6d1bbe596632a4e4b740dbfeb64ccbe0c1d57184';
+    r'4ea58551b834948b5d68241b9df99dd4ce8375a1';
 
 /// Copied from Dart SDK
 class _SystemHash {

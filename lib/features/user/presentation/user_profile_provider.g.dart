@@ -6,7 +6,7 @@ part of 'user_profile_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$userProfileHash() => r'42ba12444aeb1d972910fe0cad09c233c1f549e2';
+String _$userProfileHash() => r'f7ebdfc42b73884f558137b905b29e098cf4d908';
 
 /// See also [userProfile].
 @ProviderFor(userProfile)
@@ -24,15 +24,12 @@ final userProfileProvider = AutoDisposeFutureProvider<UserProfile?>.internal(
 // ignore: unused_element
 typedef UserProfileRef = AutoDisposeFutureProviderRef<UserProfile?>;
 String _$userProfileNotifierHash() =>
-    r'0e3a3e4eb289cdbfab66acb383f7f8ff68e78e12';
+    r'6f68282ec6d0928f44ba99038a0726f336b70129';
 
 /// See also [UserProfileNotifier].
 @ProviderFor(UserProfileNotifier)
 final userProfileNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<
-      UserProfileNotifier,
-      UserProfile?
-    >.internal(
+    AsyncNotifierProvider<UserProfileNotifier, UserProfile?>.internal(
       UserProfileNotifier.new,
       name: r'userProfileNotifierProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -42,6 +39,6 @@ final userProfileNotifierProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$UserProfileNotifier = AutoDisposeAsyncNotifier<UserProfile?>;
+typedef _$UserProfileNotifier = AsyncNotifier<UserProfile?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

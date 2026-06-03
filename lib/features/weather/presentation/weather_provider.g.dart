@@ -6,11 +6,11 @@ part of 'weather_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$weatherRepositoryHash() => r'068e17057179d3ec8aa4167c8709f7b0b336ca50';
+String _$weatherRepositoryHash() => r'63320fbd1efdf33b3ab1ff782f8375408b72f9fe';
 
 /// See also [weatherRepository].
 @ProviderFor(weatherRepository)
-final weatherRepositoryProvider = Provider<WeatherRepository>.internal(
+final weatherRepositoryProvider = FutureProvider<WeatherRepository>.internal(
   weatherRepository,
   name: r'weatherRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,14 +22,10 @@ final weatherRepositoryProvider = Provider<WeatherRepository>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef WeatherRepositoryRef = ProviderRef<WeatherRepository>;
-String _$currentWeatherHash() => r'a0b48a2c8025c095bd75cd3f8636c4f14cce3a44';
+typedef WeatherRepositoryRef = FutureProviderRef<WeatherRepository>;
+String _$currentWeatherHash() => r'1ad320910a7e8ee867fc9547d2f6b7b789513252';
 
-/// 위치 기반 현재 날씨 자동 조회 provider.
-/// currentPositionProvider가 바뀌면 자동으로 재조회.
-/// 1시간 경과 시 위치·날씨를 함께 재조회한다.
-///
-/// Copied from [currentWeather].
+/// See also [currentWeather].
 @ProviderFor(currentWeather)
 final currentWeatherProvider = FutureProvider<WeatherEntity>.internal(
   currentWeather,
@@ -44,7 +40,7 @@ final currentWeatherProvider = FutureProvider<WeatherEntity>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CurrentWeatherRef = FutureProviderRef<WeatherEntity>;
-String _$weatherNotifierHash() => r'49904956831e63c12102aa88d798117a5b7974a5';
+String _$weatherNotifierHash() => r'74cfcec8e68349efb9a6951c3a1eeeae34e2e6bb';
 
 /// See also [WeatherNotifier].
 @ProviderFor(WeatherNotifier)
