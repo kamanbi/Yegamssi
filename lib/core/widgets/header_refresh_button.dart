@@ -22,7 +22,7 @@ class _HeaderRefreshButtonState extends ConsumerState<HeaderRefreshButton> {
 
     setState(() => _isRefreshing = true);
     try {
-      await ref.read(appRefreshControllerProvider).refreshSignals();
+      await ref.read(appRefreshControllerProvider).refreshSignals(force: true);
     } catch (error) {
       if (!mounted) {
         return;

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../../core/utils/date_format_helper.dart';
+import '../../core/locale/country_code.dart';
 import '../fortune/domain/entities/fortune_result.dart';
 import '../fortune/domain/entities/oheng.dart';
 import '../score/domain/entities/activity_score.dart';
@@ -8,23 +9,38 @@ import '../weather/domain/entities/weather_entity.dart';
 import '../weather/presentation/widgets/weather_icon_mapper.dart';
 import 'widget_data_writer.dart';
 
-Future<void> syncWidgetSnapshot({
-  required WeatherEntity weather,
-  required ActivityScore score,
-  required double latitude,
-  required double longitude,
-  FortuneResult? fortune,
-}) {
-  final now = DateTime.now();
-  final isNight = _isNightByHour(now);
+class WidgetSnapshotPayload {
+  const WidgetSnapshotPayload({
+    required this.weather,
+    required this.score,
+    required this.latitude,
+    required this.longitude,
+    required this.language,
+    required this.country,
+    required this.updatedAt,
+    this.fortune,
+  });
 
-  final conditionKey = _widgetConditionKey(weather.condition, isNight);
-  final fortuneSymbol = widgetFortuneSymbolFor(fortune);
+  final WeatherEntity weather;
+  final ActivityScore score;
+  final double latitude;
+  final double longitude;
+  final AppLanguage language;
+  final CountryCode country;
+  final DateTime updatedAt;
+  final FortuneResult? fortune;
+}
+
+Future<void> syncWidgetPayload(WidgetSnapshotPayload payload) {
+  final weather = payload.weather;
+  final isNight = weather.isNight;
+  final conditionKey = widgetConditionKeyFor(weather.condition, isNight);
+  final fortuneSymbol = widgetFortuneSymbolFor(payload.fortune);
   debugPrint(
-    '[Widget] sync condition=$conditionKey'
+    '[WidgetRefresh][${payload.updatedAt.toIso8601String()}] weather=$conditionKey'
     ' temp=${weather.tempCelsius.round()}'
-    ' score=${score.score}'
-    ' fortune=$fortuneSymbol',
+    ' outdoorScore=${payload.score.score}'
+    ' fortuneArrow=$fortuneSymbol',
   );
   return WidgetDataWriter.update(
     weatherCondition: conditionKey,
@@ -35,22 +51,50 @@ Future<void> syncWidgetSnapshot({
     temperatureCelsius: weather.tempCelsius.round(),
     feelsLikeCelsius: weather.feelsLikeCelsius.round(),
     fortuneSymbol: fortuneSymbol,
-    score: score.score,
-    dateLabel: AppDateFormat.widgetDate(now),
-    timeLabel: AppDateFormat.widgetTime(now),
-    latitude: latitude,
-    longitude: longitude,
+    score: payload.score.score,
+    dateLabel: AppDateFormat.widgetDate(
+      payload.updatedAt,
+      language: payload.language,
+    ),
+    timeLabel: AppDateFormat.widgetTime(
+      payload.updatedAt,
+      language: payload.language,
+    ),
+    language: payload.language.name,
+    countryIso: payload.country.isoCode,
+    latitude: payload.latitude,
+    longitude: payload.longitude,
   );
 }
 
-bool _isNightByHour(DateTime time) {
-  return time.hour < 6 || time.hour >= 20;
+Future<void> syncWidgetSnapshot({
+  required WeatherEntity weather,
+  required ActivityScore score,
+  required double latitude,
+  required double longitude,
+  required AppLanguage language,
+  required CountryCode country,
+  FortuneResult? fortune,
+}) {
+  return syncWidgetPayload(
+    WidgetSnapshotPayload(
+      weather: weather,
+      score: score,
+      latitude: latitude,
+      longitude: longitude,
+      language: language,
+      country: country,
+      fortune: fortune,
+      updatedAt: DateTime.now(),
+    ),
+  );
 }
 
-String _widgetConditionKey(WeatherCondition condition, bool isNight) {
+String widgetConditionKeyFor(WeatherCondition condition, bool isNight) {
   const nightVariants = {
     WeatherCondition.sunny,
     WeatherCondition.partlyCloudy,
+    WeatherCondition.cloudy,
     WeatherCondition.hazy,
     WeatherCondition.hot,
   };

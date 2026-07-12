@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/locale/country_code.dart';
 import '../../../core/locale/country_resolver.dart';
+import '../../weather/domain/entities/weather_entity.dart';
 import '../../weather/presentation/weather_provider.dart';
 import '../domain/calculators/global_score_calculator.dart';
 import '../domain/calculators/kr_score_calculator.dart';
@@ -18,15 +19,22 @@ part 'score_provider.g.dart';
 Future<ActivityScore> currentScore(Ref ref) async {
   final weather = await ref.watch(currentWeatherProvider.future);
   final country = await ref.watch(resolvedCountryProvider.future);
-  final calculator = switch (country) {
-    CountryCode.kr => const KrScoreCalculator(),
-    CountryCode.us => const UsScoreCalculator(),
-    _ => const GlobalScoreCalculator(),
-  };
-  final score = calculator.calculate(weather);
+  final score = calculateActivityScore(weather: weather, country: country);
   debugPrint(
     '[Score] score=${score.score} tier=${score.tier.name}'
     ' country=${country.isoCode}',
   );
   return score;
+}
+
+ActivityScore calculateActivityScore({
+  required WeatherEntity weather,
+  required CountryCode country,
+}) {
+  final calculator = switch (country) {
+    CountryCode.kr => const KrScoreCalculator(),
+    CountryCode.us => const UsScoreCalculator(),
+    _ => const GlobalScoreCalculator(),
+  };
+  return calculator.calculate(weather);
 }

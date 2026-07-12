@@ -1,4 +1,4 @@
-﻿code,type,text,weight
+code,type,text,weight
 overall_A,intro,종합운이 좋소. 오늘은 물러서기보다 나설 때요.,1
 overall_A,intro,하루 기운은 맑게 열려 있소. 뜻을 세워도 좋겠소.,1
 overall_A,effect,오늘 하루는 좋은 쪽으로 풀릴 가능성이 크오.,1
@@ -331,10 +331,10 @@ overall_B_to_ex_wood,intro,종합운은 토기운이 살아 있소. 나서도 �
 overall_B_to_ex_wood,effect,오늘 하루는 좋은 쪽으로 풀릴 수 있소. 중심이 크게 흔들리지 않소.,1
 overall_B_to_ex_wood,action,중요한 일정부터 정리하시오. 망설이지 말고 해보시오.,1
 overall_B_to_ex_wood,state,토기운이 강하게 살아 길을 돕소. 변화도 좋은 쪽으로 움직이오.,1
-overall_B1,intro,종합운은 중간 이상이오. 방심만 삼가시오.,1
-overall_B1,intro,하루 기운은 나쁘지 않으나 다시 살피시오.,1
-overall_B1,effect,오늘 하루는 확인한 만큼 안정되오.,1
-overall_B1,effect,작은 점검이 뒤탈을 줄여줄 것이오.,1
+overall_B1,intro,종합운은 중간 이상이오. 기본을 지키면 안정되오.,1
+overall_B1,intro,하루 기운은 나쁘지 않소. 한 번 더 살피면 더욱 편하오.,1
+overall_B1,effect,오늘 하루은 확인할수록 안정되오.,1
+overall_B1,effect,작은 점검이 흐름을 한결 편하게 해줄 것이오.,1
 overall_B1,action,일정을 단순히 정리하시오. 한 번 더 살피고 움직이시오.,1
 overall_B1,action,평소의 루틴을 지키시오. 순서를 지키면 무난하오.,1
 overall_B1_geum_df_earth,intro,종합운은 분별을 다시 살피시오. 서두르진 마시오.,1
@@ -1327,10 +1327,10 @@ decision_B_to_ex_wood,intro,결정운은 토기운이 살아 있소. 나서도 �
 decision_B_to_ex_wood,effect,선택은 좋은 쪽으로 풀릴 수 있소. 중심이 크게 흔들리지 않소.,1
 decision_B_to_ex_wood,action,오래 붙잡던 문제를 정리하시오. 망설이지 말고 해보시오.,1
 decision_B_to_ex_wood,state,토기운이 강하게 살아 길을 돕소. 변화도 좋은 쪽으로 움직이오.,1
-decision_B1,intro,결정운은 중간 이상이오. 방심만 삼가시오.,1
-decision_B1,intro,판단 기운은 나쁘지 않으나 다시 살피시오.,1
-decision_B1,effect,선택은 확인한 만큼 안정되오.,1
-decision_B1,effect,작은 점검이 뒤탈을 줄여줄 것이오.,1
+decision_B1,intro,결정운은 중간 이상이오. 기본을 지키면 안정되오.,1
+decision_B1,intro,판단 기운은 나쁘지 않소. 한 번 더 살피면 더욱 편하오.,1
+decision_B1,effect,선택은 확인할수록 안정되오.,1
+decision_B1,effect,작은 점검이 흐름을 한결 편하게 해줄 것이오.,1
 decision_B1,action,기준부터 다시 세우시오. 한 번 더 살피고 움직이시오.,1
 decision_B1,action,선택지를 줄이시오. 순서를 지키면 무난하오.,1
 decision_B1_geum_df_earth,intro,결정운은 분별을 다시 살피시오. 서두르진 마시오.,1
@@ -2323,12 +2323,12 @@ money_B_to_ex_wood,intro,재물운은 토기운이 살아 있소. 나서도 좋�
 money_B_to_ex_wood,effect,재정은 좋은 쪽으로 풀릴 수 있소. 중심이 크게 흔들리지 않소.,1
 money_B_to_ex_wood,action,쓸 돈과 묶을 돈을 나누시오. 망설이지 말고 해보시오.,1
 money_B_to_ex_wood,state,토기운이 강하게 살아 길을 돕소. 변화도 좋은 쪽으로 움직이오.,1
-money_B1,intro,재물운은 중간 이상이오. 방심만 삼가시오.,1
-money_B1,intro,재물 기운은 나쁘지 않으나 다시 살피시오.,1
-money_B1,effect,재정은 확인한 만큼 안정되오.,1
-money_B1,effect,작은 점검이 뒤탈을 줄여줄 것이오.,1
+money_B1,intro,재물운은 중간 이상이오. 기본을 지키면 안정되오.,1
+money_B1,intro,재물 기운은 나쁘지 않소. 한 번 더 살피면 더욱 편하오.,1
+money_B1,effect,재정은 확인할수록 안정되오.,1
+money_B1,effect,작은 점검이 흐름을 한결 편하게 해줄 것이오.,1
 money_B1,action,지출 기준을 다시 보시오. 한 번 더 살피고 움직이시오.,1
-money_B1,action,작은 지출부터 막으시오. 순서를 지키면 무난하오.,1
+money_B1,action,작은 지출부터 정리하시오. 순서를 지키면 무난하오.,1
 money_B1_geum_df_earth,intro,재물운은 분별을 다시 살피시오. 서두르진 마시오.,1
 money_B1_geum_df_earth,effect,재정은 확인한 만큼 안정되오. 기준은 있으나 말이 굳을 수 있소.,1
 money_B1_geum_df_earth,action,작은 지출부터 막으시오. 한 번 더 살피고 움직이시오.,1
@@ -3319,10 +3319,10 @@ work_B_to_ex_wood,intro,업무운은 토기운이 살아 있소. 나서도 좋�
 work_B_to_ex_wood,effect,업무는 좋은 쪽으로 풀릴 수 있소. 중심이 크게 흔들리지 않소.,1
 work_B_to_ex_wood,action,중요한 일부터 처리하시오. 망설이지 말고 해보시오.,1
 work_B_to_ex_wood,state,토기운이 강하게 살아 길을 돕소. 변화도 좋은 쪽으로 움직이오.,1
-work_B1,intro,업무운은 중간 이상이오. 방심만 삼가시오.,1
-work_B1,intro,일의 기운은 나쁘지 않으나 다시 살피시오.,1
-work_B1,effect,업무는 확인한 만큼 안정되오.,1
-work_B1,effect,작은 점검이 뒤탈을 줄여줄 것이오.,1
+work_B1,intro,업무운은 중간 이상이오. 기본을 지키면 안정되오.,1
+work_B1,intro,일의 기운은 나쁘지 않소. 한 번 더 살피면 더욱 편하오.,1
+work_B1,effect,업무은 확인할수록 안정되오.,1
+work_B1,effect,작은 점검이 흐름을 한결 편하게 해줄 것이오.,1
 work_B1,action,일의 순서부터 다시 정하시오. 한 번 더 살피고 움직이시오.,1
 work_B1,action,속도보다 확인을 먼저 하시오. 순서를 지키면 무난하오.,1
 work_B1_geum_df_earth,intro,업무운은 분별을 다시 살피시오. 서두르진 마시오.,1
@@ -4315,10 +4315,10 @@ love_B_to_ex_wood,intro,연애운은 토기운이 살아 있소. 나서도 좋�
 love_B_to_ex_wood,effect,관계는 좋은 쪽으로 풀릴 수 있소. 중심이 크게 흔들리지 않소.,1
 love_B_to_ex_wood,action,먼저 짧게 말을 건네시오. 망설이지 말고 해보시오.,1
 love_B_to_ex_wood,state,토기운이 강하게 살아 길을 돕소. 변화도 좋은 쪽으로 움직이오.,1
-love_B1,intro,연애운은 중간 이상이오. 방심만 삼가시오.,1
-love_B1,intro,마음의 기운은 나쁘지 않으나 다시 살피시오.,1
-love_B1,effect,관계는 확인한 만큼 안정되오.,1
-love_B1,effect,작은 점검이 뒤탈을 줄여줄 것이오.,1
+love_B1,intro,연애운은 중간 이상이오. 기본을 지키면 안정되오.,1
+love_B1,intro,마음의 기운은 나쁘지 않소. 한 번 더 살피면 더욱 편하오.,1
+love_B1,effect,관계은 확인할수록 안정되오.,1
+love_B1,effect,작은 점검이 흐름을 한결 편하게 해줄 것이오.,1
 love_B1,action,말의 온도를 낮추시오. 한 번 더 살피고 움직이시오.,1
 love_B1,action,상대의 속도에 맞추시오. 순서를 지키면 무난하오.,1
 love_B1_geum_df_earth,intro,연애운은 분별을 다시 살피시오. 서두르진 마시오.,1
@@ -5311,10 +5311,10 @@ health_B_to_ex_wood,intro,건강운은 토기운이 살아 있소. 나서도 좋
 health_B_to_ex_wood,effect,몸 상태는 좋은 쪽으로 풀릴 수 있소. 중심이 크게 흔들리지 않소.,1
 health_B_to_ex_wood,action,가벼운 활동부터 시작하시오. 망설이지 말고 해보시오.,1
 health_B_to_ex_wood,state,토기운이 강하게 살아 길을 돕소. 변화도 좋은 쪽으로 움직이오.,1
-health_B1,intro,건강운은 중간 이상이오. 방심만 삼가시오.,1
-health_B1,intro,몸의 기운은 나쁘지 않으나 다시 살피시오.,1
-health_B1,effect,몸 상태는 확인한 만큼 안정되오.,1
-health_B1,effect,작은 점검이 뒤탈을 줄여줄 것이오.,1
+health_B1,intro,건강운은 중간 이상이오. 기본을 지키면 안정되오.,1
+health_B1,intro,몸의 기운은 나쁘지 않소. 한 번 더 살피면 더욱 편하오.,1
+health_B1,effect,몸 상태은 확인할수록 안정되오.,1
+health_B1,effect,작은 점검이 흐름을 한결 편하게 해줄 것이오.,1
 health_B1,action,몸 상태부터 살피시오. 한 번 더 살피고 움직이시오.,1
 health_B1,action,무리 말고 일상을 지키시오. 순서를 지키면 무난하오.,1
 health_B1_geum_df_earth,intro,건강운은 분별을 다시 살피시오. 서두르진 마시오.,1

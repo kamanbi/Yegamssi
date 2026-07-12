@@ -26,3 +26,16 @@ class ParseException extends AppException {
 class FortuneNoProfileException extends AppException {
   const FortuneNoProfileException() : super('생년월일이 입력되지 않았습니다');
 }
+
+class FortuneWeatherRefreshRequiredException extends AppException {
+  const FortuneWeatherRefreshRequiredException()
+    : super('A fresh weather snapshot is required before fortune generation.');
+}
+
+class MonthlyNoProfileException extends AppException {
+  const MonthlyNoProfileException() : super('생년월일이 입력되지 않았습니다');
+}
+
+class MonthlyGenerationException extends AppException {
+  const MonthlyGenerationException([super.message = '월간 예감씨 생성에 실패했습니다']);
+}

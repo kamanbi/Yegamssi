@@ -92,7 +92,9 @@ class AppUpdateService {
       );
     } catch (error, stackTrace) {
       debugPrint('[AppUpdate] Policy check failed: $error');
-      debugPrintStack(stackTrace: stackTrace);
+      if (kDebugMode) {
+        debugPrintStack(stackTrace: stackTrace);
+      }
       return null;
     }
   }

@@ -6,31 +6,82 @@ import 'score_calculator.dart';
 class GlobalScoreCalculator implements ScoreCalculator {
   const GlobalScoreCalculator();
 
+  static const _maxAirDeduction = 35;
+
   @override
   ActivityScore calculate(WeatherEntity weather) {
     int score = 100;
+    int rainDeduction = 0;
+    int windDeduction = 0;
+    int heatDeduction = 0;
+    final dustDeduction = _dustDeduction(weather.pm10, weather.pm25);
+    final ozoneDeduction = _ozoneDeduction(weather.o3);
 
     if (weather.precipProbability >= 0.7) {
-      score -= 40;
+      rainDeduction = 40;
     } else if (weather.precipProbability >= 0.4) {
-      score -= 20;
+      rainDeduction = 20;
     }
 
     if (weather.windSpeedMs >= 14) {
-      score -= 20;
+      windDeduction = 20;
     } else if (weather.windSpeedMs >= 9) {
-      score -= 10;
+      windDeduction = 10;
     }
 
     if (weather.tempCelsius >= 35 || weather.tempCelsius <= -10) {
-      score -= 30;
+      heatDeduction = 30;
     } else if (weather.tempCelsius >= 30 || weather.tempCelsius <= -5) {
-      score -= 15;
+      heatDeduction = 15;
     }
+
+    score -=
+        rainDeduction +
+        windDeduction +
+        heatDeduction +
+        dustDeduction +
+        ozoneDeduction;
 
     return ActivityScore.fromRaw(
       score,
-      const ScoreBreakdown(),
+      ScoreBreakdown(
+        rainDeduction: rainDeduction,
+        windDeduction: windDeduction,
+        heatDeduction: heatDeduction,
+        dustDeduction: dustDeduction,
+        ozoneDeduction: ozoneDeduction,
+      ),
     );
+  }
+
+  int _dustDeduction(double? pm10, double? pm25) {
+    int deduction = 0;
+    if (pm25 != null) {
+      if (pm25 >= 75) {
+        deduction += 25;
+      } else if (pm25 >= 35) {
+        deduction += 15;
+      } else if (pm25 >= 15) {
+        deduction += 6;
+      }
+    }
+    if (pm10 != null) {
+      if (pm10 >= 150) {
+        deduction += 25;
+      } else if (pm10 >= 80) {
+        deduction += 15;
+      } else if (pm10 >= 30) {
+        deduction += 6;
+      }
+    }
+    return deduction.clamp(0, _maxAirDeduction);
+  }
+
+  int _ozoneDeduction(double? o3) {
+    if (o3 == null) return 0;
+    if (o3 > 0.150) return 20;
+    if (o3 > 0.090) return 12;
+    if (o3 > 0.060) return 5;
+    return 0;
   }
 }

@@ -57,23 +57,24 @@ class HomeTabScreen extends ConsumerWidget {
   }
 }
 
-class _HomeHeader extends StatelessWidget {
+class _HomeHeader extends ConsumerWidget {
   const _HomeHeader({required this.titleColor, required this.bodyColor});
 
   final Color titleColor;
   final Color bodyColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final now = DateTime.now();
     final l10n = AppLocalizations.of(context);
+    final language = ref.watch(appLanguageNotifierProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppDateFormat.format(now),
-          style: AppTextStyles.labelMedium.copyWith(color: bodyColor),
+          AppDateFormat.formatWithTime(now, language: language),
+          style: AppTextStyles.pageDateTime.copyWith(color: bodyColor),
         ),
         const SizedBox(height: AppSpacing.x1),
         Text(
@@ -116,6 +117,8 @@ class _HomeLanguageSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedLanguage = ref.watch(appLanguageNotifierProvider);
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
 
     return PopupMenuButton<AppLanguage>(
       tooltip: AppLocalizations.of(context).settingsLanguage,
@@ -136,25 +139,31 @@ class _HomeLanguageSelector extends StatelessWidget {
       ],
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.white.withAlpha(18),
+          color: isDark
+              ? Colors.white.withAlpha(18)
+              : Colors.white.withAlpha(190),
           borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: Colors.white.withAlpha(28)),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withAlpha(28)
+                : AppColors.border(brightness),
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 Icons.language_rounded,
                 size: 16,
-                color: AppColors.textSecondary,
+                color: AppColors.body(brightness),
               ),
               const SizedBox(width: 6),
               Text(
                 selectedLanguage.shortLabel,
                 style: AppTextStyles.labelMedium.copyWith(
-                  color: AppColors.textSecondary,
+                  color: AppColors.body(brightness),
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -178,7 +187,9 @@ class _CurrentWeatherSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final brightness = Theme.of(context).brightness;
     return weatherAsync.when(
+      skipLoadingOnReload: true,
       loading: () => HeroGlassCard(
         child: _AsyncStatusView(
           title: l10n.homeWeatherLoadingTitle,
@@ -216,76 +227,97 @@ class _CurrentWeatherSection extends StatelessWidget {
                             weather.locationName,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.labelLarge,
-                          ),
-                          const SizedBox(height: AppSpacing.x1),
-                          Text(
-                            WeatherIconMapper.localizedLabelFor(
-                              context,
-                              weather.condition,
-                              isNight: weather.isNight,
-                            ),
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: Colors.white.withAlpha(220),
+                            style: AppTextStyles.labelLarge.copyWith(
+                              color: AppColors.title(brightness),
                             ),
                           ),
                           const SizedBox(height: AppSpacing.x2),
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${weather.tempCelsius.round()}°',
-                                style: AppTextStyles.temperature,
+                                '${weather.tempCelsius.round()}',
+                                style: TextStyle(
+                                  color: AppColors.title(brightness),
+                                  fontSize: 76,
+                                  fontWeight: FontWeight.w200,
+                                  height: 1,
+                                ),
                               ),
-                              const SizedBox(width: AppSpacing.x1),
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.only(top: 10),
                                 child: Text(
-                                  l10n.weatherFeelsLikeShort(
-                                    weather.feelsLikeCelsius.round().toString(),
+                                  '\u2103',
+                                  style: TextStyle(
+                                    color: AppColors.body(brightness),
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w300,
                                   ),
-                                  style: AppTextStyles.bodyMedium,
                                 ),
                               ),
                             ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.weatherFeelsLike(
+                              weather.feelsLikeCelsius.round().toString(),
+                            ),
+                            style: TextStyle(
+                              color: AppColors.body(brightness),
+                              fontSize: 14,
+                            ),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(width: AppSpacing.x2),
-                    PremiumWeatherIcon(
-                      condition: weather.condition,
-                      isNight: weather.isNight,
-                      size: 84,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        PremiumWeatherIcon(
+                          condition: weather.condition,
+                          isNight: weather.isNight,
+                          size: 84,
+                        ),
+                        const SizedBox(height: AppSpacing.x1),
+                        Text(
+                          WeatherIconMapper.localizedLabelFor(
+                            context,
+                            weather.condition,
+                            isNight: weather.isNight,
+                          ),
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.body(brightness),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.x3),
-                Wrap(
-                  spacing: AppSpacing.x1,
-                  runSpacing: AppSpacing.x1,
-                  children: [
-                    _MetricChip(
-                      label: l10n.weatherHumidityLabel,
-                      value: '${weather.humidity}%',
-                    ),
-                    _MetricChip(
-                      label: l10n.weatherWindLabel,
-                      value: '${weather.windSpeedMs.toStringAsFixed(1)}m/s',
-                    ),
-                    _MetricChip(
-                      label: l10n.weatherPrecipitationLabel,
-                      value: '${(weather.precipProbability * 100).round()}%',
-                    ),
-                    if (score != null && activitySpec != null)
-                      _MetricChip(
-                        label: l10n.scoreLabel,
-                        value:
-                            '${l10n.scorePointUnit(score.score)} ${ActivityIconMapper.localizedLabelFor(context, score.tier)}',
-                        icon: activitySpec.icon,
-                      ),
-                  ],
+                Text(
+                  '${l10n.weatherHumidityLabel} ${weather.humidity}%  ·  '
+                  '${l10n.weatherWindLabel} ${weather.windSpeedMs.toStringAsFixed(1)}m/s  ·  '
+                  '${l10n.weatherPrecipitationLabel} '
+                  '${(weather.precipProbability * 100).round()}%',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.body(brightness),
+                  ),
                 ),
+                if (score != null && activitySpec != null) ...[
+                  const SizedBox(height: AppSpacing.x1),
+                  _MetricChip(
+                    label: l10n.scoreLabel,
+                    value:
+                        '${l10n.scorePointUnit(score.score)} ${ActivityIconMapper.localizedLabelFor(context, score.tier)}',
+                    icon: activitySpec.icon,
+                    isFullWidth: true,
+                  ),
+                ],
               ],
             ),
           ),
@@ -309,6 +341,7 @@ class _FortuneHeadlineSection extends StatelessWidget {
     return PremiumCard(
       tone: PremiumCardTone.accent,
       child: fortuneAsync.when(
+        skipLoadingOnReload: true,
         loading: () => _AsyncStatusView(
           title: l10n.homeFortuneLoadingTitle,
           message: l10n.homeFortuneLoadingMessage,
@@ -354,35 +387,67 @@ class _FortuneHeadlineSection extends StatelessWidget {
 }
 
 class _MetricChip extends StatelessWidget {
-  const _MetricChip({required this.label, required this.value, this.icon});
+  const _MetricChip({
+    required this.label,
+    required this.value,
+    this.icon,
+    this.isFullWidth = false,
+  });
 
   final String label;
   final String value;
   final IconData? icon;
+  final bool isFullWidth;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: AppSpacing.pill,
-      decoration: BoxDecoration(
-        color: Colors.white.withAlpha(18),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: Colors.white.withAlpha(26)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, size: 14, color: Colors.white.withAlpha(224)),
-            const SizedBox(width: AppSpacing.x1),
-          ],
-          Text(
-            '$label  $value',
-            style: AppTextStyles.labelMedium.copyWith(
-              color: Colors.white.withAlpha(224),
-            ),
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
+
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: 1.1,
+      child: Container(
+        width: isFullWidth ? double.infinity : null,
+        padding: AppSpacing.pill,
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.white.withAlpha(18)
+              : Theme.of(context).colorScheme.primary.withAlpha(14),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withAlpha(26)
+                : Theme.of(context).colorScheme.primary.withAlpha(28),
           ),
-        ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(
+                icon,
+                size: 14,
+                color: isDark
+                    ? Colors.white.withAlpha(224)
+                    : AppColors.title(brightness),
+              ),
+              const SizedBox(width: AppSpacing.x1),
+            ],
+            Flexible(
+              child: Text(
+                '$label  $value',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.labelMedium.copyWith(
+                  color: isDark
+                      ? Colors.white.withAlpha(224)
+                      : AppColors.title(brightness),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

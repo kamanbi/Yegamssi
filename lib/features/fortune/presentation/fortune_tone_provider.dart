@@ -33,8 +33,10 @@ class FortuneToneNotifier extends StateNotifier<FortuneTone> {
   }
 
   Future<void> setTone(FortuneTone tone) async {
-    state = tone;
+    // 저장을 먼저 완료해야 상태 변경으로 재계산되는 쪽(dailyFortune 등)이
+    // 옛 저장값을 읽는 레이스가 없다.
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(fortuneToneStorageKey, tone.storageValue);
+    state = tone;
   }
 }

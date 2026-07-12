@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_text_styles.dart';
+import '../../../core/locale/country_code.dart';
+import '../../../core/locale/locale_provider.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/glassmorphism.dart';
 import '../../../l10n/app_localizations.dart';
@@ -20,6 +23,7 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   DateTime? _selectedDate;
   int _selectedHour = UserProfile.unknownBirthHour;
+  Gender _selectedGender = Gender.unspecified;
 
   bool get _canProceed => _selectedDate != null;
 
@@ -55,7 +59,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     await ref
         .read(userProfileNotifierProvider.notifier)
-        .save(UserProfile(birthDate: selectedDate, birthHour: _selectedHour));
+        .save(
+          UserProfile(
+            birthDate: selectedDate,
+            birthHour: _selectedHour,
+            gender: _selectedGender,
+          ),
+        );
     if (mounted) {
       context.go(AppRoutes.home);
     }
@@ -81,6 +91,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 60),
+                const Align(
+                  alignment: Alignment.centerRight,
+                  child: _OnboardingLanguageSelector(),
+                ),
+                const SizedBox(height: 16),
                 Text(
                   l10n.onboardingTitle,
                   style: const TextStyle(
@@ -132,8 +147,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                   color: _selectedDate == null
                                       ? AppColors.textMuted
                                       : AppColors.textPrimary,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
@@ -145,6 +160,39 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                GlassCard(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.onboardingGenderLabel,
+                        style: const TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          for (final gender in Gender.values) ...[
+                            Expanded(
+                              child: _GenderChoiceChip(
+                                label: _genderLabel(l10n, gender),
+                                isSelected: _selectedGender == gender,
+                                onTap: () =>
+                                    setState(() => _selectedGender = gender),
+                              ),
+                            ),
+                            if (gender != Gender.values.last)
+                              const SizedBox(width: 8),
+                          ],
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -177,8 +225,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                 _formatHour(l10n, _selectedHour),
                                 style: const TextStyle(
                                   color: AppColors.textPrimary,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
@@ -233,5 +281,115 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       return l10n.birthUnknownNoon;
     }
     return l10n.hourLabel(hour);
+  }
+
+  String _genderLabel(AppLocalizations l10n, Gender gender) {
+    return switch (gender) {
+      Gender.male => l10n.genderMale,
+      Gender.female => l10n.genderFemale,
+      Gender.unspecified => l10n.genderUnspecified,
+    };
+  }
+}
+
+class _GenderChoiceChip extends StatelessWidget {
+  const _GenderChoiceChip({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 120),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: isSelected
+              ? AppColors.gold.withAlpha(28)
+              : Colors.white.withAlpha(14),
+          border: Border.all(
+            color: isSelected
+                ? AppColors.gold.withAlpha(150)
+                : Colors.white.withAlpha(28),
+          ),
+        ),
+        child: Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: isSelected ? AppColors.textPrimary : AppColors.textMuted,
+            fontSize: 15,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OnboardingLanguageSelector extends ConsumerWidget {
+  const _OnboardingLanguageSelector();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedLanguage = ref.watch(appLanguageNotifierProvider);
+
+    return PopupMenuButton<AppLanguage>(
+      tooltip: AppLocalizations.of(context).settingsLanguage,
+      onSelected: (language) =>
+          ref.read(appLanguageNotifierProvider.notifier).setLanguage(language),
+      itemBuilder: (context) => [
+        for (final language in AppLanguage.values)
+          PopupMenuItem(
+            value: language,
+            child: Row(
+              children: [
+                SizedBox(width: 32, child: Text(language.shortLabel)),
+                const SizedBox(width: 8),
+                Text(language.displayName),
+              ],
+            ),
+          ),
+      ],
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white.withAlpha(18),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: Colors.white.withAlpha(28)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.language_rounded,
+                size: 16,
+                color: AppColors.textSecondary,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                selectedLanguage.shortLabel,
+                style: AppTextStyles.labelMedium.copyWith(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

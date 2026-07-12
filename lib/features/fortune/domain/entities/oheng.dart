@@ -3,7 +3,7 @@
 enum Oheng {
   mok, // 木 (나무, 봄)
   hwa, // 火 (불, 여름)
-  to, //  土 (흙, 환절기)
+  to, // 土 (흙, 환절기)
   geum, // 金 (쇠, 가을)
   su; // 水 (물, 겨울)
 
@@ -18,17 +18,17 @@ enum Oheng {
 
 /// 오행 강도
 enum OhengStrength {
-  ex, // 과다 (excess) — 사주 4기둥 중 3개 이상
-  df, // 부족 (deficient) — 1개 이하
+  ex, // 과다 (excess)
+  df, // 부족 (deficient)
 }
 
 /// 운세 카테고리
 enum FortuneCategory {
   overall, // 종합운세
-  money, //   재물운
-  love, //    연애운
-  work, //    직장운
-  health, //  건강운
+  money, // 재물운
+  love, // 연애운
+  work, // 직장운
+  health, // 건강운
   decision; // 결정운
 
   String get korean => switch (this) {
@@ -43,16 +43,16 @@ enum FortuneCategory {
 
 /// 천간(天干) 10개
 enum HeavenlyStem {
-  gap, //    甲
-  eul, //    乙
+  gap, // 甲
+  eul, // 乙
   byeong, // 丙
-  jeong, //  丁
-  mu, //     戊
-  gi, //     己
+  jeong, // 丁
+  mu, // 戊
+  gi, // 己
   gyeong, // 庚
-  shin, //   辛
-  im, //     壬
-  gye; //    癸
+  shin, // 辛
+  im, // 壬
+  gye; // 癸
 
   Oheng get oheng => switch (this) {
     HeavenlyStem.gap => Oheng.mok,
@@ -70,18 +70,18 @@ enum HeavenlyStem {
 
 /// 지지(地支) 12개
 enum EarthlyBranch {
-  ja, //   子
+  ja, // 子
   chuk, // 丑
-  in_, //  寅
-  myo, //  卯
-  jin, //  辰
-  sa, //   巳
-  o, //    午
-  mi, //   未
-  sin, //  申
-  yu, //   酉
-  sul, //  戌
-  hae; //  亥
+  in_, // 寅
+  myo, // 卯
+  jin, // 辰
+  sa, // 巳
+  o, // 午
+  mi, // 未
+  sin, // 申
+  yu, // 酉
+  sul, // 戌
+  hae; // 亥
 
   Oheng get oheng => switch (this) {
     EarthlyBranch.ja => Oheng.su,
@@ -100,25 +100,25 @@ enum EarthlyBranch {
 }
 
 /// 운세 갱신 슬롯.
-/// - morning  : 08~12시 → 오전 1회 갱신
-/// - afternoon: 13~17시 → 오후 1회 갱신
-/// - 00~07시  : 전날 afternoon 캐시 재사용
-/// - 18~23시  : 오늘 afternoon 캐시 재사용
+/// - morning: 06:00-12:59
+/// - afternoon: 13:00-05:59 next day
 enum TimeSlot {
   morning,
   afternoon;
 
-  /// 현재 시각 기준 슬롯과 캐시 날짜를 반환한다.
-  ///
-  /// 00~07시는 어제 afternoon 슬롯을 반환하므로,
-  /// 전날 오후에 갱신한 결과를 그대로 보여준다.
-  static ({TimeSlot slot, DateTime date}) forNow() {
-    final now = DateTime.now();
-    final h = now.hour;
-    if (h >= 8 && h < 13) return (slot: TimeSlot.morning, date: now);
-    if (h >= 13) return (slot: TimeSlot.afternoon, date: now);
-    // 00~07시: 전날 오후 슬롯
-    final yesterday = now.subtract(const Duration(days: 1));
+  static const morningStartHour = 6;
+  static const afternoonStartHour = 13;
+
+  static ({TimeSlot slot, DateTime date}) forNow({DateTime? now}) {
+    final effectiveNow = now ?? DateTime.now();
+    final hour = effectiveNow.hour;
+    if (hour >= morningStartHour && hour < afternoonStartHour) {
+      return (slot: TimeSlot.morning, date: effectiveNow);
+    }
+    if (hour >= afternoonStartHour) {
+      return (slot: TimeSlot.afternoon, date: effectiveNow);
+    }
+    final yesterday = effectiveNow.subtract(const Duration(days: 1));
     return (slot: TimeSlot.afternoon, date: yesterday);
   }
 

@@ -1,0 +1,516 @@
+{
+  "@@locale": "hi",
+  "appName": "Yegamssi",
+  "tabHome": "आज",
+  "tabWeather": "मौसम",
+  "tabScore": "स्कोर",
+  "tabMonthlyYegamssi": "मासिक",
+  "monthlyYegamssiTitle": "मासिक येगमशी",
+  "monthlyYegamssiSubtitle": "इस महीने की हर श्रेणी के अच्छे दिन और सावधानी वाले दिन देखें।",
+  "monthlyGoodDaysLabel": "अच्छे दिन",
+  "monthlyCautionDaysLabel": "सावधानी",
+  "monthlyGeneratingMessage": "इस महीने का मासिक येगमशी तैयार किया जा रहा है।",
+  "monthlyFailedMessage": "इस महीने का मासिक येगमशी तैयार नहीं हो सका। कृपया ऐप फिर से शुरू करें।",
+  "monthlyDisclaimer": "मासिक येगमशी म्योंग्री प्रवाह पर आधारित संदर्भ सामग्री है। अहम फैसले वास्तविक परिस्थितियों के साथ तौलकर लें।",
+  "monthlySummaryEarly": "इस महीने शुरुआत का प्रवाह अच्छा है, इसलिए जल्दी आगे बढ़ना आपके पक्ष में रहेगा।",
+  "monthlySummaryMid": "इस महीने मध्य के बाद प्रवाह बेहतर होता है, जल्दबाज़ी से बेहतर है सही समय का इंतज़ार करना।",
+  "monthlySummaryLate": "इस महीने अंत में जोर लगाएँगे तो अच्छे नतीजे मिलेंगे।",
+  "monthlyCategoryLove": "प्रेम",
+  "monthlyCategoryLoveMessage": "अच्छे दिन पहले अपनी भावनाएँ जताने के लिए अच्छे हैं। सावधानी वाले दिन शांत बातचीत बेहतर रहती है।",
+  "monthlyCategoryWork": "काम",
+  "monthlyCategoryWorkMessage": "अच्छे दिन कुछ नया शुरू करने के लिए अच्छे हैं। सावधानी वाले दिन ज़ोर न डालें और काम समेटने पर ध्यान दें।",
+  "monthlyCategoryMoney": "पैसा",
+  "monthlyCategoryMoneyMessage": "अच्छे दिन अपनी आर्थिक स्थिति संवारने के लिए अच्छे हैं। सावधानी वाले दिन बड़े खर्च से पहले एक बार और जाँच लें।",
+  "monthlyCategoryRelationship": "रिश्ते",
+  "monthlyCategoryRelationshipMessage": "अच्छे दिन लोगों से बातचीत के लिए अच्छे हैं। सावधानी वाले दिन गलतफहमी से बचने के लिए शब्द सोच-समझकर चुनें।",
+  "monthlyCategoryHealth": "स्वास्थ्य",
+  "monthlyCategoryHealthMessage": "अच्छे दिन शरीर को सक्रिय रखने के लिए अच्छे हैं। सावधानी वाले दिन अति न करें और आराम के लिए समय रखें।",
+  "monthlyCategoryDecision": "निर्णय",
+  "monthlyCategoryDecisionMessage": "अच्छे दिन कोई अहम निर्णय लेने के लिए अच्छे हैं। सावधानी वाले दिन फैसला टालकर थोड़ा और विचार करना बेहतर है।",
+  "monthlyCategoryTravel": "आवाजाही",
+  "monthlyCategoryTravelMessage": "अच्छे दिन बाहर जाने या यात्रा की योजना के लिए अच्छे हैं। सावधानी वाले दिन कार्यक्रम में थोड़ी छूट रखें।",
+  "tabFortune": "भविष्यफल",
+  "tabSettings": "सेटिंग्स",
+  "homeHeadline": "आज का मौसम और संकेत",
+  "homeWeatherLoadingTitle": "मौजूदा मौसम लोड हो रहा है",
+  "homeWeatherLoadingMessage": "स्थान और मौसम डेटा तैयार किया जा रहा है।",
+  "homeWeatherErrorTitle": "मौजूदा मौसम लोड नहीं हो सका",
+  "homeWeatherErrorMessage": "मौसम स्क्रीन खोलें और फिर से प्रयास करें।",
+  "homeWeatherAction": "मौसम देखें",
+  "homeFortuneLoadingTitle": "आज का भविष्यफल तैयार किया जा रहा है",
+  "homeFortuneLoadingMessage": "जल्द ही एक संक्षिप्त सारांश दिखाई देगा।",
+  "homeFortuneErrorTitle": "भविष्यफल अभी तैयार नहीं है",
+  "homeFortuneErrorMessage": "अपनी प्रोफ़ाइल जाँचें और भविष्यफल स्क्रीन पर फिर से प्रयास करें।",
+  "homeFortuneAction": "भविष्यफल देखें",
+  "homeFortuneHeadline": "आज का भविष्यफल एक पंक्ति में",
+  "appExitTitle": "ऐप से बाहर निकलें",
+  "appExitMessage": "क्या आप Yegamssi बंद करना चाहते हैं?",
+  "cancel": "रद्द करें",
+  "confirm": "ठीक है",
+  "close": "बंद करें",
+  "later": "बाद में",
+  "exit": "बाहर निकलें",
+  "search": "खोजें",
+  "loadingAd": "विज्ञापन लोड हो रहा है...",
+  "refresh": "रीफ़्रेश करें",
+  "refreshFailed": "रीफ़्रेश विफल: {error}",
+  "@refreshFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notFoundPage": "पेज नहीं मिला: {error}",
+  "@notFoundPage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLike": "महसूस होता है {temp}°C जैसा",
+  "@weatherFeelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLikeShort": "महसूस {temp}℃",
+  "@weatherFeelsLikeShort": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidity": "नमी {value}%",
+  "@weatherHumidity": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherWind": "हवा {speed}मी/से",
+  "@weatherWind": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidityLabel": "नमी",
+  "weatherWindLabel": "हवा",
+  "weatherWindSpeedLabel": "हवा की गति",
+  "weatherPrecipitationLabel": "बारिश",
+  "weatherPrecipitationAmount": "वर्षा की मात्रा {amount}",
+  "@weatherPrecipitationAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDustPm10": "PM10",
+  "weatherDustPm25": "PM2.5",
+  "weatherHourlyForecast": "घंटेवार पूर्वानुमान",
+  "weatherWeeklyForecast": "साप्ताहिक पूर्वानुमान",
+  "weatherLoading": "मौसम लोड हो रहा है...",
+  "weatherErrorTitle": "मौसम डेटा प्राप्त नहीं हो सका",
+  "weatherReturnCurrentLocation": "{seconds} सेकंड में मौजूदा स्थान पर वापस जा रहे हैं",
+  "@weatherReturnCurrentLocation": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherToday": "आज",
+  "weatherAm": "AM",
+  "weatherPm": "PM",
+  "weatherHour": "{hour}:00",
+  "@weatherHour": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherUvVeryHigh": "{uv} बहुत अधिक",
+  "weatherUvHigh": "{uv} अधिक",
+  "weatherUvModerateHigh": "{uv} मध्यम-उच्च",
+  "weatherUvModerate": "{uv} मध्यम",
+  "weatherUvLow": "{uv} कम",
+  "@weatherUvVeryHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerateHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerate": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvLow": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherConditionSunny": "धूप",
+  "weatherConditionClearNight": "साफ़ रात",
+  "weatherConditionPartlyCloudy": "आंशिक रूप से बादल",
+  "weatherConditionPartlyCloudyNight": "आंशिक बादलों वाली रात",
+  "weatherConditionCloudy": "बादल",
+  "weatherConditionHazy": "धुंधला",
+  "weatherConditionWindy": "तेज़ हवा",
+  "weatherConditionSlightRain": "हल्की बारिश",
+  "weatherConditionRain": "बारिश",
+  "weatherConditionHeavyRain": "भारी बारिश",
+  "weatherConditionThunderstorm": "आंधी-तूफ़ान",
+  "weatherConditionRainThunder": "बारिश और गरज",
+  "weatherConditionLightSnow": "हल्की बर्फ़बारी",
+  "weatherConditionSnow": "बर्फ़बारी",
+  "weatherConditionSleet": "ओलावृष्टि",
+  "weatherConditionHot": "गर्मी",
+  "weatherConditionHotNight": "गर्म रात",
+  "weatherConditionColdWave": "शीत लहर",
+  "weatherConditionUnknown": "अज्ञात",
+  "locationCurrent": "मौजूदा स्थान",
+  "locationSelectClose": "स्थान चयनकर्ता बंद करें",
+  "locationAdded": "{name} जोड़ा गया",
+  "@locationAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "locationFavoriteLimit": "आप अधिकतम 5 स्थान जोड़ सकते हैं।",
+  "locationFavoriteFull": "पसंदीदा सूची भर गई",
+  "locationFavoriteAdd": "पसंदीदा में जोड़ें",
+  "locationSearchTitle": "स्थान खोजें",
+  "locationSearchHint": "उदाहरण: सियोल, बुसान, टोक्यो",
+  "locationSearchEmpty": "कोई परिणाम नहीं मिला",
+  "scoreLabel": "बाहरी गतिविधि स्कोर",
+  "scoreLoading": "बाहरी गतिविधि स्कोर की गणना हो रही है...",
+  "scoreErrorTitle": "स्कोर की गणना नहीं हो सकी",
+  "scoreBreakdownTitle": "कटौतियाँ",
+  "scoreNoDeduction": "बाहरी गतिविधि के लिए स्थिर परिस्थितियाँ, लगभग कोई कटौती कारक नहीं।",
+  "scoreInfo": "बाहरी गतिविधि स्कोर बारिश, हवा, अनुभव तापमान, वायु गुणवत्ता और UV डेटा से गणना की जाती है।",
+  "scoreDeductionRain": "बारिश और बर्फ़",
+  "scoreDeductionWind": "हवा",
+  "scoreDeductionTemp": "तापमान",
+  "scoreDeductionAir": "वायु गुणवत्ता",
+  "scoreDeductionUv": "UV",
+  "scoreDeductionOzone": "ओज़ोन",
+  "scoreAdviceExcellent": "आज बाहरी गतिविधि के लिए अच्छा दिन है।\nहल्के मन से बाहर निकलें और अपना उत्साह बढ़ाएँ।",
+  "scoreAdviceGood": "बाहरी गतिविधि ठीक है, लेकिन हवा और UV एक बार फिर जाँच लें।",
+  "scoreAdviceFair": "बाहरी गतिविधि संभव है, और बेहतर तैयारी इसे आसान बनाएगी।",
+  "scoreAdvicePoor": "आज घर के अंदर की गतिविधियों की योजना बनाना अधिक सुरक्षित है।",
+  "scoreTierExcellent": "उत्कृष्ट",
+  "scoreTierGood": "अच्छा",
+  "scoreTierFair": "ठीक-ठाक",
+  "scoreTierPoor": "सावधानी",
+  "scorePointUnit": "{score} अंक",
+  "@scorePointUnit": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "activityRecommendOutdoor": "बाहरी गतिविधि की सलाह दी जाती है",
+  "activityRecommendLight": "हल्की गतिविधि उपयुक्त है",
+  "activityRecommendCaution": "सावधानी आवश्यक है",
+  "activityRecommendIndoor": "घर के अंदर की गतिविधि की सलाह दी जाती है",
+  "airQualityTitle": "वायु गुणवत्ता",
+  "airQualityIntegrated": "समग्र वायु गुणवत्ता",
+  "airQualityUnknown": "डेटा नहीं",
+  "airGradeGood": "अच्छी",
+  "airGradeModerate": "मध्यम",
+  "airGradeBad": "खराब",
+  "airGradeVeryBad": "बहुत खराब",
+  "pointUnit": "अंक",
+  "fortuneTitle": "आपका दैनिक भविष्यफल",
+  "fortuneNeedProfileTitle": "जन्म जानकारी आवश्यक है",
+  "fortuneNeedProfileMessage": "शांत स्वर में आज का भविष्यफल पाने के लिए अपनी जन्मतिथि और समय दर्ज करें।",
+  "fortuneBirthInputAction": "जन्म जानकारी दर्ज करें",
+  "fortuneHelpTooltip": "भविष्यफल सहायता",
+  "fortuneHelpTitle": "Yegamssi भविष्यफल कैसे पढ़ता है",
+  "fortuneHelpIntro": "Yegamssi म्योंगरी के आधार पर आज के भविष्यफल के प्रवाह को पढ़ता है।",
+  "fortuneHelpMyeongri": "म्योंगरी पूर्वी परंपरा की एक ज्योतिषीय प्रणाली है, जो जन्म तारीख और समय के आधार पर चार स्तंभों और पाँच तत्वों के संतुलन को देखती है। Yegamssi आपकी जन्म तारीख और जन्म समय से आपकी मूल ऊर्जा की गणना करता है, उसे आज के प्रवाह से मिलाता है, और समग्र, धन, प्रेम, काम, स्वास्थ्य और निर्णय से जुड़े संकेत दिखाता है।",
+  "fortuneHelpBirthTime": "अगर आपको जन्म समय नहीं पता है, तो आप दोपहर को आधार मानकर भी उपयोग कर सकते हैं। फिर भी जन्म समय दर्ज करने से व्याख्या अधिक सूक्ष्म हो सकती है।",
+  "fortuneHelpWeather": "Yegamssi केवल भविष्यफल ही नहीं, बल्कि मौसम और गतिविधि स्कोर को भी साथ में देखता है। इसलिए दिन की ऊर्जा अच्छी हो, फिर भी मौसम खराब हो तो बाहर जाने की सिफारिश कम हो सकती है। यदि भविष्यफल और मौसम दोनों स्थिर हों, तो वह कार्य करने के लिए बेहतर दिन माना जा सकता है।",
+  "fortuneHelpReference": "भविष्यफल कोई निश्चित उत्तर नहीं, बल्कि संदर्भ है। आज के प्रवाह को पहले से देखकर संपर्क, बाहर जाना, खर्च, अनुबंध और महत्वपूर्ण निर्णय थोड़ी अधिक सावधानी से चुनने में इसका उपयोग करें।",
+  "fortuneLoadFailedTitle": "भविष्यफल लोड नहीं हो सका",
+  "fortuneLoadFailedMessage": "कृपया बाद में फिर से प्रयास करें।",
+  "fortuneCategoryAnalysis": "श्रेणी विश्लेषण",
+  "fortuneOverall": "समग्र भविष्यफल",
+  "fortuneCategoryMoney": "धन",
+  "fortuneCategoryLove": "प्रेम",
+  "fortuneCategoryWork": "करियर",
+  "fortuneCategoryHealth": "स्वास्थ्य",
+  "fortuneCategoryDecision": "निर्णय",
+  "fortuneLuckyColor": "भाग्यशाली रंग",
+  "fortuneLuckyNumber": "भाग्यशाली अंक",
+  "fortuneOhengBalance": "तत्व संतुलन",
+  "fortuneOhengDescription": "आज की भावनात्मक लय के लिए एक सहायक संकेत।",
+  "fortuneCaptureTooltip": "भविष्यफल कार्ड कैप्चर करें",
+  "fortuneCaptureSaved": "भविष्यफल कार्ड कैप्चर सहेजा गया।",
+  "fortuneCaptureSaveDone": "भविष्यफल कार्ड कैप्चर पूर्ण",
+  "fortuneCaptureFailed": "कैप्चर विफल: {error}",
+  "@fortuneCaptureFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fortuneOpenFolder": "फ़ोल्डर खोलें",
+  "fortuneAnalyzing": "विश्लेषण हो रहा है।",
+  "fortuneToneBase": "मूल",
+  "fortuneToneHumor": "हास्य",
+  "fortuneToneTsundere": "त्सुन्देरे",
+  "fortuneToneCynical": "व्यंग्यात्मक",
+  "fortuneToneEmotional": "भावनात्मक",
+  "fortuneToneHistorical": "ऐतिहासिक",
+  "fortuneToneAi": "AI",
+  "fortuneTimeMorning": "सुबह",
+  "fortuneTimeAfternoon": "दोपहर",
+  "ohengMok": "लकड़ी",
+  "ohengHwa": "अग्नि",
+  "ohengTo": "पृथ्वी",
+  "ohengGeum": "धातु",
+  "ohengSu": "जल",
+  "luckyColorGreen": "हरा",
+  "luckyColorCoral": "मूँगा",
+  "luckyColorGold": "सुनहरा",
+  "luckyColorSilver": "चांदी जैसा",
+  "luckyColorSky": "आसमानी नीला",
+  "luckyColorRed": "लाल",
+  "luckyColorOrange": "नारंगी",
+  "luckyColorYellow": "पीला",
+  "luckyColorTeal": "फ़िरोज़ी",
+  "luckyColorBlue": "नीला",
+  "luckyColorPurple": "बैंगनी",
+  "luckyColorPink": "गुलाबी",
+  "settingsLanguage": "भाषा",
+  "settingsCountry": "क्षेत्र",
+  "countryKorea": "कोरिया",
+  "countryUnitedStates": "संयुक्त राज्य अमेरिका",
+  "countryJapan": "जापान",
+  "countryChina": "चीन",
+  "countryGlobal": "वैश्विक",
+  "settingsTheme": "रूप",
+  "settingsThemeDescription": "डिफ़ॉल्ट थीम कनेक्टेड स्थान के स्थानीय समय के आधार पर सुबह 6:00 से शाम 7:00 तक दिन की थीम और उसके बाहर रात की थीम का उपयोग करती है। दिन और रात की थीम समय से अलग स्थिर रहती हैं।",
+  "settingsThemeAutomatic": "डिफ़ॉल्ट थीम",
+  "settingsThemeAutomaticDescription": "कनेक्टेड स्थान पर 06:00-19:00 तक दिन की थीम और 19:00 से अगले दिन 06:00 से पहले तक रात की थीम अपने आप लागू करती है।",
+  "settingsThemeDay": "दिन की थीम",
+  "settingsThemeDayDescription": "समय की परवाह किए बिना हमेशा उजली दिन की थीम का उपयोग करती है।",
+  "settingsThemeNight": "रात की थीम",
+  "settingsThemeNightDescription": "समय की परवाह किए बिना हमेशा मौजूदा गहरी रात की थीम का उपयोग करती है।",
+  "settingsThemeDark": "गहरा",
+  "settingsThemeLight": "हल्का",
+  "settingsBirthTitle": "जन्मतिथि",
+  "settingsBirthDescription": "भविष्यफल गणना के लिए उपयोग होने वाली जन्मतिथि और समय प्रबंधित करें।",
+  "settingsBirthEmpty": "दर्ज नहीं की गई",
+  "settingsBirthEdit": "संपादित करें",
+  "settingsBirthUnknownHour": "अज्ञात",
+  "onboardingGenderLabel": "लिंग",
+  "genderMale": "पुरुष",
+  "genderFemale": "महिला",
+  "genderUnspecified": "बताना नहीं चाहते",
+  "settingsGenderTitle": "लिंग",
+  "settingsHourUnit": "{hour}:00",
+  "@settingsHourUnit": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFortuneToneTitle": "लहजा",
+  "settingsFortuneToneDescription": "भविष्यफल संदेश {tone} शैली में दिखाए जाते हैं।",
+  "@settingsFortuneToneDescription": {
+    "placeholders": {
+      "tone": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsFortuneToneSheetDescription": "मूल संदेश बने रहते हैं, और चुनी गई शैली को प्राथमिकता दी जाती है।",
+  "settingsAppInfoTitle": "ऐप जानकारी",
+  "settingsAppInfoDescription": "होमपेज, गोपनीयता गाइड, संपर्क ईमेल और लिंक देखें।",
+  "settingsPremiumTitle": "विज्ञापन हटाएं (आजीवन)",
+  "settingsPremiumDescription": "बैनर और इंटरस्टिशियल विज्ञापनों को स्थायी रूप से हटाएं।",
+  "settingsPremiumButton": "विज्ञापन हटाएं",
+  "settingsPremiumButtonPriced": "विज्ञापन हटाएं — {price}",
+  "@settingsPremiumButtonPriced": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPremiumPurchasedTitle": "विज्ञापन हटा दिए गए",
+  "settingsPremiumPurchasedDescription": "आपके समर्थन के लिए धन्यवाद।",
+  "premiumMsgSuccess": "विज्ञापन हटा दिए गए हैं। धन्यवाद!",
+  "premiumMsgCanceled": "खरीदारी रद्द कर दी गई।",
+  "premiumMsgError": "खरीदारी विफल रही। कृपया बाद में पुनः प्रयास करें।",
+  "premiumMsgStoreUnavailable": "स्टोर से कनेक्ट नहीं हो सका। कृपया बाद में पुनः प्रयास करें।",
+  "premiumMsgProductUnavailable": "यह उत्पाद फ़िलहाल उपलब्ध नहीं है।",
+  "onboardingTitle": "Yegamssi",
+  "onboardingSubtitle": "आज का भविष्यफल पाने के लिए\nअपनी जन्मतिथि और समय दर्ज करें।",
+  "onboardingStart": "शुरू करें",
+  "birthDate": "जन्मतिथि",
+  "birthHour": "जन्म समय",
+  "birthHourOptional": "जन्म समय (वैकल्पिक)",
+  "birthSelectDate": "एक तारीख़ चुनें",
+  "birthUnknownNoon": "अज्ञात (दोपहर के समय गणना)",
+  "birthUnknownNoonShort": "अज्ञात (दोपहर)",
+  "dateYmd": "{day}/{month}/{year}",
+  "@dateYmd": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "hourLabel": "{hour}:00",
+  "@hourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "appInfoHomepage": "होमपेज",
+  "appInfoHomepageDescription": "Yegamssi परिचय पेज खोलें।",
+  "appInfoPrivacy": "गोपनीयता नीति",
+  "appInfoPrivacyDescription": "गोपनीयता नीति पेज खोलें।",
+  "appInfoEmail": "संपर्क ईमेल",
+  "appInfoEmailDescription": "पूछताछ के लिए मेल ऐप खोलें।",
+  "appInfoShare": "Yegamssi साझा करें",
+  "appInfoShareDescription": "स्टोर से जुड़ा एक QR कोड दिखाएँ।",
+  "appInfoShareQrDescription": "Yegamssi स्टोर पेज खोलने के लिए QR कोड स्कैन करें।",
+  "appInfoCopyLink": "लिंक कॉपी करें",
+  "appInfoOpenStore": "स्टोर खोलें",
+  "appInfoStoreLinkCopied": "स्टोर लिंक कॉपी हो गया।",
+  "appInfoVersionTitle": "ऐप संस्करण",
+  "appInfoCurrentVersion": "मौजूदा संस्करण {version}+{buildNumber}",
+  "@appInfoCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "appInfoCheckingVersion": "संस्करण जाँचा जा रहा है...",
+  "appInfoDataSource": "डेटा स्रोत",
+  "appInfoKma": "कोरिया मौसम विज्ञान प्रशासन (KMA)",
+  "appInfoKmaDescription": "दक्षिण कोरिया के लिए मौसम और पूर्वानुमान डेटा प्रदान करता है।",
+  "appInfoAirKorea": "AirKorea",
+  "appInfoAirKoreaDescription": "दक्षिण कोरिया के लिए PM10, PM2.5, ओज़ोन और समग्र वायु गुणवत्ता डेटा प्रदान करता है।",
+  "appInfoOpenWeather": "OpenWeather",
+  "appInfoOpenWeatherDescription": "अंतरराष्ट्रीय मौसम, पूर्वानुमान और वायु गुणवत्ता (PM10, PM2.5, O3) डेटा प्रदान करता है।",
+  "appInfoNominatim": "OpenStreetMap Nominatim",
+  "appInfoNominatimDescription": "निर्देशांक को स्थानीय स्थान-नामों में बदलता है। (ODbL लाइसेंस)",
+  "appInfoNoaa": "NOAA / राष्ट्रीय मौसम सेवा",
+  "appInfoNoaaDescription": "संयुक्त राज्य अमेरिका के लिए आधिकारिक मौसम पूर्वानुमान और घंटेवार डेटा प्रदान करता है। (सार्वजनिक डेटा)",
+  "appInfoAirNow": "U.S. EPA AirNow",
+  "appInfoAirNowDescription": "संयुक्त राज्य अमेरिका के लिए रीयल-टाइम वायु गुणवत्ता डेटा (PM2.5, PM10, ओज़ोन) प्रदान करता है।",
+  "appInfoDataSourceNotice": "कुछ जानकारी KOGL एट्रिब्यूशन मानकों का पालन करती है। अंतरराष्ट्रीय डेटा OpenWeather API द्वारा प्रदान किया जाता है।",
+  "widgetScoreLabel": "स्कोर",
+  "widgetFortuneLabel": "भविष्यफल",
+  "widget_description": "Yegamssi दैनिक सारांश विजेट",
+  "widgetInstallTitle": "Yegamssi विजेट जोड़ें",
+  "widgetInstallMessage": "होम स्क्रीन से सीधे मौसम, तापमान, बाहरी गतिविधि स्कोर और भविष्यफल जाँचें।",
+  "widgetInstallAction": "विजेट इंस्टॉल करें",
+  "widgetInstallManual": "होम स्क्रीन को देर तक दबाएँ और Yegamssi विजेट जोड़ें।",
+  "appReviewTitle": "क्या आपके पास एक पल है? 🙏",
+  "appReviewMessage": "Yegamssi का उपयोग करने के लिए बहुत-बहुत धन्यवाद। यह एक व्यक्ति द्वारा बनाया गया छोटा ऐप है, और आपकी 5-स्टार रेटिंग हमारे लिए बहुत मायने रखती है। क्या आप कृपया 5 स्टार रेटिंग दे सकते हैं?",
+  "appReviewAction": "5 स्टार रेटिंग दें",
+  "appReviewLater": "बाद में",
+  "updateNoticeTitle": "अपडेट सूचना",
+  "updateRequiredTitle": "अपडेट आवश्यक",
+  "updateRequiredMessage": "मौजूदा संस्करण {currentVersion} अब समर्थित नहीं है।\nकृपया संस्करण {latestVersion} में अपडेट करें।",
+  "updateAvailableMessage": "संस्करण {latestVersion} तैयार है।\nक्या अभी अपडेट करें?",
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "currentVersion": {
+        "type": "String"
+      },
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAction": "अपडेट करें",
+  "updateNewVersionMessage": "एक नया संस्करण जारी किया गया है।\nक्या अभी अपडेट करें?",
+  "activityRunning": "दौड़ना",
+  "activityCycling": "साइकिलिंग",
+  "activityHiking": "लंबी पैदल यात्रा",
+  "activityWalking": "टहलना",
+  "activityOutdoor": "बाहरी कार्य",
+  "errorNetwork": "कृपया अपना इंटरनेट कनेक्शन जाँचें।",
+  "errorServer": "सर्वर में त्रुटि हुई।",
+  "errorLocation": "स्थान प्राप्त नहीं किया जा सका।",
+  "errorUnknown": "एक अज्ञात त्रुटि हुई।",
+  "settingsBackgroundRefreshTitle": "बैकग्राउंड रिफ्रेश",
+  "settingsBackgroundRefreshDescription": "हर लगभग 30 मिनट में मौसम, वायु गुणवत्ता, आउटडोर स्कोर और विजेट अपडेट होते हैं।",
+  "settingsBackgroundRefreshStatusEnabled": "बैटरी अपवाद सक्षम है",
+  "settingsBackgroundRefreshStatusLimited": "बैटरी अपवाद आवश्यक है",
+  "settingsBackgroundRefreshAction": "सेटिंग खोलें",
+  "batteryOptimizationReminderTitle": "स्थिर बैकग्राउंड रिफ्रेश",
+  "batteryOptimizationReminderMessage": "इस ऐप के लिए बैटरी ऑप्टिमाइज़ेशन बंद करने पर Yegamssi मौसम, वायु गुणवत्ता और विजेट को हर 30 मिनट में अधिक विश्वसनीय रूप से अपडेट कर सकता है।",
+  "batteryOptimizationReminderLater": "बाद में",
+  "batteryOptimizationReminderNever": "दोबारा न दिखाएं",
+  "batteryOptimizationReminderSettings": "सेटिंग खोलें",
+  "settingsSupportTitle": "समर्थन",
+  "settingsSupportDescription": "रिव्यू देकर या एक छोटा विज्ञापन देखकर Yegamssi को समर्थन दें।",
+  "settingsSupportSheetDescription": "एक छोटा सहयोग Yegamssi को बेहतर बनाते रहने में मदद करता है।",
+  "settingsSupportReviewAction": "रिव्यू लिखें",
+  "settingsSupportAdAction": "डेवलपर का समर्थन करने के लिए एक इंटरस्टिशियल विज्ञापन देखें",
+  "settingsSupportReviewFailed": "रिव्यू स्क्रीन खोला नहीं जा सका। कृपया बाद में पुनः प्रयास करें।",
+  "settingsSupportAdThanks": "Yegamssi का समर्थन करने के लिए धन्यवाद।",
+  "settingsSupportPremiumThanks": "आप पहले से ही विज्ञापन हटाकर Yegamssi का समर्थन कर चुके हैं। धन्यवाद।",
+  "settingsSupportAdFailed": "विज्ञापन लोड नहीं हो सका। कृपया बाद में पुनः प्रयास करें।"
+}

@@ -83,6 +83,14 @@ class AppTextStyles {
     letterSpacing: 0.15,
   );
 
+  static const TextStyle pageDateTime = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textSecondary,
+    height: 1.2,
+    letterSpacing: 0,
+  );
+
   static const TextStyle scoreDisplay = TextStyle(
     fontSize: 40,
     fontWeight: FontWeight.w700,

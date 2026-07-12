@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Yegamssi</string>
+    <string name="widget_name">Yegamssi Widget</string>
+    <string name="widget_description">A 5x1 widget for quick weather, fortune, and outdoor scores.</string>
+    <string name="widget_feels_like_label">Feels</string>
+    <string name="widget_outdoor_label">Outdoor</string>
+    <string name="widget_fortune_label">Fortune</string>
+    <string name="capture_open_chooser">Open Yegamssi Capture</string>
+</resources>

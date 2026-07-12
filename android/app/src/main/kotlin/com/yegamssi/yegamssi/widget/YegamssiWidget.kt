@@ -9,31 +9,26 @@ import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.widget.RemoteViews
-import androidx.work.Constraints
-import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.yegamssi.yegamssi.MainActivity
 import com.yegamssi.yegamssi.R
 import com.yegamssi.yegamssi.alarm.AlarmScheduler
-import com.yegamssi.yegamssi.worker.WeatherUpdateWorker
 import es.antonborri.home_widget.HomeWidgetPlugin
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class YegamssiWidget : AppWidgetProvider() {
 
-    /** 첫 위젯 추가 시 — 즉시 날씨 갱신 + 15분 알람 등록 */
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
-        Log.i(TAG, "Widget enabled — enqueuing initial fetch")
-        enqueueWeatherFetch(context)
+        Log.i(TAG, "Widget enabled. Rendering cached snapshot.")
+        refreshAll(context)
         AlarmScheduler.schedule(context)
     }
 
-    /** 마지막 위젯 삭제 시 — 불필요한 알람 해제 */
     override fun onDisabled(context: Context) {
         super.onDisabled(context)
-        Log.i(TAG, "Widget disabled — cancelling alarm")
+        Log.i(TAG, "Widget disabled. Cancelling alarm.")
         AlarmScheduler.cancel(context)
     }
 
@@ -47,31 +42,12 @@ class YegamssiWidget : AppWidgetProvider() {
         }
     }
 
-    private fun enqueueWeatherFetch(context: Context) {
-        try {
-            val request = OneTimeWorkRequestBuilder<WeatherUpdateWorker>()
-                .setConstraints(
-                    Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.CONNECTED)
-                        .build(),
-                )
-                .addTag("widget_init")
-                .build()
-            WorkManager.getInstance(context).enqueueUniqueWork(
-                "widget_init_once",
-                ExistingWorkPolicy.REPLACE,
-                request,
-            )
-            Log.i(TAG, "Initial weather fetch enqueued")
-        } catch (e: Exception) {
-            Log.w(TAG, "Initial weather fetch failed: ${e.message}")
-        }
-    }
-
     companion object {
         private const val TAG = "YegamssiWidget"
         private const val DEFAULT_WEATHER_CONDITION = "unknown"
         private const val DEFAULT_FORTUNE_SYMBOL = "\u27A1"
+        private const val DEFAULT_LANGUAGE = "ko"
+        private const val EMPTY_TEXT = ""
         private const val EMPTY_NUMBER = Int.MIN_VALUE
 
         fun refreshAll(context: Context) {
@@ -106,19 +82,29 @@ class YegamssiWidget : AppWidgetProvider() {
                 DEFAULT_FORTUNE_SYMBOL,
             ) ?: DEFAULT_FORTUNE_SYMBOL
             val score = widgetData?.getInt("widget_score", EMPTY_NUMBER) ?: EMPTY_NUMBER
-
+            val language = widgetData?.getString("widget_language", DEFAULT_LANGUAGE)
+                ?: DEFAULT_LANGUAGE
+            // widget_date/widget_time은 TextClock이 시스템 시계로 자동 갱신 — 값 주입 금지
             views.setImageViewResource(R.id.widget_weather_icon, weatherIconResId(weatherConditionKey))
             views.setTextViewText(R.id.widget_temperature, formatTemperature(temperature))
             views.setTextViewText(
                 R.id.widget_feels_like,
-                "\uCCB4\uAC10 ${formatTemperature(feelsLikeTemperature)}",
+                "${feelsLikeLabel(language)} ${formatTemperature(feelsLikeTemperature)}",
             )
+            views.setTextViewText(R.id.widget_outdoor_label, outdoorLabel(language))
             views.setTextViewText(R.id.widget_fortune_symbol, fortuneSymbol)
+            views.setTextViewText(R.id.widget_fortune_label, fortuneLabel(language))
             views.setTextViewText(R.id.widget_score, formatScore(score))
             views.setTextColor(R.id.widget_fortune_symbol, fortuneColor(fortuneSymbol))
             views.setOnClickPendingIntent(R.id.widget_root, launchAppIntent(context))
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
+            Log.i(
+                TAG,
+                "WidgetRefresh[${logTimestamp()}] weather=$weatherConditionKey " +
+                    "outdoorScore=${formatScore(score)} fortuneArrow=$fortuneSymbol " +
+                    "widgetId=$appWidgetId",
+            )
         }
 
         private fun launchAppIntent(context: Context): PendingIntent {
@@ -136,18 +122,27 @@ class YegamssiWidget : AppWidgetProvider() {
 
         private fun weatherIconResId(condition: String): Int {
             return when (condition) {
-                "sunny_night", "hot_night" -> R.drawable.widget_weather_sunny_night
-                "partlyCloudy_night" -> R.drawable.widget_weather_partly_cloudy_night
+                "sunny_night" -> R.drawable.widget_weather_sunny_night
+                "partlyCloudy_night", "cloudy_night" -> R.drawable.widget_weather_cloudy_night
                 "hazy_night" -> R.drawable.widget_weather_hazy_night
-                "sunny", "hot" -> R.drawable.widget_weather_sunny
+                "hot_night" -> R.drawable.widget_weather_hot_night
+                "sunny" -> R.drawable.widget_weather_sunny
                 "partlyCloudy" -> R.drawable.widget_weather_partly_cloudy
-                "cloudy", "unknown" -> R.drawable.widget_weather_cloudy
+                "cloudy" -> R.drawable.widget_weather_cloudy
                 "hazy" -> R.drawable.widget_weather_hazy
                 "windy" -> R.drawable.widget_weather_windy
-                "slightRain", "rainy", "heavyRain", "sleet" -> R.drawable.widget_weather_rain
-                "thunderstorm", "rainThunder" -> R.drawable.widget_weather_thunderstorm
-                "lightSnow", "snowy", "coldWave" -> R.drawable.widget_weather_snow
-                else -> R.drawable.widget_weather_cloudy
+                "slightRain" -> R.drawable.widget_weather_slight_rain
+                "rainy" -> R.drawable.widget_weather_rain
+                "heavyRain" -> R.drawable.widget_weather_heavy_rain
+                "thunderstorm" -> R.drawable.widget_weather_thunderstorm
+                "rainThunder" -> R.drawable.widget_weather_rain_thunder
+                "lightSnow" -> R.drawable.widget_weather_light_snow
+                "snowy" -> R.drawable.widget_weather_snow
+                "sleet" -> R.drawable.widget_weather_sleet
+                "hot" -> R.drawable.widget_weather_hot
+                "coldWave" -> R.drawable.widget_weather_cold_wave
+                "unknown" -> R.drawable.widget_weather_unknown
+                else -> R.drawable.widget_weather_unknown
             }
         }
 
@@ -157,6 +152,58 @@ class YegamssiWidget : AppWidgetProvider() {
 
         private fun formatScore(score: Int): String {
             return if (score == EMPTY_NUMBER) "--" else score.toString()
+        }
+
+        private fun logTimestamp(): String {
+            return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US).format(Date())
+        }
+
+        private fun feelsLikeLabel(language: String): String {
+            return when (language) {
+                "ja" -> "\u4F53\u611F"
+                "en" -> "Feels"
+                "ro" -> "Resimte"
+                "hi" -> "\u092E\u0939\u0938\u0942\u0938"
+                "zh" -> "\u4F53\u611F"
+                "es" -> "Sensaci\u00F3n"
+                "pt" -> "Sensa\u00E7\u00E3o"
+                "de" -> "Gef\u00FChlt"
+                "fr" -> "Ressenti"
+                "vi" -> "C\u1EA3m gi\u00E1c"
+                else -> "\uCCB4\uAC10"
+            }
+        }
+
+        private fun outdoorLabel(language: String): String {
+            return when (language) {
+                "ja" -> "\u5C4B\u5916"
+                "en" -> "Outdoor"
+                "ro" -> "Exterior"
+                "hi" -> "\u092C\u093E\u0939\u0930"
+                "zh" -> "\u6237\u5916"
+                "es" -> "Exterior"
+                "pt" -> "Exterior"
+                "de" -> "Drau\u00DFen"
+                "fr" -> "Ext\u00E9rieur"
+                "vi" -> "Ngo\u00E0i tr\u1EDDi"
+                else -> "\uC57C\uC678"
+            }
+        }
+
+        private fun fortuneLabel(language: String): String {
+            return when (language) {
+                "ja" -> "\u904B\u52E2"
+                "en" -> "Fortune"
+                "ro" -> "Horoscop"
+                "hi" -> "\u092D\u0935\u093F\u0937\u094D\u092F"
+                "zh" -> "\u8FD0\u52BF"
+                "es" -> "Fortuna"
+                "pt" -> "Fortuna"
+                "de" -> "Gl\u00FCck"
+                "fr" -> "Fortune"
+                "vi" -> "V\u1EADn m\u1EC7nh"
+                else -> "\uC6B4\uC138"
+            }
         }
 
         private fun fortuneColor(symbol: String): Int {

@@ -9,6 +9,7 @@ class AppAssets {
   static const String weatherPartlyCloudyNight =
       '${_weatherBase}night-cloudy.svg';
   static const String weatherCloudy = '${_weatherBase}cloudy.svg';
+  static const String weatherCloudyNight = '${_weatherBase}night-cloudy.svg';
   static const String weatherHazy = '${_weatherBase}hazy.svg';
   static const String weatherHazyNight = '${_weatherBase}night-hazey.svg';
   static const String weatherWindy = '${_weatherBase}windy.svg';

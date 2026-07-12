@@ -67,14 +67,23 @@ class WeatherIconMapper {
                 surfaceTint: Color(0x1A9CB8FF),
                 widgetSymbol: '◐',
               ),
-      WeatherCondition.cloudy => const WeatherVisualSpec(
+      WeatherCondition.cloudy => isNight
+          ? const WeatherVisualSpec(
+              label: 'cloudy night',
+              assetPath: AppAssets.weatherCloudyNight,
+              primaryColor: Color(0xFFE5EFF9),
+              accentColor: Color(0xFF8FA3C6),
+              surfaceTint: Color(0x1A6A7FB0),
+              widgetSymbol: '\u2601\uFE0F',
+            )
+          : const WeatherVisualSpec(
         label: '흐림',
         assetPath: AppAssets.weatherCloudy,
         primaryColor: Color(0xFFF2F5FC),
         accentColor: Color(0xFFB9C7E3),
         surfaceTint: Color(0x1A8FA3C6),
         widgetSymbol: '☁',
-      ),
+            ),
       WeatherCondition.hazy =>
         isNight
             ? const WeatherVisualSpec(

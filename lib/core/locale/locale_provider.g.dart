@@ -23,7 +23,7 @@ final localeNotifierProvider =
 
 typedef _$LocaleNotifier = AutoDisposeNotifier<Locale>;
 String _$appLanguageNotifierHash() =>
-    r'6cd9c468517e9af10c6959a3e23ada36604db923';
+    r'b7226e57d29146ffc0d9f7227d49fd3411ba851a';
 
 /// See also [AppLanguageNotifier].
 @ProviderFor(AppLanguageNotifier)

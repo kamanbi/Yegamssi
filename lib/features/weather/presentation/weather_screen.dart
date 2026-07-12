@@ -2,10 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_text_styles.dart';
 import '../../../core/theme/glassmorphism.dart';
+import '../../../core/widgets/premium_card.dart';
 import '../../../core/utils/date_format_helper.dart';
+import '../../../core/locale/country_code.dart';
+import '../../../core/locale/country_resolver.dart';
+import '../../../core/locale/locale_provider.dart';
 import '../../../core/widgets/header_refresh_button.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../score/domain/entities/activity_score.dart';
+import '../../score/domain/entities/score_tier.dart';
+import '../../score/presentation/score_provider.dart';
+import '../../score/presentation/widgets/score_gauge.dart';
 import '../domain/entities/weather_entity.dart';
 import 'weather_location_provider.dart';
 import 'weather_provider.dart';
@@ -43,15 +52,16 @@ class _LoadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final brightness = Theme.of(context).brightness;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CircularProgressIndicator(color: Colors.white),
+          CircularProgressIndicator(color: AppColors.title(brightness)),
           const SizedBox(height: 16),
           Text(
             l10n.weatherLoading,
-            style: const TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(color: AppColors.body(brightness)),
           ),
         ],
       ),
@@ -67,6 +77,7 @@ class _ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final brightness = Theme.of(context).brightness;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -74,16 +85,16 @@ class _ErrorView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 Icons.cloud_off_rounded,
-                color: Colors.white54,
+                color: AppColors.caption(brightness),
                 size: 48,
               ),
               const SizedBox(height: 12),
               Text(
                 l10n.weatherErrorTitle,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
+                style: TextStyle(
+                  color: AppColors.title(brightness),
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -91,8 +102,8 @@ class _ErrorView extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 message,
-                style: const TextStyle(
-                  color: AppColors.textMuted,
+                style: TextStyle(
+                  color: AppColors.caption(brightness),
                   fontSize: 12,
                 ),
                 textAlign: TextAlign.center,
@@ -105,39 +116,660 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-class _WeatherContent extends StatelessWidget {
+class _WeatherContent extends ConsumerWidget {
   const _WeatherContent({required this.weather});
 
   final WeatherEntity weather;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final selectedLocation = ref
+        .watch(weatherLocationNotifierProvider)
+        .location;
+    final country = ref.watch(resolvedCountryProvider).valueOrNull;
+    final score = selectedLocation == null
+        ? ref.watch(currentScoreProvider).valueOrNull
+        : calculateActivityScore(
+            weather: weather,
+            country: country ?? CountryCode.kr,
+          );
+    final now = DateTime.now();
+    final hourlyForecasts = weather.hourlyForecasts
+        .where(
+          (forecast) =>
+              !forecast.time.isBefore(now.subtract(const Duration(minutes: 5))),
+        )
+        .toList(growable: false);
+    final today = DateTime(now.year, now.month, now.day);
+    final dailyForecasts = weather.dailyForecasts
+        .where((forecast) => !forecast.date.isBefore(today))
+        .toList(growable: false);
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 60),
       children: [
         const _WeatherHeader(),
         const SizedBox(height: 16),
         _MainWeatherCard(weather: weather),
         const SizedBox(height: 10),
         _DetailGrid(weather: weather),
-        if (weather.hourlyForecasts.isNotEmpty) ...[
+        if (hourlyForecasts.isNotEmpty) ...[
           const SizedBox(height: 20),
           _SectionTitle(
             title: AppLocalizations.of(context).weatherHourlyForecast,
             icon: Icons.access_time_rounded,
           ),
           const SizedBox(height: 10),
-          _HourlyForecastCard(forecasts: weather.hourlyForecasts),
+          _HourlyForecastCard(forecasts: hourlyForecasts),
         ],
-        if (weather.dailyForecasts.isNotEmpty) ...[
+        if (dailyForecasts.isNotEmpty) ...[
           const SizedBox(height: 20),
           _SectionTitle(
             title: AppLocalizations.of(context).weatherWeeklyForecast,
             icon: Icons.calendar_today_rounded,
           ),
           const SizedBox(height: 10),
-          _DailyForecastList(forecasts: weather.dailyForecasts),
+          _DailyForecastList(forecasts: dailyForecasts),
         ],
+        if (score != null) ...[
+          const SizedBox(height: 20),
+          _SectionTitle(title: l10n.scoreLabel, icon: Icons.star_rounded),
+          const SizedBox(height: 10),
+          _ScoreSection(
+            score: score,
+            pm10: weather.pm10,
+            pm25: weather.pm25,
+            o3: weather.o3,
+            khaiValue: weather.khaiValue,
+            khaiGrade: weather.khaiGrade,
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _ScoreSection extends StatelessWidget {
+  const _ScoreSection({
+    required this.score,
+    this.pm10,
+    this.pm25,
+    this.o3,
+    this.khaiValue,
+    this.khaiGrade,
+  });
+
+  final ActivityScore score;
+  final double? pm10;
+  final double? pm25;
+  final double? o3;
+  final double? khaiValue;
+  final int? khaiGrade;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final brightness = Theme.of(context).brightness;
+
+    return Column(
+      children: [
+        GlassCard(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Center(
+                child: ScoreGauge(score: score.score, tier: score.tier),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                _adviceFor(l10n, score.tier),
+                style: TextStyle(
+                  color: AppColors.body(brightness),
+                  fontSize: 14,
+                  height: 1.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        if (pm10 != null ||
+            pm25 != null ||
+            o3 != null ||
+            khaiValue != null) ...[
+          const SizedBox(height: 16),
+          _AirQualityCard(
+            pm10: pm10,
+            pm25: pm25,
+            o3: o3,
+            khaiValue: khaiValue,
+            khaiGrade: khaiGrade,
+          ),
+        ],
+        const SizedBox(height: 16),
+        _ScoreSectionLabel(text: l10n.scoreBreakdownTitle),
+        const SizedBox(height: 8),
+        if (score.breakdown.total > 0)
+          GlassCard(
+            child: Column(
+              children: [
+                if (score.breakdown.rainDeduction > 0)
+                  _BreakdownRow(
+                    icon: Icons.umbrella_rounded,
+                    iconColor: const Color(0xFF64B5F6),
+                    label: l10n.scoreDeductionRain,
+                    deduction: score.breakdown.rainDeduction,
+                  ),
+                if (score.breakdown.windDeduction > 0)
+                  _BreakdownRow(
+                    icon: Icons.air_rounded,
+                    iconColor: const Color(0xFF80CBC4),
+                    label: l10n.scoreDeductionWind,
+                    deduction: score.breakdown.windDeduction,
+                  ),
+                if (score.breakdown.heatDeduction > 0)
+                  _BreakdownRow(
+                    icon: Icons.thermostat_rounded,
+                    iconColor: const Color(0xFFEF9A9A),
+                    label: l10n.scoreDeductionTemp,
+                    deduction: score.breakdown.heatDeduction,
+                  ),
+                if (score.breakdown.dustDeduction > 0)
+                  _BreakdownRow(
+                    icon: Icons.masks_rounded,
+                    iconColor: const Color(0xFFCE93D8),
+                    label: l10n.scoreDeductionAir,
+                    deduction: score.breakdown.dustDeduction,
+                  ),
+                if (score.breakdown.uvDeduction > 0)
+                  _BreakdownRow(
+                    icon: Icons.wb_sunny_outlined,
+                    iconColor: const Color(0xFFFFB74D),
+                    label: l10n.scoreDeductionUv,
+                    deduction: score.breakdown.uvDeduction,
+                    isLast: score.breakdown.ozoneDeduction == 0,
+                  ),
+                if (score.breakdown.ozoneDeduction > 0)
+                  _BreakdownRow(
+                    icon: Icons.blur_on_rounded,
+                    iconColor: const Color(0xFFA5D6A7),
+                    label: l10n.scoreDeductionOzone,
+                    deduction: score.breakdown.ozoneDeduction,
+                    isLast: true,
+                  ),
+              ],
+            ),
+          )
+        else
+          GlassCard(
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: AppColors.scoreExcellent,
+                  size: 22,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    l10n.scoreNoDeduction,
+                    style: TextStyle(
+                      color: AppColors.title(brightness),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        const SizedBox(height: 16),
+        GlassCard(
+          backgroundColor: AppColors.glassWhite,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(
+                Icons.info_outline_rounded,
+                color: AppColors.gold,
+                size: 18,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  l10n.scoreInfo,
+                  style: TextStyle(
+                    color: AppColors.caption(brightness),
+                    fontSize: 12,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _adviceFor(AppLocalizations l10n, ScoreTier tier) {
+    return switch (tier) {
+      ScoreTier.excellent => l10n.scoreAdviceExcellent,
+      ScoreTier.good => l10n.scoreAdviceGood,
+      ScoreTier.fair => l10n.scoreAdviceFair,
+      ScoreTier.poor => l10n.scoreAdvicePoor,
+    };
+  }
+}
+
+class _AirQualityCard extends StatelessWidget {
+  const _AirQualityCard({
+    this.pm10,
+    this.pm25,
+    this.o3,
+    this.khaiValue,
+    this.khaiGrade,
+  });
+
+  final double? pm10;
+  final double? pm25;
+  final double? o3;
+  final double? khaiValue;
+  final int? khaiGrade;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final brightness = Theme.of(context).brightness;
+    final integratedGrade = _integratedGrade(l10n);
+    final thresholdLabels = [
+      l10n.airGradeGood,
+      l10n.airGradeModerate,
+      l10n.airGradeBad,
+      l10n.airGradeVeryBad,
+    ];
+    final metrics = <_AirMetric>[
+      if (pm10 != null)
+        _AirMetric(
+          title: l10n.weatherDustPm10,
+          value: pm10!,
+          unit: 'μg/m³',
+          grade: _pm10Grade(l10n, pm10!),
+          maxValue: 200,
+          thresholdLabels: thresholdLabels,
+        ),
+      if (pm25 != null)
+        _AirMetric(
+          title: l10n.weatherDustPm25,
+          value: pm25!,
+          unit: 'μg/m³',
+          grade: _pm25Grade(l10n, pm25!),
+          maxValue: 100,
+          thresholdLabels: thresholdLabels,
+        ),
+      if (o3 != null)
+        _AirMetric(
+          title: l10n.scoreDeductionOzone,
+          value: o3!,
+          unit: 'ppm',
+          grade: _o3Grade(l10n, o3!),
+          maxValue: 0.2,
+          thresholdLabels: thresholdLabels,
+          fractionDigits: 3,
+        ),
+      if (khaiValue != null || khaiGrade != null)
+        _AirMetric(
+          title: l10n.airQualityIntegrated,
+          value: khaiValue ?? _khaiValueFromGrade(khaiGrade),
+          unit: l10n.pointUnit,
+          grade: integratedGrade,
+          maxValue: 250,
+          thresholdLabels: thresholdLabels,
+        ),
+    ];
+
+    return GlassCard(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.masks_rounded,
+                color: Color(0xFFCE93D8),
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                l10n.airQualityTitle,
+                style: TextStyle(
+                  color: AppColors.title(brightness),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: integratedGrade.color.withAlpha(36),
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(
+                    color: integratedGrade.color.withAlpha(100),
+                  ),
+                ),
+                child: Text(
+                  integratedGrade.label,
+                  style: TextStyle(
+                    color: integratedGrade.color,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ...metrics.asMap().entries.map((entry) {
+            final isLast = entry.key == metrics.length - 1;
+            return Padding(
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 14),
+              child: _AirMetricBar(metric: entry.value),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  _AirGrade _integratedGrade(AppLocalizations l10n) {
+    if (khaiGrade != null) {
+      return _khaiGrade(l10n, khaiGrade!);
+    }
+    if (pm25 != null) {
+      return _pm25Grade(l10n, pm25!);
+    }
+    if (pm10 != null) {
+      return _pm10Grade(l10n, pm10!);
+    }
+    if (o3 != null) {
+      return _o3Grade(l10n, o3!);
+    }
+    return _AirGrade(l10n.airQualityUnknown, AppColors.textMuted);
+  }
+
+  double _khaiValueFromGrade(int? grade) {
+    return switch (grade) {
+      1 => 40,
+      2 => 90,
+      3 => 140,
+      4 => 220,
+      _ => 0,
+    };
+  }
+
+  _AirGrade _pm10Grade(AppLocalizations l10n, double value) {
+    if (value <= 30) {
+      return _AirGrade(l10n.airGradeGood, const Color(0xFF4CAF50));
+    }
+    if (value <= 80) {
+      return _AirGrade(l10n.airGradeModerate, const Color(0xFFFFC107));
+    }
+    if (value <= 150) {
+      return _AirGrade(l10n.airGradeBad, const Color(0xFFFF7043));
+    }
+    return _AirGrade(l10n.airGradeVeryBad, const Color(0xFFE53935));
+  }
+
+  _AirGrade _pm25Grade(AppLocalizations l10n, double value) {
+    if (value <= 15) {
+      return _AirGrade(l10n.airGradeGood, const Color(0xFF4CAF50));
+    }
+    if (value <= 35) {
+      return _AirGrade(l10n.airGradeModerate, const Color(0xFFFFC107));
+    }
+    if (value <= 75) {
+      return _AirGrade(l10n.airGradeBad, const Color(0xFFFF7043));
+    }
+    return _AirGrade(l10n.airGradeVeryBad, const Color(0xFFE53935));
+  }
+
+  _AirGrade _o3Grade(AppLocalizations l10n, double value) {
+    if (value <= 0.030) {
+      return _AirGrade(l10n.airGradeGood, const Color(0xFF4CAF50));
+    }
+    if (value <= 0.090) {
+      return _AirGrade(l10n.airGradeModerate, const Color(0xFFFFC107));
+    }
+    if (value <= 0.150) {
+      return _AirGrade(l10n.airGradeBad, const Color(0xFFFF7043));
+    }
+    return _AirGrade(l10n.airGradeVeryBad, const Color(0xFFE53935));
+  }
+
+  _AirGrade _khaiGrade(AppLocalizations l10n, int value) {
+    return switch (value) {
+      1 => _AirGrade(l10n.airGradeGood, const Color(0xFF4CAF50)),
+      2 => _AirGrade(l10n.airGradeModerate, const Color(0xFFFFC107)),
+      3 => _AirGrade(l10n.airGradeBad, const Color(0xFFFF7043)),
+      _ => _AirGrade(l10n.airGradeVeryBad, const Color(0xFFE53935)),
+    };
+  }
+}
+
+class _AirMetric {
+  const _AirMetric({
+    required this.title,
+    required this.value,
+    required this.unit,
+    required this.grade,
+    required this.maxValue,
+    required this.thresholdLabels,
+    this.fractionDigits = 0,
+  });
+
+  final String title;
+  final double value;
+  final String unit;
+  final _AirGrade grade;
+  final double maxValue;
+  final List<String> thresholdLabels;
+  final int fractionDigits;
+}
+
+class _AirMetricBar extends StatelessWidget {
+  const _AirMetricBar({required this.metric});
+
+  final _AirMetric metric;
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final ratio = (metric.value / metric.maxValue).clamp(0.0, 1.0);
+    final valueLabel = metric.fractionDigits == 0
+        ? metric.value.round().toString()
+        : metric.value.toStringAsFixed(metric.fractionDigits);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                metric.title,
+                style: TextStyle(
+                  color: AppColors.title(brightness),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: metric.grade.color.withAlpha(36),
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Text(
+                metric.grade.label,
+                style: TextStyle(
+                  color: metric.grade.color,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '$valueLabel ${metric.unit}',
+              style: TextStyle(
+                color: AppColors.body(brightness),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final markerLeft = (ratio * constraints.maxWidth - 5).clamp(
+              0.0,
+              constraints.maxWidth - 10,
+            );
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Stack(
+                children: [
+                  Container(
+                    height: 12,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFF4CAF50),
+                          Color(0xFFFFC107),
+                          Color(0xFFFF7043),
+                          Color(0xFFE53935),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: markerLeft,
+                    top: 1,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white70),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 4),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: metric.thresholdLabels
+              .map(
+                (label) => Text(
+                  label,
+                  style: TextStyle(
+                    color: AppColors.caption(brightness),
+                    fontSize: 10,
+                  ),
+                ),
+              )
+              .toList(growable: false),
+        ),
+      ],
+    );
+  }
+}
+
+class _AirGrade {
+  const _AirGrade(this.label, this.color);
+
+  final String label;
+  final Color color;
+}
+
+class _ScoreSectionLabel extends StatelessWidget {
+  const _ScoreSectionLabel({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    return Text(
+      text,
+      style: TextStyle(
+        color: AppColors.body(brightness),
+        fontSize: 13,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.3,
+      ),
+    );
+  }
+}
+
+class _BreakdownRow extends StatelessWidget {
+  const _BreakdownRow({
+    required this.icon,
+    required this.iconColor,
+    required this.label,
+    required this.deduction,
+    this.isLast = false,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final String label;
+  final int deduction;
+  final bool isLast;
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              Icon(icon, color: iconColor, size: 20),
+              const SizedBox(width: 10),
+              Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.title(brightness),
+                  fontSize: 14,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '-$deduction',
+                style: const TextStyle(
+                  color: AppColors.scorePoor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (!isLast) Divider(color: AppColors.border(brightness), height: 1),
       ],
     );
   }
@@ -149,8 +781,10 @@ class _WeatherHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locationState = ref.watch(weatherLocationNotifierProvider);
+    final language = ref.watch(appLanguageNotifierProvider);
     final countdown = locationState.countdown;
     final isLocationSelected = locationState.location != null;
+    final brightness = Theme.of(context).brightness;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,10 +797,12 @@ class _WeatherHeader extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppDateFormat.format(DateTime.now()),
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 13,
+                    AppDateFormat.formatWithTime(
+                      DateTime.now(),
+                      language: language,
+                    ),
+                    style: AppTextStyles.pageDateTime.copyWith(
+                      color: AppColors.body(brightness),
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -194,19 +830,23 @@ class _CountdownBanner extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final brightness = Theme.of(context).brightness;
     return GestureDetector(
       onTap: () => ref.read(weatherLocationNotifierProvider.notifier).reset(),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.schedule_rounded,
             size: 13,
-            color: AppColors.textMuted,
+            color: AppColors.caption(brightness),
           ),
           const SizedBox(width: 4),
           Text(
             l10n.weatherReturnCurrentLocation(seconds),
-            style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+            style: TextStyle(
+              color: AppColors.caption(brightness),
+              fontSize: 12,
+            ),
           ),
         ],
       ),
@@ -222,7 +862,8 @@ class _MainWeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return GlassCard(
+    final brightness = Theme.of(context).brightness;
+    return HeroGlassCard(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,17 +871,17 @@ class _MainWeatherCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on_rounded,
-                color: AppColors.textMuted,
+                color: AppColors.caption(brightness),
                 size: 14,
               ),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   weather.locationName,
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
+                  style: TextStyle(
+                    color: AppColors.caption(brightness),
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                     height: 1.35,
@@ -263,19 +904,19 @@ class _MainWeatherCard extends StatelessWidget {
                       children: [
                         Text(
                           '${weather.tempCelsius.round()}',
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: AppColors.title(brightness),
                             fontSize: 76,
                             fontWeight: FontWeight.w200,
                             height: 1,
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
                           child: Text(
-                            '°C',
+                            '\u2103',
                             style: TextStyle(
-                              color: AppColors.textSecondary,
+                              color: AppColors.body(brightness),
                               fontSize: 28,
                               fontWeight: FontWeight.w300,
                             ),
@@ -288,8 +929,8 @@ class _MainWeatherCard extends StatelessWidget {
                       l10n.weatherFeelsLike(
                         weather.feelsLikeCelsius.round().toString(),
                       ),
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
+                      style: TextStyle(
+                        color: AppColors.body(brightness),
                         fontSize: 14,
                       ),
                     ),
@@ -299,8 +940,8 @@ class _MainWeatherCard extends StatelessWidget {
                         l10n.weatherPrecipitationAmount(
                           _formatPrecipitation(weather.precipitationAmountMm),
                         ),
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
+                        style: TextStyle(
+                          color: AppColors.body(brightness),
                           fontSize: 13,
                         ),
                       ),
@@ -312,7 +953,7 @@ class _MainWeatherCard extends StatelessWidget {
                 children: [
                   PremiumWeatherIcon(
                     condition: weather.condition,
-                    isNight: _isNightByHour(DateTime.now()),
+                    isNight: weather.isNight,
                     size: 86,
                   ),
                   const SizedBox(height: 8),
@@ -320,13 +961,10 @@ class _MainWeatherCard extends StatelessWidget {
                     WeatherIconMapper.localizedLabelFor(
                       context,
                       weather.condition,
-                      isNight: _isNightByHour(DateTime.now()),
+                      isNight: weather.isNight,
                     ),
                     style: TextStyle(
-                      color: WeatherIconMapper.colorFor(
-                        weather.condition,
-                        isNight: _isNightByHour(DateTime.now()),
-                      ),
+                      color: AppColors.body(brightness),
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -442,14 +1080,15 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     return Row(
       children: [
-        Icon(icon, color: AppColors.textSecondary, size: 16),
+        Icon(icon, color: AppColors.body(brightness), size: 16),
         const SizedBox(width: 6),
         Text(
           title,
-          style: const TextStyle(
-            color: AppColors.textSecondary,
+          style: TextStyle(
+            color: AppColors.body(brightness),
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -468,10 +1107,11 @@ class _HourlyForecastCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final limited = forecasts.take(24).toList();
     final l10n = AppLocalizations.of(context);
+    final brightness = Theme.of(context).brightness;
     return GlassCard(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: SizedBox(
-        height: 108,
+        height: 126,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: limited.length,
@@ -486,8 +1126,8 @@ class _HourlyForecastCard extends StatelessWidget {
                 children: [
                   Text(
                     '${forecast.time.month}/${forecast.time.day}',
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
+                    style: TextStyle(
+                      color: AppColors.caption(brightness),
                       fontSize: 10,
                     ),
                   ),
@@ -495,8 +1135,8 @@ class _HourlyForecastCard extends StatelessWidget {
                     l10n.weatherHour(
                       forecast.time.hour.toString().padLeft(2, '0'),
                     ),
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
+                    style: TextStyle(
+                      color: AppColors.body(brightness),
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                     ),
@@ -507,13 +1147,26 @@ class _HourlyForecastCard extends StatelessWidget {
                     size: 34,
                   ),
                   Text(
-                    '${forecast.tempCelsius.round()}°',
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
+                    '${forecast.tempCelsius.round()}\u2103',
+                    style: TextStyle(
+                      color: AppColors.title(brightness),
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  if (forecast.precipitationAmountMm case final amount?
+                      when amount > 0)
+                    Text(
+                      _formatPrecipitationAmount(amount),
+                      maxLines: 1,
+                      style: const TextStyle(
+                        color: Color(0xFF64B5F6),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  else
+                    const SizedBox(height: 12),
                 ],
               ),
             );
@@ -522,19 +1175,33 @@ class _HourlyForecastCard extends StatelessWidget {
       ),
     );
   }
+
+  String _formatPrecipitationAmount(double amount) {
+    final value = amount == amount.roundToDouble()
+        ? amount.toStringAsFixed(0)
+        : amount.toStringAsFixed(1);
+    return '$value mm';
+  }
 }
 
-class _DailyForecastList extends StatelessWidget {
+class _DailyForecastList extends ConsumerWidget {
   const _DailyForecastList({required this.forecasts});
+
+  static const _probabilityOnlyDisplayThreshold = 40;
 
   final List<DailyForecast> forecasts;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final language = ref.watch(appLanguageNotifierProvider);
+    final brightness = Theme.of(context).brightness;
     return Column(
       children: forecasts.map((forecast) {
-        final weekday = AppDateFormat.weekdayLabel(forecast.date);
+        final weekday = AppDateFormat.weekdayLabel(
+          forecast.date,
+          language: language,
+        );
         final isToday = _isToday(forecast.date);
         final precipitationSummary = _dailyPrecipitationSummary(forecast);
 
@@ -555,7 +1222,7 @@ class _DailyForecastList extends StatelessWidget {
                         style: TextStyle(
                           color: isToday
                               ? AppColors.gold
-                              : AppColors.textSecondary,
+                              : AppColors.body(brightness),
                           fontSize: 13,
                           fontWeight: isToday
                               ? FontWeight.w700
@@ -580,23 +1247,23 @@ class _DailyForecastList extends StatelessWidget {
                     ],
                     const Spacer(),
                     Text(
-                      '${forecast.tempMin.round()}°',
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
+                      '${forecast.tempMin.round()}\u2103',
+                      style: TextStyle(
+                        color: AppColors.caption(brightness),
                         fontSize: 13,
                       ),
                     ),
-                    const Text(
+                    Text(
                       ' ~ ',
                       style: TextStyle(
-                        color: AppColors.textMuted,
+                        color: AppColors.caption(brightness),
                         fontSize: 12,
                       ),
                     ),
                     Text(
-                      '${forecast.tempMax.round()}°',
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      '${forecast.tempMax.round()}\u2103',
+                      style: TextStyle(
+                        color: AppColors.title(brightness),
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
@@ -641,13 +1308,15 @@ class _DailyForecastList extends StatelessWidget {
   String? _dailyPrecipitationSummary(DailyForecast forecast) {
     final probability = (forecast.precipProbability * 100).round();
     final amount = forecast.expectedPrecipitationMm;
-    if (probability <= 0 && (amount == null || amount <= 0)) {
+    final hasExpectedAmount = amount != null && amount > 0;
+    if (hasExpectedAmount) {
+      final amountLabel = _formatPrecipitation(amount);
+      return probability > 0 ? '$probability% / $amountLabel' : amountLabel;
+    }
+    if (probability < _probabilityOnlyDisplayThreshold) {
       return null;
     }
-    if (amount == null || amount <= 0) {
-      return '$probability%';
-    }
-    return '$probability% · ${_formatPrecipitation(amount)}';
+    return '$probability%';
   }
 }
 
@@ -664,12 +1333,20 @@ class _DayPartForecastChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(18),
+        color: isDark
+            ? Colors.white.withAlpha(18)
+            : AppColors.mutedSurface(brightness).withAlpha(180),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withAlpha(20)),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withAlpha(20)
+              : AppColors.border(brightness),
+        ),
       ),
       child: Row(
         children: [
@@ -677,8 +1354,8 @@ class _DayPartForecastChip extends StatelessWidget {
             width: 24,
             child: Text(
               label,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
+              style: TextStyle(
+                color: AppColors.body(brightness),
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
               ),
@@ -688,9 +1365,9 @@ class _DayPartForecastChip extends StatelessWidget {
           PremiumWeatherIcon(condition: condition, size: 22),
           const Spacer(),
           Text(
-            '${temperature.round()}°',
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            '${temperature.round()}\u2103',
+            style: TextStyle(
+              color: AppColors.title(brightness),
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
@@ -716,6 +1393,7 @@ class _DetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     return GlassCard(
       padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
       child: Row(
@@ -727,8 +1405,8 @@ class _DetailCard extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: AppColors.textMuted,
+              style: TextStyle(
+                color: AppColors.caption(brightness),
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -739,8 +1417,8 @@ class _DetailCard extends StatelessWidget {
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: AppColors.title(brightness),
               fontSize: 14,
               fontWeight: FontWeight.w700,
             ),
@@ -752,7 +1430,7 @@ class _DetailCard extends StatelessWidget {
 }
 
 bool _isNightByHour(DateTime time) {
-  return time.hour < 6 || time.hour >= 20;
+  return time.hour < 6 || time.hour >= 19;
 }
 
 String _formatPrecipitation(double? amountMm) {

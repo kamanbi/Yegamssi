@@ -21,6 +21,90 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tabScore => '점수';
 
   @override
+  String get tabMonthlyYegamssi => '월간예감';
+
+  @override
+  String get monthlyYegamssiTitle => '월간 예감씨';
+
+  @override
+  String get monthlyYegamssiSubtitle => '이번 달 카테고리별 좋은 날과 조심할 날을 확인하세요.';
+
+  @override
+  String get monthlyGoodDaysLabel => '좋은 날';
+
+  @override
+  String get monthlyCautionDaysLabel => '조심할 날';
+
+  @override
+  String get monthlyGeneratingMessage => '이번 달 월간 예감씨를 준비 중입니다.';
+
+  @override
+  String get monthlyFailedMessage => '이번 달 월간 예감씨를 준비하지 못했습니다. 앱을 다시 실행해주세요.';
+
+  @override
+  String get monthlyDisclaimer =>
+      '월간 예감씨는 명리학 흐름을 바탕으로 만든 참고용 콘텐츠입니다. 중요한 결정은 현실적인 조건과 함께 판단해주세요.';
+
+  @override
+  String get monthlySummaryEarly => '이번 달은 초반 흐름이 좋습니다. 미리 움직이는 편이 유리합니다.';
+
+  @override
+  String get monthlySummaryMid =>
+      '이번 달은 중순 이후 흐름이 좋아집니다. 서두르기보다 때를 살피는 편이 좋습니다.';
+
+  @override
+  String get monthlySummaryLate => '이번 달은 후반에 힘을 내면 좋은 결과가 있습니다.';
+
+  @override
+  String get monthlyCategoryLove => '연애';
+
+  @override
+  String get monthlyCategoryLoveMessage =>
+      '좋은 날에는 먼저 마음을 표현하기 좋습니다. 조심할 날에는 차분하게 대화하는 편이 좋습니다.';
+
+  @override
+  String get monthlyCategoryWork => '일';
+
+  @override
+  String get monthlyCategoryWorkMessage =>
+      '좋은 날에는 새로운 일을 시작하기 좋습니다. 조심할 날에는 무리하지 않고 마무리에 집중하는 편이 좋습니다.';
+
+  @override
+  String get monthlyCategoryMoney => '돈';
+
+  @override
+  String get monthlyCategoryMoneyMessage =>
+      '좋은 날에는 재정을 정리하기 좋습니다. 조심할 날에는 큰 지출 전 한 번 더 확인하는 편이 좋습니다.';
+
+  @override
+  String get monthlyCategoryRelationship => '관계';
+
+  @override
+  String get monthlyCategoryRelationshipMessage =>
+      '좋은 날에는 사람들과 대화하기 좋습니다. 조심할 날에는 오해가 생기지 않게 말을 아끼는 편이 좋습니다.';
+
+  @override
+  String get monthlyCategoryHealth => '건강';
+
+  @override
+  String get monthlyCategoryHealthMessage =>
+      '좋은 날에는 몸을 움직이기 좋습니다. 조심할 날에는 무리하지 않고 휴식을 챙기는 편이 좋습니다.';
+
+  @override
+  String get monthlyCategoryDecision => '결정';
+
+  @override
+  String get monthlyCategoryDecisionMessage =>
+      '좋은 날에는 중요한 판단을 내리기 좋습니다. 조심할 날에는 결정을 미루고 더 살펴보는 편이 좋습니다.';
+
+  @override
+  String get monthlyCategoryTravel => '이동';
+
+  @override
+  String get monthlyCategoryTravelMessage =>
+      '좋은 날에는 외출이나 이동을 계획하기 좋습니다. 조심할 날에는 일정을 여유 있게 잡는 편이 좋습니다.';
+
+  @override
   String get tabFortune => '운세';
 
   @override
@@ -109,7 +193,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String weatherFeelsLikeShort(String temp) {
-    return '체감 $temp°';
+    return '체감 $temp℃';
   }
 
   @override
@@ -402,6 +486,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fortuneBirthInputAction => '출생 정보 입력하기';
 
   @override
+  String get fortuneHelpTooltip => '운세 도움말';
+
+  @override
+  String get fortuneHelpTitle => '예감씨 운세 안내';
+
+  @override
+  String get fortuneHelpIntro => '예감씨는 명리학을 기반으로 오늘의 운세 흐름을 읽어줍니다.';
+
+  @override
+  String get fortuneHelpMyeongri =>
+      '명리학은 태어난 날짜와 시간을 바탕으로 사주팔자와 오행의 균형을 살펴보는 동양의 전통 운세 체계입니다. 예감씨는 사용자의 생년월일과 출생시간을 이용해 개인의 기본 기운을 계산하고, 오늘 날짜의 흐름과 비교해 종합운, 재물운, 연애운, 직장운, 건강운, 결정운을 안내합니다.';
+
+  @override
+  String get fortuneHelpBirthTime =>
+      '출생시간을 모른다면 정오 기준으로도 이용할 수 있습니다. 다만 출생시간을 입력하면 더 세밀한 해석에 도움이 됩니다.';
+
+  @override
+  String get fortuneHelpWeather =>
+      '예감씨는 운세뿐 아니라 날씨와 활동 점수도 함께 반영합니다. 그래서 오늘의 기운이 좋아도 날씨가 좋지 않다면 외출 추천도가 낮아질 수 있고, 반대로 운세와 날씨가 함께 안정적이라면 행동하기 좋은 날로 볼 수 있습니다.';
+
+  @override
+  String get fortuneHelpReference =>
+      '운세는 정답이 아니라 참고입니다. 오늘의 흐름을 미리 살펴보고, 연락, 외출, 소비, 계약, 중요한 결정 등을 조금 더 신중하게 선택하는 데 도움을 드립니다.';
+
+  @override
   String get fortuneLoadFailedTitle => '운세를 불러오지 못했습니다';
 
   @override
@@ -518,13 +627,73 @@ class AppLocalizationsKo extends AppLocalizations {
   String get luckyColorSky => '하늘색';
 
   @override
+  String get luckyColorRed => '빨강';
+
+  @override
+  String get luckyColorOrange => '주황';
+
+  @override
+  String get luckyColorYellow => '노랑';
+
+  @override
+  String get luckyColorTeal => '청록';
+
+  @override
+  String get luckyColorBlue => '파랑';
+
+  @override
+  String get luckyColorPurple => '보라';
+
+  @override
+  String get luckyColorPink => '분홍';
+
+  @override
   String get settingsLanguage => '언어';
 
   @override
   String get settingsCountry => '지역';
 
   @override
+  String get countryKorea => '한국';
+
+  @override
+  String get countryUnitedStates => '미국';
+
+  @override
+  String get countryJapan => '일본';
+
+  @override
+  String get countryChina => '중국';
+
+  @override
+  String get countryGlobal => '글로벌';
+
+  @override
   String get settingsTheme => '테마';
+
+  @override
+  String get settingsThemeDescription =>
+      '기본테마는 접속 위치의 현지 시간 기준 오전 6시부터 오후 7시까지 주간 테마를 사용하고, 그 외 시간에는 야간 테마를 사용합니다. 주간테마와 야간테마는 시간과 관계없이 고정됩니다.';
+
+  @override
+  String get settingsThemeAutomatic => '기본테마';
+
+  @override
+  String get settingsThemeAutomaticDescription =>
+      '접속 위치의 현지 시간 기준 06:00-19:00은 주간 테마, 19:00 이후부터 다음날 06:00 전까지는 야간 테마를 자동으로 적용합니다.';
+
+  @override
+  String get settingsThemeDay => '주간테마';
+
+  @override
+  String get settingsThemeDayDescription => '시간과 관계없이 밝은 주간 테마를 항상 사용합니다.';
+
+  @override
+  String get settingsThemeNight => '야간테마';
+
+  @override
+  String get settingsThemeNightDescription =>
+      '시간과 관계없이 기존 어두운 야간 테마를 항상 사용합니다.';
 
   @override
   String get settingsThemeDark => '다크';
@@ -542,7 +711,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settingsBirthEmpty => '입력하지 않음';
 
   @override
+  String get settingsBirthEdit => '수정';
+
+  @override
   String get settingsBirthUnknownHour => '미상';
+
+  @override
+  String get onboardingGenderLabel => '성별';
+
+  @override
+  String get genderMale => '남성';
+
+  @override
+  String get genderFemale => '여성';
+
+  @override
+  String get genderUnspecified => '선택 안 함';
+
+  @override
+  String get settingsGenderTitle => '성별';
 
   @override
   String settingsHourUnit(int hour) {
@@ -567,6 +754,41 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get settingsAppInfoDescription =>
       '홈페이지, 개인정보 처리 안내, 문의 이메일, 링크를 확인합니다.';
+
+  @override
+  String get settingsPremiumTitle => '광고 제거 (평생 이용)';
+
+  @override
+  String get settingsPremiumDescription => '배너 광고 및 전면 광고를 영구적으로 제거합니다.';
+
+  @override
+  String get settingsPremiumButton => '광고 제거 구매';
+
+  @override
+  String settingsPremiumButtonPriced(String price) {
+    return '광고 제거 구매 — $price';
+  }
+
+  @override
+  String get settingsPremiumPurchasedTitle => '광고 제거 구매 완료';
+
+  @override
+  String get settingsPremiumPurchasedDescription => '감사합니다.';
+
+  @override
+  String get premiumMsgSuccess => '광고가 제거되었습니다. 감사합니다!';
+
+  @override
+  String get premiumMsgCanceled => '구매를 취소했습니다.';
+
+  @override
+  String get premiumMsgError => '구매에 실패했습니다. 잠시 후 다시 시도해주세요.';
+
+  @override
+  String get premiumMsgStoreUnavailable => '스토어에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.';
+
+  @override
+  String get premiumMsgProductUnavailable => '현재 이용할 수 없는 상품입니다.';
 
   @override
   String get onboardingTitle => '예감씨';
@@ -656,19 +878,49 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appInfoDataSource => '데이터 출처';
 
   @override
-  String get appInfoKma => '기상청';
+  String get appInfoKma => '기상청 (KMA)';
 
   @override
-  String get appInfoKmaDescription => '날씨와 예보 데이터를 제공합니다.';
+  String get appInfoKmaDescription => '한국 날씨·예보 데이터를 제공합니다. (국내 전용)';
 
   @override
-  String get appInfoAirKorea => '에어코리아';
+  String get appInfoAirKorea => '에어코리아 (AirKorea)';
 
   @override
-  String get appInfoAirKoreaDescription => '미세먼지, 초미세먼지, 오존, 통합 대기질 정보를 제공합니다.';
+  String get appInfoAirKoreaDescription =>
+      '미세먼지, 초미세먼지, 오존, 통합 대기질 정보를 제공합니다. (국내 전용)';
 
   @override
-  String get appInfoDataSourceNotice => '일부 정보는 공공데이터포털과 공공누리 출처 표시 기준을 따릅니다.';
+  String get appInfoOpenWeather => 'OpenWeather';
+
+  @override
+  String get appInfoOpenWeatherDescription =>
+      '해외 날씨·예보·대기질(PM10·PM2.5·O3) 데이터를 제공합니다.';
+
+  @override
+  String get appInfoNominatim => 'OpenStreetMap Nominatim';
+
+  @override
+  String get appInfoNominatimDescription =>
+      '좌표 기반 지역명을 선택 언어로 변환합니다. (ODbL 라이선스)';
+
+  @override
+  String get appInfoNoaa => 'NOAA / 미국 국립기상청';
+
+  @override
+  String get appInfoNoaaDescription =>
+      '미국 전역의 공식 날씨 예보 및 시간별 데이터를 제공합니다. (공개 데이터)';
+
+  @override
+  String get appInfoAirNow => '미국 EPA AirNow';
+
+  @override
+  String get appInfoAirNowDescription =>
+      '미국 전역의 실시간 대기질 데이터(PM2.5, PM10, 오존)를 제공합니다.';
+
+  @override
+  String get appInfoDataSourceNotice =>
+      '일부 정보는 공공데이터포털과 공공누리 출처 표시 기준을 따릅니다. 해외 데이터는 OpenWeather API를 이용합니다.';
 
   @override
   String get widgetScoreLabel => '점수';
@@ -690,6 +942,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get widgetInstallManual => '홈 화면을 길게 눌러 예감씨 위젯을 추가해 주세요.';
+
+  @override
+  String get appReviewTitle => '잠시 시간 괜찮으실까요? 🙏';
+
+  @override
+  String get appReviewMessage =>
+      '예감씨를 사용해 주셔서 진심으로 감사합니다. 작은 1인 개발 앱이라 사용자님의 별점 다섯 개가 정말 큰 힘이 됩니다. 괜찮으시다면 따뜻한 별 다섯 개를 남겨주실 수 있을까요?';
+
+  @override
+  String get appReviewAction => '별 5개 남기기';
+
+  @override
+  String get appReviewLater => '다음에 할게요';
 
   @override
   String get updateNoticeTitle => '업데이트 안내';
@@ -739,4 +1004,63 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get errorUnknown => '알 수 없는 오류가 발생했습니다.';
+
+  @override
+  String get settingsBackgroundRefreshTitle => '백그라운드 갱신';
+
+  @override
+  String get settingsBackgroundRefreshDescription =>
+      '날씨, 대기질, 야외점수, 위젯 데이터를 약 30분마다 갱신합니다. 배터리 최적화 예외를 허용하면 더 안정적으로 동작합니다.';
+
+  @override
+  String get settingsBackgroundRefreshStatusEnabled => '배터리 예외 적용됨';
+
+  @override
+  String get settingsBackgroundRefreshStatusLimited => '배터리 예외 필요';
+
+  @override
+  String get settingsBackgroundRefreshAction => '설정 열기';
+
+  @override
+  String get batteryOptimizationReminderTitle => '백그라운드 갱신을 안정화하세요';
+
+  @override
+  String get batteryOptimizationReminderMessage =>
+      '예감씨가 날씨, 대기질, 위젯을 30분마다 더 안정적으로 갱신하려면 이 앱의 배터리 최적화 예외를 허용해야 합니다.';
+
+  @override
+  String get batteryOptimizationReminderLater => '나중에';
+
+  @override
+  String get batteryOptimizationReminderNever => '다시 보지 않음';
+
+  @override
+  String get batteryOptimizationReminderSettings => '설정 열기';
+
+  @override
+  String get settingsSupportTitle => '응원하기';
+
+  @override
+  String get settingsSupportDescription => '리뷰와 광고 시청으로 예감씨 개발을 응원합니다.';
+
+  @override
+  String get settingsSupportSheetDescription => '작은 응원이 예감씨를 계속 다듬는 데 도움이 됩니다.';
+
+  @override
+  String get settingsSupportReviewAction => '리뷰하기';
+
+  @override
+  String get settingsSupportAdAction => '개발자 응원하기 위해 전면광고를 본다';
+
+  @override
+  String get settingsSupportReviewFailed => '리뷰 화면을 열지 못했습니다. 잠시 후 다시 시도해 주세요.';
+
+  @override
+  String get settingsSupportAdThanks => '응원해 주셔서 감사합니다.';
+
+  @override
+  String get settingsSupportPremiumThanks => '이미 광고 제거로 응원해 주셨어요. 감사합니다.';
+
+  @override
+  String get settingsSupportAdFailed => '광고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.';
 }

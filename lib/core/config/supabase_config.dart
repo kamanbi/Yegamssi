@@ -6,8 +6,8 @@ class SupabaseConfig {
   SupabaseConfig._();
 
   static Future<void> initialize() async {
-    final url = AppConfig.supabaseUrl;
-    final anonKey = AppConfig.supabaseAnonKey;
+    const url = AppConfig.supabaseUrl;
+    const anonKey = AppConfig.supabaseAnonKey;
 
     // .env에 값이 없으면 초기화 건너뜀 (Phase 1 개발 시)
     if (url.isEmpty || anonKey.isEmpty) return;

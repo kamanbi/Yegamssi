@@ -1,4 +1,4 @@
-﻿code,type,text,weight
+code,type,text,weight
 overall_A,intro,"종합운은 꽤 좋다. 이런 날은 드물다, 써먹는 편이 낫다.",1
 overall_A,intro,하루 흐름은 평소보다 덜 삐걱거린다. 이 정도면 쓸 만하다.,1
 overall_A,effect,오늘 하루에서 기대보다 나은 결과가 나온다. 인생이 바뀌진 않아도 도움은 된다.,1
@@ -331,12 +331,12 @@ overall_B_to_ex_wood,intro,종합운은 안정감이 버텨줘서 생각보다 �
 overall_B_to_ex_wood,effect,오늘 하루는 예상보다 덜 꼬인다. 속도는 느려도 크게 흔들리지는 않는다.,1
 overall_B_to_ex_wood,action,중요한 일정부터 정리해라. 지금 하는 편이 나중의 너에게 덜 미안하다.,1
 overall_B_to_ex_wood,state,안정감이 강해 움직임이 느려질 수 있다. 변화가 많아 일이 쉽게 퍼질 수 있다. 큰 문제는 아니지만 확인은 필요하다.,1
-overall_B1,intro,종합운은 중간은 넘는다. 방심하지 않으면 체면은 지킨다.,1
-overall_B1,intro,하루 흐름은 나쁘지 않지만 믿고 맡길 정도는 아니다.,1
-overall_B1,effect,오늘 하루는 확인한 만큼만 안전하다. 대충 넘기면 대충 돌아온다.,1
-overall_B1,effect,큰 문제는 적지만 디테일이 귀찮게 굴 수 있다.,1
-overall_B1,action,일정을 단순하게 줄여라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
-overall_B1,action,평소 루틴부터 지켜라. 큰 의미를 붙이지 말고 현실적으로 처리해라.,1
+overall_B1,intro,종합운은 중간 이상이다. 기본만 지키면 꽤 안정적으로 간다.,1
+overall_B1,intro,하루 흐름은 나쁘지 않다. 과신만 빼면 쓸 만한 흐름이다.,1
+overall_B1,effect,오늘 하루은 확인할수록 안정된다. 기본 점검만 해도 충분히 도움이 된다.,1
+overall_B1,effect,큰 문제는 적다. 작은 리듬만 맞추면 하루가 훨씬 편해진다.,1
+overall_B1,action,일정을 단순하게 정리해라. 한 번 더 보면 더 편하게 움직일 수 있다.,1
+overall_B1,action,평소 루틴부터 지켜라. 현실적으로 움직이면 충분히 괜찮다.,1
 overall_B1_geum_df_earth,intro,종합운은 정리력이 애매하다. 확인 없이 밀기엔 좀 귀찮다.,1
 overall_B1_geum_df_earth,effect,오늘 하루는 확인한 만큼만 안전하다. 기준은 보이지만 말이 딱딱해질 수 있다.,1
 overall_B1_geum_df_earth,action,평소 루틴부터 지켜라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
@@ -1327,12 +1327,12 @@ decision_B_to_ex_wood,intro,결정운은 안정감이 버텨줘서 생각보다 
 decision_B_to_ex_wood,effect,선택은 예상보다 덜 꼬인다. 속도는 느려도 크게 흔들리지는 않는다.,1
 decision_B_to_ex_wood,action,오래 붙잡던 문제를 정리해라. 지금 하는 편이 나중의 너에게 덜 미안하다.,1
 decision_B_to_ex_wood,state,안정감이 강해 움직임이 느려질 수 있다. 변화가 많아 일이 쉽게 퍼질 수 있다. 큰 문제는 아니지만 확인은 필요하다.,1
-decision_B1,intro,결정운은 중간은 넘는다. 방심하지 않으면 체면은 지킨다.,1
-decision_B1,intro,판단은 나쁘지 않지만 믿고 맡길 정도는 아니다.,1
-decision_B1,effect,선택은 확인한 만큼만 안전하다. 대충 넘기면 대충 돌아온다.,1
-decision_B1,effect,큰 문제는 적지만 디테일이 귀찮게 굴 수 있다.,1
-decision_B1,action,기준부터 다시 세워라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
-decision_B1,action,선택지를 줄여라. 큰 의미를 붙이지 말고 현실적으로 처리해라.,1
+decision_B1,intro,결정운은 중간 이상이다. 기본만 지키면 꽤 안정적으로 간다.,1
+decision_B1,intro,판단은 나쁘지 않다. 과신만 빼면 쓸 만한 흐름이다.,1
+decision_B1,effect,선택은 확인할수록 안정된다. 기본 점검만 해도 충분히 도움이 된다.,1
+decision_B1,effect,큰 문제는 적다. 작은 리듬만 맞추면 하루가 훨씬 편해진다.,1
+decision_B1,action,기준부터 다시 세워라. 한 번 더 보면 더 편하게 움직일 수 있다.,1
+decision_B1,action,선택지를 줄여라. 현실적으로 움직이면 충분히 괜찮다.,1
 decision_B1_geum_df_earth,intro,결정운은 정리력이 애매하다. 확인 없이 밀기엔 좀 귀찮다.,1
 decision_B1_geum_df_earth,effect,선택은 확인한 만큼만 안전하다. 기준은 보이지만 말이 딱딱해질 수 있다.,1
 decision_B1_geum_df_earth,action,기준부터 다시 세워라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
@@ -2323,12 +2323,12 @@ money_B_to_ex_wood,intro,재물운은 안정감이 버텨줘서 생각보다 괜
 money_B_to_ex_wood,effect,재정은 예상보다 덜 꼬인다. 속도는 느려도 크게 흔들리지는 않는다.,1
 money_B_to_ex_wood,action,쓸 돈과 묶을 돈을 나눠라. 지금 하는 편이 나중의 너에게 덜 미안하다.,1
 money_B_to_ex_wood,state,안정감이 강해 움직임이 느려질 수 있다. 변화가 많아 일이 쉽게 퍼질 수 있다. 큰 문제는 아니지만 확인은 필요하다.,1
-money_B1,intro,재물운은 중간은 넘는다. 방심하지 않으면 체면은 지킨다.,1
-money_B1,intro,돈의 흐름은 나쁘지 않지만 믿고 맡길 정도는 아니다.,1
-money_B1,effect,재정은 확인한 만큼만 안전하다. 대충 넘기면 대충 돌아온다.,1
-money_B1,effect,큰 문제는 적지만 디테일이 귀찮게 굴 수 있다.,1
-money_B1,action,지출 기준부터 다시 봐라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
-money_B1,action,큰돈보다 잔돈 새는 곳부터 막아라. 큰 의미를 붙이지 말고 현실적으로 처리해라.,1
+money_B1,intro,재물운은 중간 이상이다. 기본만 지키면 꽤 안정적으로 간다.,1
+money_B1,intro,돈의 흐름은 나쁘지 않다. 과신만 빼면 쓸 만한 흐름이다.,1
+money_B1,effect,재정은 확인할수록 안정된다. 기본 점검만 해도 충분히 도움이 된다.,1
+money_B1,effect,큰 문제는 적다. 작은 리듬만 맞추면 하루가 훨씬 편해진다.,1
+money_B1,action,지출 기준부터 다시 봐라. 한 번 더 보면 더 편하게 움직일 수 있다.,1
+money_B1,action,잔돈 새는 곳부터 정리해라. 현실적으로 움직이면 충분히 괜찮다.,1
 money_B1_geum_df_earth,intro,재물운은 정리력이 애매하다. 확인 없이 밀기엔 좀 귀찮다.,1
 money_B1_geum_df_earth,effect,재정은 확인한 만큼만 안전하다. 기준은 보이지만 말이 딱딱해질 수 있다.,1
 money_B1_geum_df_earth,action,큰돈보다 잔돈 새는 곳부터 막아라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
@@ -3319,12 +3319,12 @@ work_B_to_ex_wood,intro,업무운은 안정감이 버텨줘서 생각보다 괜�
 work_B_to_ex_wood,effect,업무는 예상보다 덜 꼬인다. 속도는 느려도 크게 흔들리지는 않는다.,1
 work_B_to_ex_wood,action,중요한 일부터 처리해라. 지금 하는 편이 나중의 너에게 덜 미안하다.,1
 work_B_to_ex_wood,state,안정감이 강해 움직임이 느려질 수 있다. 변화가 많아 일이 쉽게 퍼질 수 있다. 큰 문제는 아니지만 확인은 필요하다.,1
-work_B1,intro,업무운은 중간은 넘는다. 방심하지 않으면 체면은 지킨다.,1
-work_B1,intro,일의 흐름은 나쁘지 않지만 믿고 맡길 정도는 아니다.,1
-work_B1,effect,업무는 확인한 만큼만 안전하다. 대충 넘기면 대충 돌아온다.,1
-work_B1,effect,큰 문제는 적지만 디테일이 귀찮게 굴 수 있다.,1
-work_B1,action,일의 순서부터 다시 정해라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
-work_B1,action,속도보다 확인을 먼저 해라. 큰 의미를 붙이지 말고 현실적으로 처리해라.,1
+work_B1,intro,업무운은 중간 이상이다. 기본만 지키면 꽤 안정적으로 간다.,1
+work_B1,intro,일의 흐름은 나쁘지 않다. 과신만 빼면 쓸 만한 흐름이다.,1
+work_B1,effect,업무은 확인할수록 안정된다. 기본 점검만 해도 충분히 도움이 된다.,1
+work_B1,effect,큰 문제는 적다. 작은 리듬만 맞추면 하루가 훨씬 편해진다.,1
+work_B1,action,일의 순서부터 다시 정해라. 한 번 더 보면 더 편하게 움직일 수 있다.,1
+work_B1,action,속도보다 확인을 먼저 해라. 현실적으로 움직이면 충분히 괜찮다.,1
 work_B1_geum_df_earth,intro,업무운은 정리력이 애매하다. 확인 없이 밀기엔 좀 귀찮다.,1
 work_B1_geum_df_earth,effect,업무는 확인한 만큼만 안전하다. 기준은 보이지만 말이 딱딱해질 수 있다.,1
 work_B1_geum_df_earth,action,일의 순서부터 다시 정해라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
@@ -4315,12 +4315,12 @@ love_B_to_ex_wood,intro,연애운은 안정감이 버텨줘서 생각보다 괜�
 love_B_to_ex_wood,effect,관계는 예상보다 덜 꼬인다. 속도는 느려도 크게 흔들리지는 않는다.,1
 love_B_to_ex_wood,action,먼저 짧게 말을 건네라. 지금 하는 편이 나중의 너에게 덜 미안하다.,1
 love_B_to_ex_wood,state,안정감이 강해 움직임이 느려질 수 있다. 변화가 많아 일이 쉽게 퍼질 수 있다. 큰 문제는 아니지만 확인은 필요하다.,1
-love_B1,intro,연애운은 중간은 넘는다. 방심하지 않으면 체면은 지킨다.,1
-love_B1,intro,마음은 나쁘지 않지만 믿고 맡길 정도는 아니다.,1
-love_B1,effect,관계는 확인한 만큼만 안전하다. 대충 넘기면 대충 돌아온다.,1
-love_B1,effect,큰 문제는 적지만 디테일이 귀찮게 굴 수 있다.,1
-love_B1,action,말의 온도부터 낮춰라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
-love_B1,action,상대 속도에 맞춰라. 큰 의미를 붙이지 말고 현실적으로 처리해라.,1
+love_B1,intro,연애운은 중간 이상이다. 기본만 지키면 꽤 안정적으로 간다.,1
+love_B1,intro,마음은 나쁘지 않다. 과신만 빼면 쓸 만한 흐름이다.,1
+love_B1,effect,관계은 확인할수록 안정된다. 기본 점검만 해도 충분히 도움이 된다.,1
+love_B1,effect,큰 문제는 적다. 작은 리듬만 맞추면 하루가 훨씬 편해진다.,1
+love_B1,action,말의 온도부터 낮춰라. 한 번 더 보면 더 편하게 움직일 수 있다.,1
+love_B1,action,상대 속도에 맞춰라. 현실적으로 움직이면 충분히 괜찮다.,1
 love_B1_geum_df_earth,intro,연애운은 정리력이 애매하다. 확인 없이 밀기엔 좀 귀찮다.,1
 love_B1_geum_df_earth,effect,관계는 확인한 만큼만 안전하다. 기준은 보이지만 말이 딱딱해질 수 있다.,1
 love_B1_geum_df_earth,action,말의 온도부터 낮춰라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
@@ -5311,12 +5311,12 @@ health_B_to_ex_wood,intro,건강운은 안정감이 버텨줘서 생각보다 �
 health_B_to_ex_wood,effect,몸 상태는 예상보다 덜 꼬인다. 속도는 느려도 크게 흔들리지는 않는다.,1
 health_B_to_ex_wood,action,가벼운 활동부터 시작해라. 지금 하는 편이 나중의 너에게 덜 미안하다.,1
 health_B_to_ex_wood,state,안정감이 강해 움직임이 느려질 수 있다. 변화가 많아 일이 쉽게 퍼질 수 있다. 큰 문제는 아니지만 확인은 필요하다.,1
-health_B1,intro,건강운은 중간은 넘는다. 방심하지 않으면 체면은 지킨다.,1
-health_B1,intro,컨디션은 나쁘지 않지만 믿고 맡길 정도는 아니다.,1
-health_B1,effect,몸 상태는 확인한 만큼만 안전하다. 대충 넘기면 대충 돌아온다.,1
-health_B1,effect,큰 문제는 적지만 디테일이 귀찮게 굴 수 있다.,1
-health_B1,action,몸 상태부터 살펴라. 한 번 더 보는 게 결국 싸게 먹힌다.,1
-health_B1,action,무리하지 말고 일상을 유지해라. 큰 의미를 붙이지 말고 현실적으로 처리해라.,1
+health_B1,intro,건강운은 중간 이상이다. 기본만 지키면 꽤 안정적으로 간다.,1
+health_B1,intro,컨디션은 나쁘지 않다. 과신만 빼면 쓸 만한 흐름이다.,1
+health_B1,effect,몸 상태은 확인할수록 안정된다. 기본 점검만 해도 충분히 도움이 된다.,1
+health_B1,effect,큰 문제는 적다. 작은 리듬만 맞추면 하루가 훨씬 편해진다.,1
+health_B1,action,몸 상태부터 가볍게 살펴라. 한 번 더 보면 더 편하게 움직일 수 있다.,1
+health_B1,action,무리하지 말고 일상을 유지해라. 현실적으로 움직이면 충분히 괜찮다.,1
 health_B1_geum_df_earth,intro,건강운은 정리력이 애매하다. 확인 없이 밀기엔 좀 귀찮다.,1
 health_B1_geum_df_earth,effect,몸 상태는 확인한 만큼만 안전하다. 기준은 보이지만 말이 딱딱해질 수 있다.,1
 health_B1_geum_df_earth,action,몸 상태부터 살펴라. 한 번 더 보는 게 결국 싸게 먹힌다.,1

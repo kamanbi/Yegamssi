@@ -23,7 +23,7 @@ final weatherRepositoryProvider = FutureProvider<WeatherRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef WeatherRepositoryRef = FutureProviderRef<WeatherRepository>;
-String _$currentWeatherHash() => r'1ad320910a7e8ee867fc9547d2f6b7b789513252';
+String _$currentWeatherHash() => r'412eb72e482c4a5f834f704a2744447de78cbf5b';
 
 /// See also [currentWeather].
 @ProviderFor(currentWeather)
@@ -40,7 +40,7 @@ final currentWeatherProvider = FutureProvider<WeatherEntity>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CurrentWeatherRef = FutureProviderRef<WeatherEntity>;
-String _$weatherNotifierHash() => r'74cfcec8e68349efb9a6951c3a1eeeae34e2e6bb';
+String _$weatherNotifierHash() => r'311e1cdb8b67f3f56d5994a8fa4f10948b79f89a';
 
 /// See also [WeatherNotifier].
 @ProviderFor(WeatherNotifier)

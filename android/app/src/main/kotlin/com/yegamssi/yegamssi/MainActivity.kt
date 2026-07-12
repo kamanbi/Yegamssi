@@ -8,7 +8,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Build
 import android.os.Environment
+import android.os.PowerManager
 import android.provider.MediaStore
+import android.provider.Settings
 import com.yegamssi.yegamssi.alarm.AlarmScheduler
 import com.yegamssi.yegamssi.widget.YegamssiWidget
 import io.flutter.embedding.android.FlutterActivity
@@ -38,6 +40,12 @@ class MainActivity : FlutterActivity() {
                         finishAndRemoveTask()
                     }
                     result.success(null)
+                }
+                METHOD_IS_IGNORING_BATTERY_OPTIMIZATIONS -> {
+                    result.success(isIgnoringBatteryOptimizations())
+                }
+                METHOD_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS -> {
+                    result.success(requestIgnoreBatteryOptimizations())
                 }
                 else -> result.notImplemented()
             }
@@ -147,7 +155,7 @@ class MainActivity : FlutterActivity() {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             if (runCatching {
-                    startActivity(Intent.createChooser(imageIntent, "예감씨 캡처 열기"))
+                    startActivity(Intent.createChooser(imageIntent, getString(R.string.capture_open_chooser)))
                     true
                 }.getOrDefault(false)
             ) {
@@ -160,14 +168,40 @@ class MainActivity : FlutterActivity() {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         return runCatching {
-            startActivity(Intent.createChooser(galleryIntent, "예감씨 캡처 열기"))
+            startActivity(Intent.createChooser(galleryIntent, getString(R.string.capture_open_chooser)))
             true
         }.getOrDefault(false)
+    }
+
+    private fun isIgnoringBatteryOptimizations(): Boolean {
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+        return powerManager.isIgnoringBatteryOptimizations(packageName)
+    }
+
+    private fun requestIgnoreBatteryOptimizations(): Boolean {
+        if (isIgnoringBatteryOptimizations()) return true
+        return runCatching {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                data = Uri.parse("package:$packageName")
+            }
+            startActivity(intent)
+            true
+        }.getOrElse {
+            runCatching {
+                val fallback = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                startActivity(fallback)
+                true
+            }.getOrDefault(false)
+        }
     }
 
     companion object {
         private const val APP_CONTROL_CHANNEL = "yegamssi/app_control"
         private const val METHOD_CLOSE_APP = "closeApp"
+        private const val METHOD_IS_IGNORING_BATTERY_OPTIMIZATIONS =
+            "isIgnoringBatteryOptimizations"
+        private const val METHOD_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS =
+            "requestIgnoreBatteryOptimizations"
         private const val WIDGET_CHANNEL = "yegamssi/widget"
         private const val METHOD_IS_WIDGET_INSTALLED = "isWidgetInstalled"
         private const val METHOD_REQUEST_PIN_WIDGET = "requestPinWidget"

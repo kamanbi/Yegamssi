@@ -5,9 +5,17 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_hi.dart';
 import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_ro.dart';
+import 'app_localizations_vi.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -95,9 +103,17 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
+    Locale('es'),
+    Locale('fr'),
+    Locale('hi'),
     Locale('ja'),
     Locale('ko'),
+    Locale('pt'),
+    Locale('ro'),
+    Locale('vi'),
+    Locale('zh'),
   ];
 
   /// No description provided for @appName.
@@ -123,6 +139,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Score'**
   String get tabScore;
+
+  /// No description provided for @tabMonthlyYegamssi.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get tabMonthlyYegamssi;
+
+  /// No description provided for @monthlyYegamssiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Yegamssi'**
+  String get monthlyYegamssiTitle;
+
+  /// No description provided for @monthlyYegamssiSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'See this month\'s good days and days to watch for each category.'**
+  String get monthlyYegamssiSubtitle;
+
+  /// No description provided for @monthlyGoodDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Good days'**
+  String get monthlyGoodDaysLabel;
+
+  /// No description provided for @monthlyCautionDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch out'**
+  String get monthlyCautionDaysLabel;
+
+  /// No description provided for @monthlyGeneratingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing this month\'s Monthly Yegamssi.'**
+  String get monthlyGeneratingMessage;
+
+  /// No description provided for @monthlyFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t prepare this month\'s Monthly Yegamssi. Please restart the app.'**
+  String get monthlyFailedMessage;
+
+  /// No description provided for @monthlyDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Yegamssi is reference content based on Myeongri flow. Please weigh important decisions against real-world conditions.'**
+  String get monthlyDisclaimer;
+
+  /// No description provided for @monthlySummaryEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'The flow is strong early this month, so moving ahead sooner works in your favor.'**
+  String get monthlySummaryEarly;
+
+  /// No description provided for @monthlySummaryMid.
+  ///
+  /// In en, this message translates to:
+  /// **'The flow improves from mid-month onward, so watching for the right moment beats rushing.'**
+  String get monthlySummaryMid;
+
+  /// No description provided for @monthlySummaryLate.
+  ///
+  /// In en, this message translates to:
+  /// **'Push through later in the month and good results will follow.'**
+  String get monthlySummaryLate;
+
+  /// No description provided for @monthlyCategoryLove.
+  ///
+  /// In en, this message translates to:
+  /// **'Love'**
+  String get monthlyCategoryLove;
+
+  /// No description provided for @monthlyCategoryLoveMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Good days are great for expressing how you feel first. On days to watch, a calm conversation works better.'**
+  String get monthlyCategoryLoveMessage;
+
+  /// No description provided for @monthlyCategoryWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get monthlyCategoryWork;
+
+  /// No description provided for @monthlyCategoryWorkMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Good days are great for starting something new. On days to watch, ease off and focus on wrapping things up.'**
+  String get monthlyCategoryWorkMessage;
+
+  /// No description provided for @monthlyCategoryMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get monthlyCategoryMoney;
+
+  /// No description provided for @monthlyCategoryMoneyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Good days are great for tidying up your finances. On days to watch, double-check before any big spending.'**
+  String get monthlyCategoryMoneyMessage;
+
+  /// No description provided for @monthlyCategoryRelationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationships'**
+  String get monthlyCategoryRelationship;
+
+  /// No description provided for @monthlyCategoryRelationshipMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Good days are great for talking with people. On days to watch, choose your words carefully to avoid misunderstandings.'**
+  String get monthlyCategoryRelationshipMessage;
+
+  /// No description provided for @monthlyCategoryHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get monthlyCategoryHealth;
+
+  /// No description provided for @monthlyCategoryHealthMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Good days are great for getting your body moving. On days to watch, don\'t overdo it and make room for rest.'**
+  String get monthlyCategoryHealthMessage;
+
+  /// No description provided for @monthlyCategoryDecision.
+  ///
+  /// In en, this message translates to:
+  /// **'Decisions'**
+  String get monthlyCategoryDecision;
+
+  /// No description provided for @monthlyCategoryDecisionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Good days are great for making an important call. On days to watch, hold off and look things over a bit more.'**
+  String get monthlyCategoryDecisionMessage;
+
+  /// No description provided for @monthlyCategoryTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get monthlyCategoryTravel;
+
+  /// No description provided for @monthlyCategoryTravelMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Good days are great for planning an outing or trip. On days to watch, leave some slack in your schedule.'**
+  String get monthlyCategoryTravelMessage;
 
   /// No description provided for @tabFortune.
   ///
@@ -289,7 +455,7 @@ abstract class AppLocalizations {
   /// No description provided for @weatherFeelsLikeShort.
   ///
   /// In en, this message translates to:
-  /// **'Feels {temp}°'**
+  /// **'Feels {temp}℃'**
   String weatherFeelsLikeShort(String temp);
 
   /// No description provided for @weatherHumidity.
@@ -820,6 +986,48 @@ abstract class AppLocalizations {
   /// **'Enter Birth Info'**
   String get fortuneBirthInputAction;
 
+  /// No description provided for @fortuneHelpTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune help'**
+  String get fortuneHelpTooltip;
+
+  /// No description provided for @fortuneHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How Yegamssi Reads Fortune'**
+  String get fortuneHelpTitle;
+
+  /// No description provided for @fortuneHelpIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Yegamssi reads the flow of today\'s fortune based on Myeongri.'**
+  String get fortuneHelpIntro;
+
+  /// No description provided for @fortuneHelpMyeongri.
+  ///
+  /// In en, this message translates to:
+  /// **'Myeongri is an East Asian fortune system that looks at the Four Pillars and the balance of the five elements using your birth date and time. Yegamssi calculates your basic personal energy from your birth date and birth time, compares it with today\'s flow, and guides your overall, money, love, work, health, and decision fortune.'**
+  String get fortuneHelpMyeongri;
+
+  /// No description provided for @fortuneHelpBirthTime.
+  ///
+  /// In en, this message translates to:
+  /// **'If you do not know your birth time, you can use noon as the default. Entering the birth time helps produce a more detailed reading.'**
+  String get fortuneHelpBirthTime;
+
+  /// No description provided for @fortuneHelpWeather.
+  ///
+  /// In en, this message translates to:
+  /// **'Yegamssi also reflects weather and activity scores, not only fortune. If today\'s energy is good but the weather is poor, the outdoor recommendation can be lower. If fortune and weather are both stable, it can be a better day to act.'**
+  String get fortuneHelpWeather;
+
+  /// No description provided for @fortuneHelpReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune is a reference, not a fixed answer. Use it to preview today\'s flow and choose contacts, outings, spending, contracts, and important decisions with a little more care.'**
+  String get fortuneHelpReference;
+
   /// No description provided for @fortuneLoadFailedTitle.
   ///
   /// In en, this message translates to:
@@ -1048,6 +1256,48 @@ abstract class AppLocalizations {
   /// **'Sky blue'**
   String get luckyColorSky;
 
+  /// No description provided for @luckyColorRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get luckyColorRed;
+
+  /// No description provided for @luckyColorOrange.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get luckyColorOrange;
+
+  /// No description provided for @luckyColorYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get luckyColorYellow;
+
+  /// No description provided for @luckyColorTeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get luckyColorTeal;
+
+  /// No description provided for @luckyColorBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get luckyColorBlue;
+
+  /// No description provided for @luckyColorPurple.
+  ///
+  /// In en, this message translates to:
+  /// **'Purple'**
+  String get luckyColorPurple;
+
+  /// No description provided for @luckyColorPink.
+  ///
+  /// In en, this message translates to:
+  /// **'Pink'**
+  String get luckyColorPink;
+
   /// No description provided for @settingsLanguage.
   ///
   /// In en, this message translates to:
@@ -1060,11 +1310,83 @@ abstract class AppLocalizations {
   /// **'Region'**
   String get settingsCountry;
 
+  /// No description provided for @countryKorea.
+  ///
+  /// In en, this message translates to:
+  /// **'Korea'**
+  String get countryKorea;
+
+  /// No description provided for @countryUnitedStates.
+  ///
+  /// In en, this message translates to:
+  /// **'United States'**
+  String get countryUnitedStates;
+
+  /// No description provided for @countryJapan.
+  ///
+  /// In en, this message translates to:
+  /// **'Japan'**
+  String get countryJapan;
+
+  /// No description provided for @countryChina.
+  ///
+  /// In en, this message translates to:
+  /// **'China'**
+  String get countryChina;
+
+  /// No description provided for @countryGlobal.
+  ///
+  /// In en, this message translates to:
+  /// **'Global'**
+  String get countryGlobal;
+
   /// No description provided for @settingsTheme.
   ///
   /// In en, this message translates to:
   /// **'Appearance'**
   String get settingsTheme;
+
+  /// No description provided for @settingsThemeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Default theme uses the day theme from 6:00 AM to 7:00 PM based on the connected location\'s local time, and the night theme outside that range. Day theme and night theme stay fixed regardless of time.'**
+  String get settingsThemeDescription;
+
+  /// No description provided for @settingsThemeAutomatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Default theme'**
+  String get settingsThemeAutomatic;
+
+  /// No description provided for @settingsThemeAutomaticDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses the day theme from 06:00 to 19:00 at the connected location, then switches to the night theme from 19:00 until before 06:00 the next day.'**
+  String get settingsThemeAutomaticDescription;
+
+  /// No description provided for @settingsThemeDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day theme'**
+  String get settingsThemeDay;
+
+  /// No description provided for @settingsThemeDayDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Always uses the bright day theme regardless of time.'**
+  String get settingsThemeDayDescription;
+
+  /// No description provided for @settingsThemeNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night theme'**
+  String get settingsThemeNight;
+
+  /// No description provided for @settingsThemeNightDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Always uses the existing dark night theme regardless of time.'**
+  String get settingsThemeNightDescription;
 
   /// No description provided for @settingsThemeDark.
   ///
@@ -1096,11 +1418,47 @@ abstract class AppLocalizations {
   /// **'Not entered'**
   String get settingsBirthEmpty;
 
+  /// No description provided for @settingsBirthEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get settingsBirthEdit;
+
   /// No description provided for @settingsBirthUnknownHour.
   ///
   /// In en, this message translates to:
   /// **'Unknown'**
   String get settingsBirthUnknownHour;
+
+  /// No description provided for @onboardingGenderLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get onboardingGenderLabel;
+
+  /// No description provided for @genderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get genderMale;
+
+  /// No description provided for @genderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get genderFemale;
+
+  /// No description provided for @genderUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get genderUnspecified;
+
+  /// No description provided for @settingsGenderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get settingsGenderTitle;
 
   /// No description provided for @settingsHourUnit.
   ///
@@ -1137,6 +1495,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check homepage, privacy guide, contact email, and links.'**
   String get settingsAppInfoDescription;
+
+  /// No description provided for @settingsPremiumTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Ads (Lifetime)'**
+  String get settingsPremiumTitle;
+
+  /// No description provided for @settingsPremiumDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently remove banner and interstitial ads.'**
+  String get settingsPremiumDescription;
+
+  /// No description provided for @settingsPremiumButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Ads'**
+  String get settingsPremiumButton;
+
+  /// No description provided for @settingsPremiumButtonPriced.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Ads — {price}'**
+  String settingsPremiumButtonPriced(String price);
+
+  /// No description provided for @settingsPremiumPurchasedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ads Removed'**
+  String get settingsPremiumPurchasedTitle;
+
+  /// No description provided for @settingsPremiumPurchasedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your support.'**
+  String get settingsPremiumPurchasedDescription;
+
+  /// No description provided for @premiumMsgSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Ads have been removed. Thank you!'**
+  String get premiumMsgSuccess;
+
+  /// No description provided for @premiumMsgCanceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase canceled.'**
+  String get premiumMsgCanceled;
+
+  /// No description provided for @premiumMsgError.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase failed. Please try again later.'**
+  String get premiumMsgError;
+
+  /// No description provided for @premiumMsgStoreUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot connect to the store. Please try again later.'**
+  String get premiumMsgStoreUnavailable;
+
+  /// No description provided for @premiumMsgProductUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This item is currently unavailable.'**
+  String get premiumMsgProductUnavailable;
 
   /// No description provided for @onboardingTitle.
   ///
@@ -1303,13 +1727,13 @@ abstract class AppLocalizations {
   /// No description provided for @appInfoKma.
   ///
   /// In en, this message translates to:
-  /// **'Korea Meteorological Administration'**
+  /// **'Korea Meteorological Administration (KMA)'**
   String get appInfoKma;
 
   /// No description provided for @appInfoKmaDescription.
   ///
   /// In en, this message translates to:
-  /// **'Provides weather and forecast data.'**
+  /// **'Provides weather and forecast data for South Korea.'**
   String get appInfoKmaDescription;
 
   /// No description provided for @appInfoAirKorea.
@@ -1321,13 +1745,61 @@ abstract class AppLocalizations {
   /// No description provided for @appInfoAirKoreaDescription.
   ///
   /// In en, this message translates to:
-  /// **'Provides PM10, PM2.5, ozone, and integrated air quality data.'**
+  /// **'Provides PM10, PM2.5, ozone, and integrated air quality data for South Korea.'**
   String get appInfoAirKoreaDescription;
+
+  /// No description provided for @appInfoOpenWeather.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenWeather'**
+  String get appInfoOpenWeather;
+
+  /// No description provided for @appInfoOpenWeatherDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Provides international weather, forecast, and air quality (PM10, PM2.5, O3) data.'**
+  String get appInfoOpenWeatherDescription;
+
+  /// No description provided for @appInfoNominatim.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenStreetMap Nominatim'**
+  String get appInfoNominatim;
+
+  /// No description provided for @appInfoNominatimDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Converts coordinates to localized place names. (ODbL license)'**
+  String get appInfoNominatimDescription;
+
+  /// No description provided for @appInfoNoaa.
+  ///
+  /// In en, this message translates to:
+  /// **'NOAA / National Weather Service'**
+  String get appInfoNoaa;
+
+  /// No description provided for @appInfoNoaaDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Provides official weather forecasts and hourly data for the United States. (Public domain)'**
+  String get appInfoNoaaDescription;
+
+  /// No description provided for @appInfoAirNow.
+  ///
+  /// In en, this message translates to:
+  /// **'U.S. EPA AirNow'**
+  String get appInfoAirNow;
+
+  /// No description provided for @appInfoAirNowDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Provides real-time air quality data (PM2.5, PM10, Ozone) for the United States.'**
+  String get appInfoAirNowDescription;
 
   /// No description provided for @appInfoDataSourceNotice.
   ///
   /// In en, this message translates to:
-  /// **'Some information follows public data portal and public Nuri attribution standards.'**
+  /// **'Some information follows KOGL attribution standards. International data is provided by OpenWeather API.'**
   String get appInfoDataSourceNotice;
 
   /// No description provided for @widgetScoreLabel.
@@ -1371,6 +1843,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Long-press the home screen and add the Yegamssi widget.'**
   String get widgetInstallManual;
+
+  /// No description provided for @appReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Could you spare a moment? 🙏'**
+  String get appReviewTitle;
+
+  /// No description provided for @appReviewMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you so much for using Yegamssi. As a small one-person project, a 5-star rating from you would mean the world to us. Would you mind leaving a 5-star review?'**
+  String get appReviewMessage;
+
+  /// No description provided for @appReviewAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate 5 Stars'**
+  String get appReviewAction;
+
+  /// No description provided for @appReviewLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe Later'**
+  String get appReviewLater;
 
   /// No description provided for @updateNoticeTitle.
   ///
@@ -1461,6 +1957,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An unknown error occurred.'**
   String get errorUnknown;
+
+  /// No description provided for @settingsBackgroundRefreshTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Background refresh'**
+  String get settingsBackgroundRefreshTitle;
+
+  /// No description provided for @settingsBackgroundRefreshDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates weather, air quality, outdoor score, and widget data about every 30 minutes. Battery optimization exception improves reliability.'**
+  String get settingsBackgroundRefreshDescription;
+
+  /// No description provided for @settingsBackgroundRefreshStatusEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery exception enabled'**
+  String get settingsBackgroundRefreshStatusEnabled;
+
+  /// No description provided for @settingsBackgroundRefreshStatusLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery exception needed'**
+  String get settingsBackgroundRefreshStatusLimited;
+
+  /// No description provided for @settingsBackgroundRefreshAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get settingsBackgroundRefreshAction;
+
+  /// No description provided for @batteryOptimizationReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow stable background refresh'**
+  String get batteryOptimizationReminderTitle;
+
+  /// No description provided for @batteryOptimizationReminderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Yegamssi can update weather, air quality, and widgets more reliably every 30 minutes when battery optimization is disabled for this app.'**
+  String get batteryOptimizationReminderMessage;
+
+  /// No description provided for @batteryOptimizationReminderLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get batteryOptimizationReminderLater;
+
+  /// No description provided for @batteryOptimizationReminderNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get batteryOptimizationReminderNever;
+
+  /// No description provided for @batteryOptimizationReminderSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get batteryOptimizationReminderSettings;
+
+  /// No description provided for @settingsSupportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get settingsSupportTitle;
+
+  /// No description provided for @settingsSupportDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Yegamssi with a review or a short ad view.'**
+  String get settingsSupportDescription;
+
+  /// No description provided for @settingsSupportSheetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A small action helps keep Yegamssi improving.'**
+  String get settingsSupportSheetDescription;
+
+  /// No description provided for @settingsSupportReviewAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a review'**
+  String get settingsSupportReviewAction;
+
+  /// No description provided for @settingsSupportAdAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch an interstitial ad to support the developer'**
+  String get settingsSupportAdAction;
+
+  /// No description provided for @settingsSupportReviewFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the review screen. Please try again later.'**
+  String get settingsSupportReviewFailed;
+
+  /// No description provided for @settingsSupportAdThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for supporting Yegamssi.'**
+  String get settingsSupportAdThanks;
+
+  /// No description provided for @settingsSupportPremiumThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'You already supported Yegamssi by removing ads. Thank you.'**
+  String get settingsSupportPremiumThanks;
+
+  /// No description provided for @settingsSupportAdFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load an ad. Please try again later.'**
+  String get settingsSupportAdFailed;
 }
 
 class _AppLocalizationsDelegate
@@ -1473,8 +2083,19 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'ja', 'ko'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'de',
+    'en',
+    'es',
+    'fr',
+    'hi',
+    'ja',
+    'ko',
+    'pt',
+    'ro',
+    'vi',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1483,12 +2104,28 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'hi':
+      return AppLocalizationsHi();
     case 'ja':
       return AppLocalizationsJa();
     case 'ko':
       return AppLocalizationsKo();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ro':
+      return AppLocalizationsRo();
+    case 'vi':
+      return AppLocalizationsVi();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

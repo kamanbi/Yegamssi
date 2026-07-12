@@ -1,0 +1,516 @@
+{
+  "@@locale": "fr",
+  "appName": "Yegamssi",
+  "tabHome": "Aujourd'hui",
+  "tabWeather": "Météo",
+  "tabScore": "Score",
+  "tabMonthlyYegamssi": "Mois",
+  "monthlyYegamssiTitle": "Yegamssi du mois",
+  "monthlyYegamssiSubtitle": "Découvre les bons jours et les jours à surveiller de ce mois, par catégorie.",
+  "monthlyGoodDaysLabel": "Bons jours",
+  "monthlyCautionDaysLabel": "À surveiller",
+  "monthlyGeneratingMessage": "Préparation du Yegamssi du mois.",
+  "monthlyFailedMessage": "Impossible de préparer le Yegamssi du mois. Veuillez relancer l'application.",
+  "monthlyDisclaimer": "Le Yegamssi du mois est un contenu indicatif fondé sur le flux du Myeongri. Pèse tes décisions importantes en tenant compte des conditions réelles.",
+  "monthlySummaryEarly": "Ce mois-ci, le flux est bon en début de mois : avancer tôt joue en ta faveur.",
+  "monthlySummaryMid": "Ce mois-ci, le flux s'améliore à partir de la mi-mois : mieux vaut guetter le bon moment que se précipiter.",
+  "monthlySummaryLate": "Ce mois-ci, si tu donnes tout en fin de mois, de bons résultats suivront.",
+  "monthlyCategoryLove": "Amour",
+  "monthlyCategoryLoveMessage": "Les bons jours sont parfaits pour exprimer tes sentiments en premier. Les jours à surveiller, mieux vaut une conversation posée.",
+  "monthlyCategoryWork": "Travail",
+  "monthlyCategoryWorkMessage": "Les bons jours sont parfaits pour lancer quelque chose de nouveau. Les jours à surveiller, ne force pas et concentre-toi sur ce que tu boucles.",
+  "monthlyCategoryMoney": "Argent",
+  "monthlyCategoryMoneyMessage": "Les bons jours sont parfaits pour mettre de l'ordre dans tes finances. Les jours à surveiller, vérifie deux fois avant une grosse dépense.",
+  "monthlyCategoryRelationship": "Relations",
+  "monthlyCategoryRelationshipMessage": "Les bons jours sont parfaits pour échanger avec les autres. Les jours à surveiller, choisis bien tes mots pour éviter les malentendus.",
+  "monthlyCategoryHealth": "Santé",
+  "monthlyCategoryHealthMessage": "Les bons jours sont parfaits pour bouger. Les jours à surveiller, n'en fais pas trop et ménage-toi du repos.",
+  "monthlyCategoryDecision": "Décisions",
+  "monthlyCategoryDecisionMessage": "Les bons jours sont parfaits pour trancher une question importante. Les jours à surveiller, mieux vaut attendre et réexaminer un peu.",
+  "monthlyCategoryTravel": "Déplacements",
+  "monthlyCategoryTravelMessage": "Les bons jours sont parfaits pour planifier une sortie ou un voyage. Les jours à surveiller, garde un peu de marge dans ton emploi du temps.",
+  "tabFortune": "Fortune",
+  "tabSettings": "Paramètres",
+  "homeHeadline": "La météo et les signaux d'aujourd'hui",
+  "homeWeatherLoadingTitle": "Chargement de la météo actuelle",
+  "homeWeatherLoadingMessage": "Préparation des données de localisation et de météo.",
+  "homeWeatherErrorTitle": "Impossible de charger la météo actuelle",
+  "homeWeatherErrorMessage": "Ouvre l'écran météo et réessaie.",
+  "homeWeatherAction": "Voir la météo",
+  "homeFortuneLoadingTitle": "Préparation de la fortune du jour",
+  "homeFortuneLoadingMessage": "Un court résumé apparaîtra bientôt.",
+  "homeFortuneErrorTitle": "La fortune n'est pas encore prête",
+  "homeFortuneErrorMessage": "Vérifie ton profil et réessaie sur l'écran fortune.",
+  "homeFortuneAction": "Voir la fortune",
+  "homeFortuneHeadline": "La fortune du jour en une phrase",
+  "appExitTitle": "Quitter l'application",
+  "appExitMessage": "Voulez-vous fermer Yegamssi ?",
+  "cancel": "Annuler",
+  "confirm": "OK",
+  "close": "Fermer",
+  "later": "Plus tard",
+  "exit": "Quitter",
+  "search": "Rechercher",
+  "loadingAd": "Chargement de la publicité...",
+  "refresh": "Actualiser",
+  "refreshFailed": "Échec de l'actualisation : {error}",
+  "@refreshFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notFoundPage": "Page introuvable : {error}",
+  "@notFoundPage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLike": "Ressenti {temp}°C",
+  "@weatherFeelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLikeShort": "Res. {temp}℃",
+  "@weatherFeelsLikeShort": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidity": "Humidité {value}%",
+  "@weatherHumidity": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherWind": "Vent {speed}m/s",
+  "@weatherWind": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidityLabel": "Humidité",
+  "weatherWindLabel": "Vent",
+  "weatherWindSpeedLabel": "Vit. vent",
+  "weatherPrecipitationLabel": "Pluie",
+  "weatherPrecipitationAmount": "Pluie {amount}",
+  "@weatherPrecipitationAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDustPm10": "PM10",
+  "weatherDustPm25": "PM2.5",
+  "weatherHourlyForecast": "Prévisions horaires",
+  "weatherWeeklyForecast": "Prévisions hebdomadaires",
+  "weatherLoading": "Chargement météo...",
+  "weatherErrorTitle": "Impossible d'obtenir les données météo",
+  "weatherReturnCurrentLocation": "Retour à la localisation actuelle dans {seconds}s",
+  "@weatherReturnCurrentLocation": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherToday": "Aujourd'hui",
+  "weatherAm": "AM",
+  "weatherPm": "PM",
+  "weatherHour": "{hour}:00",
+  "@weatherHour": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherUvVeryHigh": "{uv} Très élevé",
+  "weatherUvHigh": "{uv} Élevé",
+  "weatherUvModerateHigh": "{uv} Modéré-élevé",
+  "weatherUvModerate": "{uv} Modéré",
+  "weatherUvLow": "{uv} Faible",
+  "@weatherUvVeryHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerateHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerate": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvLow": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherConditionSunny": "Ensoleillé",
+  "weatherConditionClearNight": "Nuit claire",
+  "weatherConditionPartlyCloudy": "Partiellement nuageux",
+  "weatherConditionPartlyCloudyNight": "Nuit partiellement nuageuse",
+  "weatherConditionCloudy": "Nuageux",
+  "weatherConditionHazy": "Brumeux",
+  "weatherConditionWindy": "Venteux",
+  "weatherConditionSlightRain": "Pluie légère",
+  "weatherConditionRain": "Pluie",
+  "weatherConditionHeavyRain": "Forte pluie",
+  "weatherConditionThunderstorm": "Orage",
+  "weatherConditionRainThunder": "Pluie et tonnerre",
+  "weatherConditionLightSnow": "Neige légère",
+  "weatherConditionSnow": "Neige",
+  "weatherConditionSleet": "Grésil",
+  "weatherConditionHot": "Chaud",
+  "weatherConditionHotNight": "Nuit chaude",
+  "weatherConditionColdWave": "Vague de froid",
+  "weatherConditionUnknown": "Inconnu",
+  "locationCurrent": "Position actuelle",
+  "locationSelectClose": "Fermer le sélecteur de position",
+  "locationAdded": "{name} ajouté",
+  "@locationAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "locationFavoriteLimit": "Vous pouvez ajouter jusqu'à 5 positions.",
+  "locationFavoriteFull": "Favoris pleins",
+  "locationFavoriteAdd": "Ajouter aux favoris",
+  "locationSearchTitle": "Rechercher une position",
+  "locationSearchHint": "Exemple : Séoul, Busan, Tokyo",
+  "locationSearchEmpty": "Aucun résultat trouvé",
+  "scoreLabel": "Score d'activité extérieure",
+  "scoreLoading": "Calcul du score d'activité extérieure...",
+  "scoreErrorTitle": "Impossible de calculer le score",
+  "scoreBreakdownTitle": "Déductions",
+  "scoreNoDeduction": "Conditions extérieures stables, presque sans facteurs de déduction.",
+  "scoreInfo": "Le score d'activité extérieure est calculé à partir de la pluie, du vent, de la sensation thermique, de la qualité de l'air et des données UV.",
+  "scoreDeductionRain": "Pluie et neige",
+  "scoreDeductionWind": "Vent",
+  "scoreDeductionTemp": "Température",
+  "scoreDeductionAir": "Qualité de l'air",
+  "scoreDeductionUv": "UV",
+  "scoreDeductionOzone": "Ozone",
+  "scoreAdviceExcellent": "Aujourd'hui est parfait pour les activités extérieures.\nSors et profites-en.",
+  "scoreAdviceGood": "Les activités extérieures sont bonnes, mais vérifie le vent et les UV.",
+  "scoreAdviceFair": "Les activités extérieures sont possibles, mieux vaut se préparer.",
+  "scoreAdvicePoor": "Aujourd'hui, il vaut mieux planifier des activités intérieures.",
+  "scoreTierExcellent": "Excellent",
+  "scoreTierGood": "Bon",
+  "scoreTierFair": "Passable",
+  "scoreTierPoor": "Attention",
+  "scorePointUnit": "{score} pts",
+  "@scorePointUnit": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "activityRecommendOutdoor": "Activité extérieure recommandée",
+  "activityRecommendLight": "Activité légère adaptée",
+  "activityRecommendCaution": "Prudence requise",
+  "activityRecommendIndoor": "Activité intérieure recommandée",
+  "airQualityTitle": "Qualité de l'air",
+  "airQualityIntegrated": "Qualité de l'air intégrée",
+  "airQualityUnknown": "Pas de données",
+  "airGradeGood": "Bonne",
+  "airGradeModerate": "Modérée",
+  "airGradeBad": "Mauvaise",
+  "airGradeVeryBad": "Très mauvaise",
+  "pointUnit": "pts",
+  "fortuneTitle": "Votre fortune quotidienne",
+  "fortuneNeedProfileTitle": "Informations de naissance requises",
+  "fortuneNeedProfileMessage": "Entrez votre date et heure de naissance pour recevoir la fortune du jour.",
+  "fortuneBirthInputAction": "Saisir les informations de naissance",
+  "fortuneHelpTooltip": "Aide sur la fortune",
+  "fortuneHelpTitle": "Comment Yegamssi lit la fortune",
+  "fortuneHelpIntro": "Yegamssi lit le flux de la fortune du jour à partir du Myeongri.",
+  "fortuneHelpMyeongri": "Le Myeongri est un système traditionnel oriental qui observe les Quatre Piliers et l'équilibre des cinq éléments à partir de la date et de l'heure de naissance. Yegamssi calcule ton énergie personnelle de base avec ta date et ton heure de naissance, la compare au flux du jour, puis présente la fortune générale, financière, amoureuse, professionnelle, de santé et de décision.",
+  "fortuneHelpBirthTime": "Si tu ne connais pas ton heure de naissance, tu peux utiliser midi comme référence. Indiquer l'heure de naissance aide toutefois à obtenir une interprétation plus précise.",
+  "fortuneHelpWeather": "Yegamssi tient aussi compte de la météo et du score d'activité, pas seulement de la fortune. Ainsi, même si l'énergie du jour est bonne, une mauvaise météo peut réduire la recommandation de sortie. Si la fortune et la météo sont stables, la journée peut être plus favorable à l'action.",
+  "fortuneHelpReference": "La fortune n'est pas une réponse définitive, mais un repère. Utilise-la pour observer le flux du jour et choisir avec plus de prudence tes contacts, sorties, dépenses, contrats et décisions importantes.",
+  "fortuneLoadFailedTitle": "Impossible de charger la fortune",
+  "fortuneLoadFailedMessage": "Veuillez réessayer plus tard.",
+  "fortuneCategoryAnalysis": "Analyse par catégorie",
+  "fortuneOverall": "Fortune générale",
+  "fortuneCategoryMoney": "Argent",
+  "fortuneCategoryLove": "Amour",
+  "fortuneCategoryWork": "Travail",
+  "fortuneCategoryHealth": "Santé",
+  "fortuneCategoryDecision": "Décision",
+  "fortuneLuckyColor": "Couleur porte-bonheur",
+  "fortuneLuckyNumber": "Numéro porte-bonheur",
+  "fortuneOhengBalance": "Équilibre élémentaire",
+  "fortuneOhengDescription": "Un signal de soutien pour le flux émotionnel d'aujourd'hui.",
+  "fortuneCaptureTooltip": "Capturer la carte de fortune",
+  "fortuneCaptureSaved": "Capture de carte sauvegardée.",
+  "fortuneCaptureSaveDone": "Capture de carte terminée",
+  "fortuneCaptureFailed": "Échec de la capture : {error}",
+  "@fortuneCaptureFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fortuneOpenFolder": "Ouvrir le dossier",
+  "fortuneAnalyzing": "Analyse en cours.",
+  "fortuneToneBase": "Base",
+  "fortuneToneHumor": "Humour",
+  "fortuneToneTsundere": "Tsundere",
+  "fortuneToneCynical": "Cynique",
+  "fortuneToneEmotional": "Émotionnel",
+  "fortuneToneHistorical": "Historique",
+  "fortuneToneAi": "IA",
+  "fortuneTimeMorning": "Matin",
+  "fortuneTimeAfternoon": "Après-midi",
+  "ohengMok": "Bois",
+  "ohengHwa": "Feu",
+  "ohengTo": "Terre",
+  "ohengGeum": "Métal",
+  "ohengSu": "Eau",
+  "luckyColorGreen": "Vert",
+  "luckyColorCoral": "Corail",
+  "luckyColorGold": "Or",
+  "luckyColorSilver": "Argent",
+  "luckyColorSky": "Bleu ciel",
+  "luckyColorRed": "Rouge",
+  "luckyColorOrange": "Orange",
+  "luckyColorYellow": "Jaune",
+  "luckyColorTeal": "Turquoise",
+  "luckyColorBlue": "Bleu",
+  "luckyColorPurple": "Violet",
+  "luckyColorPink": "Rose",
+  "settingsLanguage": "Langue",
+  "settingsCountry": "Région",
+  "countryKorea": "Corée",
+  "countryUnitedStates": "États-Unis",
+  "countryJapan": "Japon",
+  "countryChina": "Chine",
+  "countryGlobal": "Global",
+  "settingsTheme": "Apparence",
+  "settingsThemeDescription": "Le thème par défaut utilise le thème de jour de 06:00 à 19:00 selon l'heure locale de la position connectée, puis le thème de nuit en dehors de cette plage. Les thèmes de jour et de nuit restent fixes quelle que soit l'heure.",
+  "settingsThemeAutomatic": "Thème par défaut",
+  "settingsThemeAutomaticDescription": "Utilise automatiquement le thème de jour de 06:00 à 19:00 à la position connectée, puis le thème de nuit de 19:00 jusqu'avant 06:00 le lendemain.",
+  "settingsThemeDay": "Thème de jour",
+  "settingsThemeDayDescription": "Utilise toujours le thème clair de jour, quelle que soit l'heure.",
+  "settingsThemeNight": "Thème de nuit",
+  "settingsThemeNightDescription": "Utilise toujours le thème sombre de nuit existant, quelle que soit l'heure.",
+  "settingsThemeDark": "Sombre",
+  "settingsThemeLight": "Clair",
+  "settingsBirthTitle": "Date de naissance",
+  "settingsBirthDescription": "Gérez la date et l'heure de naissance pour le calcul de la fortune.",
+  "settingsBirthEmpty": "Non renseigné",
+  "settingsBirthEdit": "Modifier",
+  "settingsBirthUnknownHour": "Inconnu",
+  "onboardingGenderLabel": "Genre",
+  "genderMale": "Homme",
+  "genderFemale": "Femme",
+  "genderUnspecified": "Je préfère ne pas répondre",
+  "settingsGenderTitle": "Genre",
+  "settingsHourUnit": "{hour}:00",
+  "@settingsHourUnit": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFortuneToneTitle": "Ton",
+  "settingsFortuneToneDescription": "Les messages de fortune sont affichés en style {tone}.",
+  "@settingsFortuneToneDescription": {
+    "placeholders": {
+      "tone": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsFortuneToneSheetDescription": "Les messages de base sont conservés et le style sélectionné est prioritaire.",
+  "settingsAppInfoTitle": "Informations sur l'app",
+  "settingsAppInfoDescription": "Consulter la page d'accueil, le guide de confidentialité, l'e-mail de contact et les liens.",
+  "settingsPremiumTitle": "Supprimer les publicités (à vie)",
+  "settingsPremiumDescription": "Supprime définitivement les bannières publicitaires et les publicités interstitielles.",
+  "settingsPremiumButton": "Supprimer les publicités",
+  "settingsPremiumButtonPriced": "Supprimer les publicités — {price}",
+  "@settingsPremiumButtonPriced": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPremiumPurchasedTitle": "Publicités supprimées",
+  "settingsPremiumPurchasedDescription": "Merci pour votre soutien.",
+  "premiumMsgSuccess": "Les publicités ont été supprimées. Merci !",
+  "premiumMsgCanceled": "Achat annulé.",
+  "premiumMsgError": "L'achat a échoué. Veuillez réessayer plus tard.",
+  "premiumMsgStoreUnavailable": "Impossible de se connecter au magasin. Veuillez réessayer plus tard.",
+  "premiumMsgProductUnavailable": "Cet article n'est pas disponible actuellement.",
+  "onboardingTitle": "Yegamssi",
+  "onboardingSubtitle": "Entrez votre date et heure de naissance\npour recevoir la fortune du jour.",
+  "onboardingStart": "Commencer",
+  "birthDate": "Date de naissance",
+  "birthHour": "Heure de naissance",
+  "birthHourOptional": "Heure de naissance (optionnel)",
+  "birthSelectDate": "Sélectionner une date",
+  "birthUnknownNoon": "Inconnu (calculé à midi)",
+  "birthUnknownNoonShort": "Inconnu (midi)",
+  "dateYmd": "{day}/{month}/{year}",
+  "@dateYmd": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "hourLabel": "{hour}:00",
+  "@hourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "appInfoHomepage": "Page d'accueil",
+  "appInfoHomepageDescription": "Ouvrir la page de présentation de Yegamssi.",
+  "appInfoPrivacy": "Politique de confidentialité",
+  "appInfoPrivacyDescription": "Ouvrir la page de politique de confidentialité.",
+  "appInfoEmail": "E-mail de contact",
+  "appInfoEmailDescription": "Ouvrir l'application de messagerie pour les demandes.",
+  "appInfoShare": "Partager Yegamssi",
+  "appInfoShareDescription": "Afficher un QR code lié à la boutique.",
+  "appInfoShareQrDescription": "Scannez le QR code pour ouvrir la page de la boutique Yegamssi.",
+  "appInfoCopyLink": "Copier le lien",
+  "appInfoOpenStore": "Ouvrir la boutique",
+  "appInfoStoreLinkCopied": "Lien de la boutique copié.",
+  "appInfoVersionTitle": "Version de l'app",
+  "appInfoCurrentVersion": "Version actuelle {version}+{buildNumber}",
+  "@appInfoCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "appInfoCheckingVersion": "Vérification de la version...",
+  "appInfoDataSource": "Sources de données",
+  "appInfoKma": "Service météorologique coréen (KMA)",
+  "appInfoKmaDescription": "Fournit des données météo et des prévisions pour la Corée du Sud.",
+  "appInfoAirKorea": "AirKorea",
+  "appInfoAirKoreaDescription": "Fournit les données PM10, PM2.5, ozone et qualité de l'air intégrée pour la Corée du Sud.",
+  "appInfoOpenWeather": "OpenWeather",
+  "appInfoOpenWeatherDescription": "Fournit des données météo internationales, des prévisions et la qualité de l'air (PM10, PM2.5, O3).",
+  "appInfoNominatim": "OpenStreetMap Nominatim",
+  "appInfoNominatimDescription": "Convertit les coordonnées en noms de lieux localisés. (Licence ODbL)",
+  "appInfoNoaa": "NOAA / Service météorologique national des États-Unis",
+  "appInfoNoaaDescription": "Fournit des prévisions météo officielles et des données horaires pour les États-Unis. (Domaine public)",
+  "appInfoAirNow": "U.S. EPA AirNow",
+  "appInfoAirNowDescription": "Fournit des données de qualité de l'air en temps réel (PM2.5, PM10, Ozone) pour les États-Unis.",
+  "appInfoDataSourceNotice": "Certaines informations suivent les normes d'attribution KOGL. Les données internationales sont fournies par l'API OpenWeather.",
+  "widgetScoreLabel": "Score",
+  "widgetFortuneLabel": "Fortune",
+  "widget_description": "Widget de résumé quotidien Yegamssi",
+  "widgetInstallTitle": "Ajouter le widget Yegamssi",
+  "widgetInstallMessage": "Consultez la météo, la température, le score extérieur et la fortune directement depuis votre écran d'accueil.",
+  "widgetInstallAction": "Installer le widget",
+  "widgetInstallManual": "Appuyez longuement sur l'écran d'accueil et ajoutez le widget Yegamssi.",
+  "appReviewTitle": "Avez-vous un instant? 🙏",
+  "appReviewMessage": "Merci beaucoup d'utiliser Yegamssi. C'est une petite application développée par une seule personne, et un avis 5 étoiles de votre part compterait énormément pour nous. Pourriez-vous nous laisser un avis 5 étoiles, s'il vous plaît?",
+  "appReviewAction": "Donner 5 étoiles",
+  "appReviewLater": "Peut-être plus tard",
+  "updateNoticeTitle": "Avis de mise à jour",
+  "updateRequiredTitle": "Mise à jour requise",
+  "updateRequiredMessage": "La version actuelle {currentVersion} n'est plus prise en charge.\nVeuillez mettre à jour vers la version {latestVersion}.",
+  "updateAvailableMessage": "La version {latestVersion} est prête.\nMettre à jour maintenant ?",
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "currentVersion": {
+        "type": "String"
+      },
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAction": "Mettre à jour",
+  "updateNewVersionMessage": "Une nouvelle version a été publiée.\nMettre à jour maintenant ?",
+  "activityRunning": "Course",
+  "activityCycling": "Vélo",
+  "activityHiking": "Randonnée",
+  "activityWalking": "Marche",
+  "activityOutdoor": "Travail extérieur",
+  "errorNetwork": "Vérifiez votre connexion internet.",
+  "errorServer": "Une erreur serveur s'est produite.",
+  "errorLocation": "Impossible d'obtenir la localisation.",
+  "errorUnknown": "Une erreur inconnue s'est produite.",
+  "settingsBackgroundRefreshTitle": "Actualisation en arriere-plan",
+  "settingsBackgroundRefreshDescription": "Actualise la meteo, la qualite de l air, le score exterieur et le widget environ toutes les 30 minutes. L exception de batterie ameliore la fiabilite.",
+  "settingsBackgroundRefreshStatusEnabled": "Exception batterie activee",
+  "settingsBackgroundRefreshStatusLimited": "Exception batterie requise",
+  "settingsBackgroundRefreshAction": "Ouvrir les reglages",
+  "batteryOptimizationReminderTitle": "Autoriser une actualisation stable",
+  "batteryOptimizationReminderMessage": "Yegamssi peut actualiser plus fiablement la meteo, la qualite de l air et les widgets toutes les 30 minutes si l optimisation batterie est desactivee pour cette app.",
+  "batteryOptimizationReminderLater": "Plus tard",
+  "batteryOptimizationReminderNever": "Ne plus afficher",
+  "batteryOptimizationReminderSettings": "Ouvrir les reglages",
+  "settingsSupportTitle": "Soutien",
+  "settingsSupportDescription": "Soutenez Yegamssi en laissant un avis ou en regardant une courte publicité.",
+  "settingsSupportSheetDescription": "Un petit geste aide Yegamssi à continuer de s'améliorer.",
+  "settingsSupportReviewAction": "Écrire un avis",
+  "settingsSupportAdAction": "Regarder une publicité interstitielle pour soutenir le développeur",
+  "settingsSupportReviewFailed": "Impossible d'ouvrir l'écran d'avis. Veuillez réessayer plus tard.",
+  "settingsSupportAdThanks": "Merci de soutenir Yegamssi.",
+  "settingsSupportPremiumThanks": "Vous avez déjà soutenu Yegamssi en supprimant les publicités. Merci.",
+  "settingsSupportAdFailed": "Impossible de charger la publicité. Veuillez réessayer plus tard."
+}

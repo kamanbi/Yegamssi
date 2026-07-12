@@ -1,0 +1,516 @@
+{
+  "@@locale": "vi",
+  "appName": "Yegamssi",
+  "tabHome": "Hôm nay",
+  "tabWeather": "Thời tiết",
+  "tabScore": "Điểm số",
+  "tabMonthlyYegamssi": "Hằng tháng",
+  "monthlyYegamssiTitle": "Yegamssi hằng tháng",
+  "monthlyYegamssiSubtitle": "Xem những ngày tốt và ngày cần lưu ý của tháng này theo từng hạng mục.",
+  "monthlyGoodDaysLabel": "Ngày tốt",
+  "monthlyCautionDaysLabel": "Cần lưu ý",
+  "monthlyGeneratingMessage": "Đang chuẩn bị Yegamssi hằng tháng của tháng này.",
+  "monthlyFailedMessage": "Không thể chuẩn bị Yegamssi hằng tháng của tháng này. Vui lòng khởi động lại ứng dụng.",
+  "monthlyDisclaimer": "Yegamssi hằng tháng là nội dung tham khảo dựa trên dòng chảy Myeongri. Hãy cân nhắc các quyết định quan trọng cùng với điều kiện thực tế.",
+  "monthlySummaryEarly": "Tháng này đầu tháng có dòng chảy thuận lợi, nên hành động sớm sẽ có lợi cho bạn.",
+  "monthlySummaryMid": "Tháng này dòng chảy tốt lên từ giữa tháng, chờ đúng thời điểm hơn là vội vàng.",
+  "monthlySummaryLate": "Tháng này nếu dồn sức vào cuối tháng, kết quả tốt sẽ đến.",
+  "monthlyCategoryLove": "Tình cảm",
+  "monthlyCategoryLoveMessage": "Ngày tốt thích hợp để chủ động bày tỏ tình cảm. Ngày cần lưu ý thì một cuộc trò chuyện điềm tĩnh sẽ tốt hơn.",
+  "monthlyCategoryWork": "Công việc",
+  "monthlyCategoryWorkMessage": "Ngày tốt thích hợp để bắt đầu việc mới. Ngày cần lưu ý thì đừng gắng sức, hãy tập trung hoàn tất công việc.",
+  "monthlyCategoryMoney": "Tiền bạc",
+  "monthlyCategoryMoneyMessage": "Ngày tốt thích hợp để sắp xếp tài chính. Ngày cần lưu ý hãy kiểm tra lại trước khi chi tiêu lớn.",
+  "monthlyCategoryRelationship": "Quan hệ",
+  "monthlyCategoryRelationshipMessage": "Ngày tốt thích hợp để trò chuyện với mọi người. Ngày cần lưu ý hãy chọn lời cẩn thận để tránh hiểu lầm.",
+  "monthlyCategoryHealth": "Sức khỏe",
+  "monthlyCategoryHealthMessage": "Ngày tốt thích hợp để vận động. Ngày cần lưu ý đừng làm quá sức và dành thời gian nghỉ ngơi.",
+  "monthlyCategoryDecision": "Quyết định",
+  "monthlyCategoryDecisionMessage": "Ngày tốt thích hợp để đưa ra quyết định quan trọng. Ngày cần lưu ý nên hoãn lại và cân nhắc thêm.",
+  "monthlyCategoryTravel": "Di chuyển",
+  "monthlyCategoryTravelMessage": "Ngày tốt thích hợp để lên kế hoạch ra ngoài hoặc đi xa. Ngày cần lưu ý hãy để lịch trình rộng rãi hơn một chút.",
+  "tabFortune": "Vận mệnh",
+  "tabSettings": "Cài đặt",
+  "homeHeadline": "Thời tiết và tín hiệu cho hôm nay",
+  "homeWeatherLoadingTitle": "Đang tải thời tiết hiện tại",
+  "homeWeatherLoadingMessage": "Đang chuẩn bị dữ liệu vị trí và thời tiết.",
+  "homeWeatherErrorTitle": "Không thể tải thời tiết hiện tại",
+  "homeWeatherErrorMessage": "Hãy mở màn hình thời tiết và thử lại.",
+  "homeWeatherAction": "Xem thời tiết",
+  "homeFortuneLoadingTitle": "Đang chuẩn bị vận mệnh hôm nay",
+  "homeFortuneLoadingMessage": "Bản tóm tắt ngắn sẽ xuất hiện ngay.",
+  "homeFortuneErrorTitle": "Vận mệnh chưa sẵn sàng",
+  "homeFortuneErrorMessage": "Hãy kiểm tra hồ sơ và thử lại ở màn hình vận mệnh.",
+  "homeFortuneAction": "Xem vận mệnh",
+  "homeFortuneHeadline": "Vận mệnh hôm nay trong một dòng",
+  "appExitTitle": "Thoát ứng dụng",
+  "appExitMessage": "Bạn có muốn đóng Yegamssi không?",
+  "cancel": "Hủy",
+  "confirm": "OK",
+  "close": "Đóng",
+  "later": "Để sau",
+  "exit": "Thoát",
+  "search": "Tìm kiếm",
+  "loadingAd": "Đang tải quảng cáo...",
+  "refresh": "Làm mới",
+  "refreshFailed": "Làm mới thất bại: {error}",
+  "@refreshFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notFoundPage": "Không tìm thấy trang: {error}",
+  "@notFoundPage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLike": "Cảm giác như {temp}°C",
+  "@weatherFeelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLikeShort": "Cảm giác {temp}℃",
+  "@weatherFeelsLikeShort": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidity": "Độ ẩm {value}%",
+  "@weatherHumidity": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherWind": "Gió {speed}m/s",
+  "@weatherWind": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidityLabel": "Độ ẩm",
+  "weatherWindLabel": "Gió",
+  "weatherWindSpeedLabel": "Tốc độ gió",
+  "weatherPrecipitationLabel": "Mưa",
+  "weatherPrecipitationAmount": "Lượng mưa {amount}",
+  "@weatherPrecipitationAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDustPm10": "PM10",
+  "weatherDustPm25": "PM2.5",
+  "weatherHourlyForecast": "Dự báo theo giờ",
+  "weatherWeeklyForecast": "Dự báo theo tuần",
+  "weatherLoading": "Đang tải thời tiết...",
+  "weatherErrorTitle": "Không thể lấy dữ liệu thời tiết",
+  "weatherReturnCurrentLocation": "Sẽ quay về vị trí hiện tại sau {seconds}s",
+  "@weatherReturnCurrentLocation": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherToday": "Hôm nay",
+  "weatherAm": "AM",
+  "weatherPm": "PM",
+  "weatherHour": "{hour}:00",
+  "@weatherHour": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherUvVeryHigh": "{uv} Rất cao",
+  "weatherUvHigh": "{uv} Cao",
+  "weatherUvModerateHigh": "{uv} Khá cao",
+  "weatherUvModerate": "{uv} Trung bình",
+  "weatherUvLow": "{uv} Thấp",
+  "@weatherUvVeryHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerateHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerate": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvLow": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherConditionSunny": "Nắng",
+  "weatherConditionClearNight": "Đêm quang đãng",
+  "weatherConditionPartlyCloudy": "Có mây rải rác",
+  "weatherConditionPartlyCloudyNight": "Đêm có mây rải rác",
+  "weatherConditionCloudy": "Nhiều mây",
+  "weatherConditionHazy": "Mù",
+  "weatherConditionWindy": "Nhiều gió",
+  "weatherConditionSlightRain": "Mưa nhẹ",
+  "weatherConditionRain": "Mưa",
+  "weatherConditionHeavyRain": "Mưa to",
+  "weatherConditionThunderstorm": "Giông bão",
+  "weatherConditionRainThunder": "Mưa kèm sấm",
+  "weatherConditionLightSnow": "Tuyết nhẹ",
+  "weatherConditionSnow": "Tuyết",
+  "weatherConditionSleet": "Mưa tuyết",
+  "weatherConditionHot": "Nóng",
+  "weatherConditionHotNight": "Đêm nóng",
+  "weatherConditionColdWave": "Rét đậm",
+  "weatherConditionUnknown": "Không xác định",
+  "locationCurrent": "Vị trí hiện tại",
+  "locationSelectClose": "Đóng bộ chọn vị trí",
+  "locationAdded": "Đã thêm {name}",
+  "@locationAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "locationFavoriteLimit": "Bạn có thể thêm tối đa 5 vị trí.",
+  "locationFavoriteFull": "Danh sách yêu thích đã đầy",
+  "locationFavoriteAdd": "Thêm vào yêu thích",
+  "locationSearchTitle": "Tìm vị trí",
+  "locationSearchHint": "Ví dụ: Seoul, Busan, Tokyo",
+  "locationSearchEmpty": "Không tìm thấy kết quả",
+  "scoreLabel": "Điểm hoạt động ngoài trời",
+  "scoreLoading": "Đang tính điểm hoạt động ngoài trời...",
+  "scoreErrorTitle": "Không thể tính điểm",
+  "scoreBreakdownTitle": "Các yếu tố trừ điểm",
+  "scoreNoDeduction": "Điều kiện ngoài trời ổn định, gần như không có yếu tố trừ điểm.",
+  "scoreInfo": "Điểm hoạt động ngoài trời được tính từ mưa, gió, nhiệt độ cảm nhận, chất lượng không khí và chỉ số UV.",
+  "scoreDeductionRain": "Mưa và tuyết",
+  "scoreDeductionWind": "Gió",
+  "scoreDeductionTemp": "Nhiệt độ",
+  "scoreDeductionAir": "Chất lượng không khí",
+  "scoreDeductionUv": "UV",
+  "scoreDeductionOzone": "Ozone",
+  "scoreAdviceExcellent": "Hôm nay thích hợp cho hoạt động ngoài trời.\nHãy ra ngoài thư giãn và nâng cao tinh thần.",
+  "scoreAdviceGood": "Hoạt động ngoài trời vẫn ổn, nhưng hãy để ý thêm về gió và tia UV.",
+  "scoreAdviceFair": "Vẫn có thể ra ngoài, chuẩn bị kỹ hơn một chút sẽ dễ chịu hơn.",
+  "scoreAdvicePoor": "Hôm nay nên ưu tiên các hoạt động trong nhà cho an toàn.",
+  "scoreTierExcellent": "Tuyệt vời",
+  "scoreTierGood": "Tốt",
+  "scoreTierFair": "Bình thường",
+  "scoreTierPoor": "Thận trọng",
+  "scorePointUnit": "{score} điểm",
+  "@scorePointUnit": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "activityRecommendOutdoor": "Nên hoạt động ngoài trời",
+  "activityRecommendLight": "Phù hợp với vận động nhẹ",
+  "activityRecommendCaution": "Cần thận trọng",
+  "activityRecommendIndoor": "Nên hoạt động trong nhà",
+  "airQualityTitle": "Chất lượng không khí",
+  "airQualityIntegrated": "Chất lượng không khí tổng hợp",
+  "airQualityUnknown": "Không có dữ liệu",
+  "airGradeGood": "Tốt",
+  "airGradeModerate": "Trung bình",
+  "airGradeBad": "Xấu",
+  "airGradeVeryBad": "Rất xấu",
+  "pointUnit": "điểm",
+  "fortuneTitle": "Vận mệnh hôm nay của bạn",
+  "fortuneNeedProfileTitle": "Cần thông tin ngày sinh",
+  "fortuneNeedProfileMessage": "Nhập ngày và giờ sinh để nhận vận mệnh hôm nay với giọng điệu nhẹ nhàng.",
+  "fortuneBirthInputAction": "Nhập thông tin ngày sinh",
+  "fortuneHelpTooltip": "Trợ giúp về vận mệnh",
+  "fortuneHelpTitle": "Yegamssi đọc vận mệnh như thế nào",
+  "fortuneHelpIntro": "Yegamssi đọc dòng chảy vận mệnh hôm nay dựa trên Mệnh lý.",
+  "fortuneHelpMyeongri": "Mệnh lý là hệ thống bói toán phương Đông, xem xét Tứ trụ và sự cân bằng của ngũ hành dựa trên ngày và giờ sinh của bạn. Yegamssi tính năng lượng cơ bản của bạn từ ngày và giờ sinh, so sánh với dòng chảy hôm nay, rồi hướng dẫn về vận tổng quát, tiền bạc, tình cảm, công việc, sức khỏe và quyết định.",
+  "fortuneHelpBirthTime": "Nếu bạn không biết giờ sinh, có thể dùng buổi trưa làm mặc định. Nhập giờ sinh giúp cho ra kết quả chi tiết hơn.",
+  "fortuneHelpWeather": "Yegamssi không chỉ phản ánh vận mệnh mà còn cả thời tiết và điểm hoạt động. Nếu năng lượng hôm nay tốt nhưng thời tiết xấu, gợi ý ra ngoài có thể thấp hơn. Nếu cả vận mệnh và thời tiết đều ổn định, đó là ngày thích hợp hơn để hành động.",
+  "fortuneHelpReference": "Vận mệnh là để tham khảo, không phải câu trả lời cố định. Hãy dùng nó để xem trước dòng chảy hôm nay và cân nhắc kỹ hơn một chút khi gặp gỡ, ra ngoài, chi tiêu, ký kết hay đưa ra quyết định quan trọng.",
+  "fortuneLoadFailedTitle": "Không thể tải vận mệnh",
+  "fortuneLoadFailedMessage": "Vui lòng thử lại sau.",
+  "fortuneCategoryAnalysis": "Phân tích theo hạng mục",
+  "fortuneOverall": "Vận tổng quát",
+  "fortuneCategoryMoney": "Tiền bạc",
+  "fortuneCategoryLove": "Tình cảm",
+  "fortuneCategoryWork": "Công việc",
+  "fortuneCategoryHealth": "Sức khỏe",
+  "fortuneCategoryDecision": "Quyết định",
+  "fortuneLuckyColor": "Màu may mắn",
+  "fortuneLuckyNumber": "Số may mắn",
+  "fortuneOhengBalance": "Cân bằng ngũ hành",
+  "fortuneOhengDescription": "Một tín hiệu hỗ trợ cho dòng chảy cảm xúc hôm nay.",
+  "fortuneCaptureTooltip": "Chụp lại thẻ vận mệnh",
+  "fortuneCaptureSaved": "Đã lưu ảnh chụp thẻ vận mệnh.",
+  "fortuneCaptureSaveDone": "Đã hoàn tất chụp thẻ vận mệnh",
+  "fortuneCaptureFailed": "Chụp thất bại: {error}",
+  "@fortuneCaptureFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fortuneOpenFolder": "Mở thư mục",
+  "fortuneAnalyzing": "Đang phân tích.",
+  "fortuneToneBase": "Cơ bản",
+  "fortuneToneHumor": "Hài hước",
+  "fortuneToneTsundere": "Tsundere",
+  "fortuneToneCynical": "Châm biếm",
+  "fortuneToneEmotional": "Cảm xúc",
+  "fortuneToneHistorical": "Cổ trang",
+  "fortuneToneAi": "AI",
+  "fortuneTimeMorning": "Buổi sáng",
+  "fortuneTimeAfternoon": "Buổi chiều",
+  "ohengMok": "Mộc",
+  "ohengHwa": "Hỏa",
+  "ohengTo": "Thổ",
+  "ohengGeum": "Kim",
+  "ohengSu": "Thủy",
+  "luckyColorGreen": "Xanh lá",
+  "luckyColorCoral": "Cam san hô",
+  "luckyColorGold": "Vàng kim",
+  "luckyColorSilver": "Bạc",
+  "luckyColorSky": "Xanh da trời",
+  "luckyColorRed": "Đỏ",
+  "luckyColorOrange": "Cam",
+  "luckyColorYellow": "Vàng",
+  "luckyColorTeal": "Xanh mòng két",
+  "luckyColorBlue": "Xanh dương",
+  "luckyColorPurple": "Tím",
+  "luckyColorPink": "Hồng",
+  "settingsLanguage": "Ngôn ngữ",
+  "settingsCountry": "Khu vực",
+  "countryKorea": "Hàn Quốc",
+  "countryUnitedStates": "Hoa Kỳ",
+  "countryJapan": "Nhật Bản",
+  "countryChina": "Trung Quốc",
+  "countryGlobal": "Toàn cầu",
+  "settingsTheme": "Giao diện",
+  "settingsThemeDescription": "Giao diện mặc định dùng chủ đề ban ngày từ 6:00 sáng đến 7:00 tối theo giờ địa phương của vị trí đã kết nối, và chủ đề ban đêm ngoài khoảng đó. Chủ đề ban ngày và ban đêm luôn cố định bất kể thời gian.",
+  "settingsThemeAutomatic": "Chủ đề mặc định",
+  "settingsThemeAutomaticDescription": "Dùng chủ đề ban ngày từ 06:00 đến 19:00 tại vị trí đã kết nối, rồi chuyển sang chủ đề ban đêm từ 19:00 đến trước 06:00 ngày hôm sau.",
+  "settingsThemeDay": "Chủ đề ban ngày",
+  "settingsThemeDayDescription": "Luôn dùng chủ đề ban ngày sáng sủa bất kể thời gian.",
+  "settingsThemeNight": "Chủ đề ban đêm",
+  "settingsThemeNightDescription": "Luôn dùng chủ đề ban đêm tối hiện có bất kể thời gian.",
+  "settingsThemeDark": "Tối",
+  "settingsThemeLight": "Sáng",
+  "settingsBirthTitle": "Ngày sinh",
+  "settingsBirthDescription": "Quản lý ngày và giờ sinh dùng để tính vận mệnh.",
+  "settingsBirthEmpty": "Chưa nhập",
+  "settingsBirthEdit": "Chỉnh sửa",
+  "settingsBirthUnknownHour": "Không rõ",
+  "onboardingGenderLabel": "Giới tính",
+  "genderMale": "Nam",
+  "genderFemale": "Nữ",
+  "genderUnspecified": "Không muốn nói",
+  "settingsGenderTitle": "Giới tính",
+  "settingsHourUnit": "{hour}:00",
+  "@settingsHourUnit": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFortuneToneTitle": "Giọng điệu",
+  "settingsFortuneToneDescription": "Thông điệp vận mệnh được hiển thị theo phong cách {tone}.",
+  "@settingsFortuneToneDescription": {
+    "placeholders": {
+      "tone": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsFortuneToneSheetDescription": "Giữ nguyên thông điệp cơ bản và ưu tiên phong cách đã chọn.",
+  "settingsAppInfoTitle": "Thông tin ứng dụng",
+  "settingsAppInfoDescription": "Xem trang chủ, hướng dẫn quyền riêng tư, email liên hệ và các liên kết.",
+  "settingsPremiumTitle": "Gỡ quảng cáo (Trọn đời)",
+  "settingsPremiumDescription": "Gỡ vĩnh viễn quảng cáo banner và quảng cáo toàn màn hình.",
+  "settingsPremiumButton": "Gỡ quảng cáo",
+  "settingsPremiumButtonPriced": "Gỡ quảng cáo — {price}",
+  "@settingsPremiumButtonPriced": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPremiumPurchasedTitle": "Đã gỡ quảng cáo",
+  "settingsPremiumPurchasedDescription": "Cảm ơn bạn đã ủng hộ.",
+  "premiumMsgSuccess": "Đã gỡ quảng cáo. Cảm ơn bạn!",
+  "premiumMsgCanceled": "Đã hủy giao dịch.",
+  "premiumMsgError": "Giao dịch thất bại. Vui lòng thử lại sau.",
+  "premiumMsgStoreUnavailable": "Không thể kết nối cửa hàng. Vui lòng thử lại sau.",
+  "premiumMsgProductUnavailable": "Mục này hiện không khả dụng.",
+  "onboardingTitle": "Yegamssi",
+  "onboardingSubtitle": "Nhập ngày và giờ sinh\nđể nhận vận mệnh hôm nay.",
+  "onboardingStart": "Bắt đầu",
+  "birthDate": "Ngày sinh",
+  "birthHour": "Giờ sinh",
+  "birthHourOptional": "Giờ sinh (Tùy chọn)",
+  "birthSelectDate": "Chọn ngày",
+  "birthUnknownNoon": "Không rõ (tính vào buổi trưa)",
+  "birthUnknownNoonShort": "Không rõ (buổi trưa)",
+  "dateYmd": "{year}-{month}-{day}",
+  "@dateYmd": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "hourLabel": "{hour}:00",
+  "@hourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "appInfoHomepage": "Trang chủ",
+  "appInfoHomepageDescription": "Mở trang giới thiệu Yegamssi.",
+  "appInfoPrivacy": "Chính sách quyền riêng tư",
+  "appInfoPrivacyDescription": "Mở trang chính sách quyền riêng tư.",
+  "appInfoEmail": "Email liên hệ",
+  "appInfoEmailDescription": "Mở ứng dụng email để gửi câu hỏi.",
+  "appInfoShare": "Chia sẻ Yegamssi",
+  "appInfoShareDescription": "Hiển thị mã QR liên kết đến cửa hàng.",
+  "appInfoShareQrDescription": "Quét mã QR để mở trang cửa hàng của Yegamssi.",
+  "appInfoCopyLink": "Sao chép liên kết",
+  "appInfoOpenStore": "Mở cửa hàng",
+  "appInfoStoreLinkCopied": "Đã sao chép liên kết cửa hàng.",
+  "appInfoVersionTitle": "Phiên bản ứng dụng",
+  "appInfoCurrentVersion": "Phiên bản hiện tại {version}+{buildNumber}",
+  "@appInfoCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "appInfoCheckingVersion": "Đang kiểm tra phiên bản...",
+  "appInfoDataSource": "Nguồn dữ liệu",
+  "appInfoKma": "Cơ quan Khí tượng Hàn Quốc (KMA)",
+  "appInfoKmaDescription": "Cung cấp dữ liệu thời tiết và dự báo cho Hàn Quốc.",
+  "appInfoAirKorea": "AirKorea",
+  "appInfoAirKoreaDescription": "Cung cấp dữ liệu PM10, PM2.5, ozone và chất lượng không khí tổng hợp cho Hàn Quốc.",
+  "appInfoOpenWeather": "OpenWeather",
+  "appInfoOpenWeatherDescription": "Cung cấp dữ liệu thời tiết, dự báo và chất lượng không khí (PM10, PM2.5, O3) quốc tế.",
+  "appInfoNominatim": "OpenStreetMap Nominatim",
+  "appInfoNominatimDescription": "Chuyển tọa độ thành tên địa danh bản địa hóa. (Giấy phép ODbL)",
+  "appInfoNoaa": "NOAA / National Weather Service",
+  "appInfoNoaaDescription": "Cung cấp dự báo thời tiết chính thức và dữ liệu theo giờ cho Hoa Kỳ. (Phạm vi công cộng)",
+  "appInfoAirNow": "U.S. EPA AirNow",
+  "appInfoAirNowDescription": "Cung cấp dữ liệu chất lượng không khí thời gian thực (PM2.5, PM10, Ozone) cho Hoa Kỳ.",
+  "appInfoDataSourceNotice": "Một số thông tin tuân theo tiêu chuẩn ghi nguồn KOGL. Dữ liệu quốc tế do OpenWeather API cung cấp.",
+  "widgetScoreLabel": "Điểm",
+  "widgetFortuneLabel": "Vận mệnh",
+  "widget_description": "Tiện ích tóm tắt hằng ngày của Yegamssi",
+  "widgetInstallTitle": "Thêm tiện ích Yegamssi",
+  "widgetInstallMessage": "Xem thời tiết, nhiệt độ, điểm ngoài trời và vận mệnh ngay trên màn hình chính.",
+  "widgetInstallAction": "Cài đặt tiện ích",
+  "widgetInstallManual": "Nhấn giữ màn hình chính rồi thêm tiện ích Yegamssi.",
+  "appReviewTitle": "Bạn có thể dành chút thời gian không? 🙏",
+  "appReviewMessage": "Cảm ơn bạn rất nhiều vì đã dùng Yegamssi. Là một dự án cá nhân nhỏ, một đánh giá 5 sao của bạn có ý nghĩa vô cùng lớn với chúng tôi. Bạn có thể để lại đánh giá 5 sao không?",
+  "appReviewAction": "Đánh giá 5 sao",
+  "appReviewLater": "Có lẽ để sau",
+  "updateNoticeTitle": "Thông báo cập nhật",
+  "updateRequiredTitle": "Cần cập nhật",
+  "updateRequiredMessage": "Phiên bản hiện tại {currentVersion} không còn được hỗ trợ.\nVui lòng cập nhật lên phiên bản {latestVersion}.",
+  "updateAvailableMessage": "Phiên bản {latestVersion} đã sẵn sàng.\nCập nhật ngay?",
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "currentVersion": {
+        "type": "String"
+      },
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAction": "Cập nhật",
+  "updateNewVersionMessage": "Đã phát hành phiên bản mới.\nCập nhật ngay?",
+  "activityRunning": "Chạy bộ",
+  "activityCycling": "Đạp xe",
+  "activityHiking": "Leo núi",
+  "activityWalking": "Đi bộ",
+  "activityOutdoor": "Làm việc ngoài trời",
+  "errorNetwork": "Vui lòng kiểm tra kết nối Internet.",
+  "errorServer": "Đã xảy ra lỗi máy chủ.",
+  "errorLocation": "Không thể lấy vị trí.",
+  "errorUnknown": "Đã xảy ra lỗi không xác định.",
+  "settingsBackgroundRefreshTitle": "Làm mới nền",
+  "settingsBackgroundRefreshDescription": "Cập nhật thời tiết, chất lượng không khí, điểm ngoài trời và dữ liệu tiện ích khoảng mỗi 30 phút. Cho phép ngoại lệ tối ưu hóa pin sẽ tăng độ tin cậy.",
+  "settingsBackgroundRefreshStatusEnabled": "Đã bật ngoại lệ pin",
+  "settingsBackgroundRefreshStatusLimited": "Cần ngoại lệ pin",
+  "settingsBackgroundRefreshAction": "Mở cài đặt",
+  "batteryOptimizationReminderTitle": "Cho phép làm mới nền ổn định",
+  "batteryOptimizationReminderMessage": "Yegamssi có thể cập nhật thời tiết, chất lượng không khí và tiện ích đáng tin cậy hơn mỗi 30 phút khi tắt tối ưu hóa pin cho ứng dụng này.",
+  "batteryOptimizationReminderLater": "Để sau",
+  "batteryOptimizationReminderNever": "Không hiển thị lại",
+  "batteryOptimizationReminderSettings": "Mở cài đặt",
+  "settingsSupportTitle": "Ủng hộ",
+  "settingsSupportDescription": "Ủng hộ Yegamssi bằng đánh giá hoặc xem một quảng cáo ngắn.",
+  "settingsSupportSheetDescription": "Một hành động nhỏ giúp Yegamssi tiếp tục được cải thiện.",
+  "settingsSupportReviewAction": "Viết đánh giá",
+  "settingsSupportAdAction": "Xem quảng cáo toàn màn hình để ủng hộ nhà phát triển",
+  "settingsSupportReviewFailed": "Không thể mở màn hình đánh giá. Vui lòng thử lại sau.",
+  "settingsSupportAdThanks": "Cảm ơn bạn đã ủng hộ Yegamssi.",
+  "settingsSupportPremiumThanks": "Bạn đã ủng hộ Yegamssi bằng cách gỡ quảng cáo. Cảm ơn bạn.",
+  "settingsSupportAdFailed": "Không thể tải quảng cáo. Vui lòng thử lại sau."
+}

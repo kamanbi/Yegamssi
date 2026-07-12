@@ -1,6 +1,8 @@
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/fortune_result.dart';
+import '../../domain/calculators/lucky_color_calculator.dart';
+import '../../domain/entities/fortune_evaluation_context.dart';
 import '../../domain/entities/fortune_tone.dart';
 import '../../domain/entities/oheng.dart';
 import '../../domain/entities/saju.dart';
@@ -18,15 +20,11 @@ class FortuneRepositoryImpl implements FortuneRepository {
   Future<FortuneQueryResult> getDailyFortune({
     required Saju saju,
     required Map<FortuneCategory, int> scores,
-    required Oheng? weatherOheng,
-    required String lang,
-    required FortuneTone tone,
+    required FortuneEvaluationContext context,
   }) async {
     try {
-      final selectedTableName = tone.tableNameForLang(lang);
-      final baseTableName = FortuneTone.base.tableNameForLang(lang);
-      final (:slot, :date) = TimeSlot.forNow();
-      final now = DateTime.now();
+      final selectedTableName = context.tone.tableNameForLang(context.language);
+      final baseTableName = FortuneTone.base.tableNameForLang(context.language);
       final messages = <FortuneCategory, String>{};
 
       for (final cat in FortuneCategory.values) {
@@ -36,7 +34,7 @@ class FortuneRepositoryImpl implements FortuneRepository {
           score: score,
           dominantOheng: saju.dominant,
           strength: saju.dominantStrength,
-          weatherOheng: weatherOheng,
+          weatherOheng: context.weatherOheng,
         );
 
         var fragments = await _source.fetchWithFallback(
@@ -55,12 +53,10 @@ class FortuneRepositoryImpl implements FortuneRepository {
         }
 
         // score를 시드에 포함 → 같은 티어 내에서도 점수별 다른 조각 선택
-        final seed =
-            saju.dayStem.index * 997 ^
-            (now.year * 10000 + now.month * 100 + now.day) ^
-            (slot.index * 997) ^
-            (cat.index * 31) ^
-            (score * 17);
+        final seed = context.messageSeed(
+          categoryIndex: cat.index,
+          score: score,
+        );
 
         messages[cat] = FragmentComposer.compose(
           fragments,
@@ -75,14 +71,24 @@ class FortuneRepositoryImpl implements FortuneRepository {
         for (final o in Oheng.values)
           o: total > 0 ? (saju.ohengCount[o] ?? 0) / total : 0.2,
       };
+      final luckyColor = LuckyColorCalculator.calculate(
+        LuckyColorInput(
+          saju: saju,
+          basisDate: context.basisDate,
+          slot: context.slot,
+          scores: scores,
+          weatherOheng: context.weatherOheng,
+        ),
+      );
 
       return (
         data: FortuneResult(
           scores: scores,
           messages: messages,
           ohengRatio: ohengRatio,
-          date: now,
-          slot: slot,
+          luckyColor: luckyColor,
+          date: context.basisDate,
+          slot: context.slot,
         ),
         error: null,
       );

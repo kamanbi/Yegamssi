@@ -4,9 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../../core/constants/app_colors.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/utils/location_provider.dart';
 import '../../../core/version/app_update_service.dart';
+import '../../../core/locale/country_resolver.dart';
+import '../../../core/locale/locale_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../fortune/domain/entities/fortune_result.dart';
 import '../../fortune/presentation/fortune_provider.dart';
@@ -25,6 +28,7 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   static const _releaseNoticeKey = 'release_notice_20260518_fortune_tones_v1';
+  static const _firstLaunchKey = 'app_first_launch_done';
 
   late final AnimationController _controller;
   late final Animation<double> _progressAnim;
@@ -36,7 +40,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 2000),
     );
     _progressAnim = Tween<double>(
       begin: 0,
@@ -76,7 +80,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     await Future.any([
       _warmupFuture ?? Future.value(),
-      Future.delayed(const Duration(seconds: 3)),
+      Future.delayed(const Duration(milliseconds: 1500)),
     ]).catchError((_) {});
     if (!mounted) return;
 
@@ -92,9 +96,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   Future<void> _showReleaseNoticeIfNeeded() async {
     final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(_releaseNoticeKey) ?? false) {
+
+    // 첫 설치라면 모든 과거 release notice를 건너뛰고 표시 완료로 마킹
+    final isFirstLaunch = !(prefs.getBool(_firstLaunchKey) ?? false);
+    if (isFirstLaunch) {
+      await prefs.setBool(_firstLaunchKey, true);
+      await prefs.setBool(_releaseNoticeKey, true);
       return;
     }
+
+    if (prefs.getBool(_releaseNoticeKey) ?? false) return;
     if (!mounted) return;
 
     await showDialog<void>(
@@ -134,12 +145,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       final weather = await weatherFuture;
       final score = await scoreFuture;
       final fortune = await fortuneFuture;
+      final country = await ref.read(resolvedCountryProvider.future);
 
       await syncWidgetSnapshot(
         weather: weather,
         score: score,
         latitude: position.lat,
         longitude: position.lon,
+        language: ref.read(appLanguageNotifierProvider),
+        country: country,
         fortune: fortune,
       );
     } catch (_) {}
@@ -248,8 +262,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final progressColors = _SplashProgressColors.fromBrightness(brightness);
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0D2B5E),
+      backgroundColor: AppColors.scaffold(brightness),
       body: Center(
         child: AnimatedBuilder(
           animation: _controller,
@@ -272,6 +289,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   child: CustomPaint(
                     painter: _HandDrawnProgressPainter(
                       progress: _progressAnim.value,
+                      colors: progressColors,
                     ),
                   ),
                 ),
@@ -285,9 +303,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 }
 
 class _HandDrawnProgressPainter extends CustomPainter {
-  _HandDrawnProgressPainter({required this.progress});
+  _HandDrawnProgressPainter({required this.progress, required this.colors});
 
   final double progress;
+  final _SplashProgressColors colors;
 
   Path _wobblyRect(double left, double top, double right, double bottom) {
     const wobble = 1.5;
@@ -337,10 +356,10 @@ class _HandDrawnProgressPainter extends CustomPainter {
     const barBottom = barTop + barHeight;
 
     final textPainter = TextPainter(
-      text: const TextSpan(
+      text: TextSpan(
         text: 'LOADING ...',
         style: TextStyle(
-          color: Color(0xFFAACCFF),
+          color: colors.label,
           fontSize: 13,
           fontWeight: FontWeight.w700,
           letterSpacing: 2,
@@ -355,7 +374,7 @@ class _HandDrawnProgressPainter extends CustomPainter {
     );
 
     final outlinePaint = Paint()
-      ..color = const Color(0xFF4488CC)
+      ..color = colors.outline
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.2
       ..strokeJoin = StrokeJoin.round
@@ -375,7 +394,7 @@ class _HandDrawnProgressPainter extends CustomPainter {
     canvas.clipRect(Rect.fromLTWH(0, barTop - 2, fillWidth + 2, barHeight + 4));
 
     final fillPaint = Paint()
-      ..color = const Color(0xFF0D47A1)
+      ..color = colors.fill
       ..style = PaintingStyle.fill;
     canvas.drawRect(
       Rect.fromLTRB(2, barTop + 2, fillWidth, barBottom - 2),
@@ -383,7 +402,7 @@ class _HandDrawnProgressPainter extends CustomPainter {
     );
 
     final highlightPaint = Paint()
-      ..color = const Color(0xFF1565C0).withAlpha(180)
+      ..color = colors.highlight
       ..style = PaintingStyle.fill;
     canvas.drawRect(
       Rect.fromLTRB(2, barTop + 2, fillWidth, barTop + barHeight * 0.45),
@@ -393,7 +412,7 @@ class _HandDrawnProgressPainter extends CustomPainter {
     canvas.restore();
 
     final sketchPaint = Paint()
-      ..color = Colors.white.withAlpha(30)
+      ..color = colors.sketch
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
     for (double x = 8; x < fillWidth; x += 12) {
@@ -407,6 +426,37 @@ class _HandDrawnProgressPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_HandDrawnProgressPainter oldDelegate) {
-    return oldDelegate.progress != progress;
+    return oldDelegate.progress != progress || oldDelegate.colors != colors;
+  }
+}
+
+class _SplashProgressColors {
+  const _SplashProgressColors({
+    required this.label,
+    required this.outline,
+    required this.fill,
+    required this.highlight,
+    required this.sketch,
+  });
+
+  final Color label;
+  final Color outline;
+  final Color fill;
+  final Color highlight;
+  final Color sketch;
+
+  factory _SplashProgressColors.fromBrightness(Brightness brightness) {
+    final isDark = brightness == Brightness.dark;
+    return _SplashProgressColors(
+      label: isDark ? const Color(0xFFAACCFF) : AppColors.body(brightness),
+      outline: isDark ? const Color(0xFF4488CC) : AppColors.primaryBlue,
+      fill: isDark ? const Color(0xFF0D47A1) : AppColors.skyGlow,
+      highlight: isDark
+          ? const Color(0xFF1565C0).withAlpha(180)
+          : AppColors.lightSurface.withAlpha(190),
+      sketch: isDark
+          ? Colors.white.withAlpha(30)
+          : AppColors.primaryBlue.withAlpha(36),
+    );
   }
 }

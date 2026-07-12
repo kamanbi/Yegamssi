@@ -12,6 +12,16 @@ val keyProps = Properties().apply {
     if (keyFile.exists()) load(keyFile.inputStream())
 }
 val hasKeyProps = keyProps.isNotEmpty()
+check(hasKeyProps) {
+    "Missing android/key.properties: release builds must use the configured release keystore."
+}
+val localEnvProps = Properties().apply {
+    val envFile = rootProject.file("../.env")
+    if (envFile.exists()) load(envFile.inputStream())
+}
+
+fun localEnvValue(key: String): String =
+    (System.getenv(key) ?: localEnvProps.getProperty(key) ?: "").replace("\\", "\\\\").replace("\"", "\\\"")
 
 android {
     namespace = "com.yegamssi.yegamssi"
@@ -36,6 +46,13 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        buildConfigField("String", "SUPABASE_URL", "\"${localEnvValue("SUPABASE_URL")}\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localEnvValue("SUPABASE_ANON_KEY")}\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     signingConfigs {
@@ -51,8 +68,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig = if (hasKeyProps) signingConfigs.getByName("release")
-                            else signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

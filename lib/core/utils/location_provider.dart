@@ -10,7 +10,10 @@ part 'location_provider.g.dart';
 const _defaultLat = 37.5665;
 const _defaultLon = 126.9780;
 
-/// 현재 GPS 위치를 반환하는 provider.
+/// 마지막으로 알려진 위치가 이 시간 이내면 재조회 없이 즉시 사용
+const _lastKnownFreshness = Duration(minutes: 2);
+
+/// 현재 위치를 반환하는 provider.
 /// 권한이 없거나 서비스가 꺼져 있으면 서울 좌표를 반환.
 @Riverpod(keepAlive: true)
 Future<({double lat, double lon})> currentPosition(Ref ref) async {
@@ -29,10 +32,21 @@ Future<({double lat, double lon})> currentPosition(Ref ref) async {
       return await _loadCachedOrDefault();
     }
 
+    final lastKnown = await Geolocator.getLastKnownPosition();
+    if (lastKnown != null &&
+        DateTime.now().difference(lastKnown.timestamp) <
+            _lastKnownFreshness) {
+      await LocationCacheStore.save(
+        latitude: lastKnown.latitude,
+        longitude: lastKnown.longitude,
+      );
+      return (lat: lastKnown.latitude, lon: lastKnown.longitude);
+    }
+
     final pos = await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.low,
-        timeLimit: Duration(seconds: 5),
+        accuracy: LocationAccuracy.medium,
+        timeLimit: Duration(seconds: 10),
       ),
     );
     await LocationCacheStore.save(

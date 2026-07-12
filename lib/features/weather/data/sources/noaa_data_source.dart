@@ -5,14 +5,18 @@ import '../../../../core/error/app_exception.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../domain/entities/weather_entity.dart';
 import '../models/weather_response.dart';
+import 'air_now_data_source.dart';
 import 'weather_data_source.dart';
 
 /// NOAA/NWS API 구현체 — 미국 전용 (키 불필요)
+/// 대기질은 EPA AirNow API 병렬 조회
 class NoaaDataSource implements WeatherDataSource {
   NoaaDataSource()
-      : _dio = DioClient.create(baseUrl: AppConfig.noaaBaseUrl);
+      : _dio = DioClient.create(baseUrl: AppConfig.noaaBaseUrl),
+        _airNow = AirNowDataSource();
 
   final Dio _dio;
+  final AirNowDataSource _airNow;
 
   @override
   Future<WeatherResponse> fetchCurrent({
@@ -40,13 +44,21 @@ class NoaaDataSource implements WeatherDataSource {
         throw const ParseException('NOAA forecastHourly URL이 없습니다');
       }
 
-      // 시간별 + 일별 예보 병렬 요청
+      // 시간별 + 일별 예보 + AirNow 대기질 병렬 요청
       final opts = Options(headers: headers);
-      final responses = await Future.wait([
-        _dio.get(forecastHourlyUrl, options: opts),
-        if (forecastUrl != null && forecastUrl.isNotEmpty)
-          _dio.get(forecastUrl, options: opts),
+      final results = await Future.wait([
+        Future.wait([
+          _dio.get(forecastHourlyUrl, options: opts),
+          if (forecastUrl != null && forecastUrl.isNotEmpty)
+            _dio.get(forecastUrl, options: opts),
+        ]),
+        _airNow.fetchAirQuality(lat: lat, lon: lon).then(
+          (v) => v,
+          onError: (_) => (null, null, null, null, null),
+        ),
       ]);
+
+      final responses = results[0] as List<Response>;
 
       final hourlyData = responses[0].data as Map<String, dynamic>;
       final hourlyProps =
@@ -90,6 +102,7 @@ class NoaaDataSource implements WeatherDataSource {
             time: DateTime.parse(startTimeStr),
             tempCelsius: _toCelsius(t, unit),
             condition: _mapForecast((p['shortForecast'] as String?) ?? ''),
+            precipitationAmountMm: _precipitationAmount(p),
           ),
         );
       }
@@ -162,6 +175,10 @@ class NoaaDataSource implements WeatherDataSource {
         }
       }
 
+      final airQuality = results[1]
+          as (double?, double?, double?, double?, int?);
+      final (pm10, pm25, o3, aqiValue, aqiGrade) = airQuality;
+
       return WeatherResponse(
         tempCelsius: _toCelsius(temperature, temperatureUnit),
         feelsLikeCelsius: _toCelsius(temperature, temperatureUnit),
@@ -174,6 +191,11 @@ class NoaaDataSource implements WeatherDataSource {
         locationName: locationName.isEmpty ? 'United States' : locationName,
         hourlyForecasts: hourlyForecasts,
         dailyForecasts: dailyForecasts,
+        pm10: pm10,
+        pm25: pm25,
+        o3: o3,
+        khaiValue: aqiValue,
+        khaiGrade: aqiGrade,
       );
     } on DioException catch (error) {
       throw NetworkException('NOAA API 오류: ${error.message}');
@@ -192,6 +214,12 @@ class NoaaDataSource implements WeatherDataSource {
     final match = RegExp(r'(\d+(?:\.\d+)?)').firstMatch(windSpeedText);
     final mph = double.tryParse(match?.group(1) ?? '0') ?? 0;
     return mph * 0.44704;
+  }
+
+  double? _precipitationAmount(Map<String, dynamic> period) {
+    final precipitation =
+        period['quantitativePrecipitation'] as Map<String, dynamic>?;
+    return (precipitation?['value'] as num?)?.toDouble();
   }
 
   WeatherCondition _mapForecast(String forecast) {

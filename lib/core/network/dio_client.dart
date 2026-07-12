@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 import 'api_interceptor.dart';
@@ -24,10 +25,10 @@ class DioClient {
       ),
     );
 
-    dio.interceptors.addAll([
-      ApiInterceptor(),
-      LogInterceptor(logPrint: (obj) => Logger().d(obj)),
-    ]);
+    dio.interceptors.add(ApiInterceptor());
+    if (kDebugMode) {
+      dio.interceptors.add(LogInterceptor(logPrint: (obj) => Logger().d(obj)));
+    }
 
     return dio;
   }

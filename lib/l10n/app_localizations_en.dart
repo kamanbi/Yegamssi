@@ -21,6 +21,95 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabScore => 'Score';
 
   @override
+  String get tabMonthlyYegamssi => 'Monthly';
+
+  @override
+  String get monthlyYegamssiTitle => 'Monthly Yegamssi';
+
+  @override
+  String get monthlyYegamssiSubtitle =>
+      'See this month\'s good days and days to watch for each category.';
+
+  @override
+  String get monthlyGoodDaysLabel => 'Good days';
+
+  @override
+  String get monthlyCautionDaysLabel => 'Watch out';
+
+  @override
+  String get monthlyGeneratingMessage =>
+      'Preparing this month\'s Monthly Yegamssi.';
+
+  @override
+  String get monthlyFailedMessage =>
+      'We couldn\'t prepare this month\'s Monthly Yegamssi. Please restart the app.';
+
+  @override
+  String get monthlyDisclaimer =>
+      'Monthly Yegamssi is reference content based on Myeongri flow. Please weigh important decisions against real-world conditions.';
+
+  @override
+  String get monthlySummaryEarly =>
+      'The flow is strong early this month, so moving ahead sooner works in your favor.';
+
+  @override
+  String get monthlySummaryMid =>
+      'The flow improves from mid-month onward, so watching for the right moment beats rushing.';
+
+  @override
+  String get monthlySummaryLate =>
+      'Push through later in the month and good results will follow.';
+
+  @override
+  String get monthlyCategoryLove => 'Love';
+
+  @override
+  String get monthlyCategoryLoveMessage =>
+      'Good days are great for expressing how you feel first. On days to watch, a calm conversation works better.';
+
+  @override
+  String get monthlyCategoryWork => 'Work';
+
+  @override
+  String get monthlyCategoryWorkMessage =>
+      'Good days are great for starting something new. On days to watch, ease off and focus on wrapping things up.';
+
+  @override
+  String get monthlyCategoryMoney => 'Money';
+
+  @override
+  String get monthlyCategoryMoneyMessage =>
+      'Good days are great for tidying up your finances. On days to watch, double-check before any big spending.';
+
+  @override
+  String get monthlyCategoryRelationship => 'Relationships';
+
+  @override
+  String get monthlyCategoryRelationshipMessage =>
+      'Good days are great for talking with people. On days to watch, choose your words carefully to avoid misunderstandings.';
+
+  @override
+  String get monthlyCategoryHealth => 'Health';
+
+  @override
+  String get monthlyCategoryHealthMessage =>
+      'Good days are great for getting your body moving. On days to watch, don\'t overdo it and make room for rest.';
+
+  @override
+  String get monthlyCategoryDecision => 'Decisions';
+
+  @override
+  String get monthlyCategoryDecisionMessage =>
+      'Good days are great for making an important call. On days to watch, hold off and look things over a bit more.';
+
+  @override
+  String get monthlyCategoryTravel => 'Travel';
+
+  @override
+  String get monthlyCategoryTravelMessage =>
+      'Good days are great for planning an outing or trip. On days to watch, leave some slack in your schedule.';
+
+  @override
   String get tabFortune => 'Fortune';
 
   @override
@@ -112,7 +201,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String weatherFeelsLikeShort(String temp) {
-    return 'Feels $temp°';
+    return 'Feels $temp℃';
   }
 
   @override
@@ -411,6 +500,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fortuneBirthInputAction => 'Enter Birth Info';
 
   @override
+  String get fortuneHelpTooltip => 'Fortune help';
+
+  @override
+  String get fortuneHelpTitle => 'How Yegamssi Reads Fortune';
+
+  @override
+  String get fortuneHelpIntro =>
+      'Yegamssi reads the flow of today\'s fortune based on Myeongri.';
+
+  @override
+  String get fortuneHelpMyeongri =>
+      'Myeongri is an East Asian fortune system that looks at the Four Pillars and the balance of the five elements using your birth date and time. Yegamssi calculates your basic personal energy from your birth date and birth time, compares it with today\'s flow, and guides your overall, money, love, work, health, and decision fortune.';
+
+  @override
+  String get fortuneHelpBirthTime =>
+      'If you do not know your birth time, you can use noon as the default. Entering the birth time helps produce a more detailed reading.';
+
+  @override
+  String get fortuneHelpWeather =>
+      'Yegamssi also reflects weather and activity scores, not only fortune. If today\'s energy is good but the weather is poor, the outdoor recommendation can be lower. If fortune and weather are both stable, it can be a better day to act.';
+
+  @override
+  String get fortuneHelpReference =>
+      'Fortune is a reference, not a fixed answer. Use it to preview today\'s flow and choose contacts, outings, spending, contracts, and important decisions with a little more care.';
+
+  @override
   String get fortuneLoadFailedTitle => 'Could not load fortune';
 
   @override
@@ -528,13 +643,74 @@ class AppLocalizationsEn extends AppLocalizations {
   String get luckyColorSky => 'Sky blue';
 
   @override
+  String get luckyColorRed => 'Red';
+
+  @override
+  String get luckyColorOrange => 'Orange';
+
+  @override
+  String get luckyColorYellow => 'Yellow';
+
+  @override
+  String get luckyColorTeal => 'Teal';
+
+  @override
+  String get luckyColorBlue => 'Blue';
+
+  @override
+  String get luckyColorPurple => 'Purple';
+
+  @override
+  String get luckyColorPink => 'Pink';
+
+  @override
   String get settingsLanguage => 'Language';
 
   @override
   String get settingsCountry => 'Region';
 
   @override
+  String get countryKorea => 'Korea';
+
+  @override
+  String get countryUnitedStates => 'United States';
+
+  @override
+  String get countryJapan => 'Japan';
+
+  @override
+  String get countryChina => 'China';
+
+  @override
+  String get countryGlobal => 'Global';
+
+  @override
   String get settingsTheme => 'Appearance';
+
+  @override
+  String get settingsThemeDescription =>
+      'Default theme uses the day theme from 6:00 AM to 7:00 PM based on the connected location\'s local time, and the night theme outside that range. Day theme and night theme stay fixed regardless of time.';
+
+  @override
+  String get settingsThemeAutomatic => 'Default theme';
+
+  @override
+  String get settingsThemeAutomaticDescription =>
+      'Uses the day theme from 06:00 to 19:00 at the connected location, then switches to the night theme from 19:00 until before 06:00 the next day.';
+
+  @override
+  String get settingsThemeDay => 'Day theme';
+
+  @override
+  String get settingsThemeDayDescription =>
+      'Always uses the bright day theme regardless of time.';
+
+  @override
+  String get settingsThemeNight => 'Night theme';
+
+  @override
+  String get settingsThemeNightDescription =>
+      'Always uses the existing dark night theme regardless of time.';
 
   @override
   String get settingsThemeDark => 'Dark';
@@ -553,7 +729,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsBirthEmpty => 'Not entered';
 
   @override
+  String get settingsBirthEdit => 'Edit';
+
+  @override
   String get settingsBirthUnknownHour => 'Unknown';
+
+  @override
+  String get onboardingGenderLabel => 'Gender';
+
+  @override
+  String get genderMale => 'Male';
+
+  @override
+  String get genderFemale => 'Female';
+
+  @override
+  String get genderUnspecified => 'Prefer not to say';
+
+  @override
+  String get settingsGenderTitle => 'Gender';
 
   @override
   String settingsHourUnit(int hour) {
@@ -578,6 +772,45 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsAppInfoDescription =>
       'Check homepage, privacy guide, contact email, and links.';
+
+  @override
+  String get settingsPremiumTitle => 'Remove Ads (Lifetime)';
+
+  @override
+  String get settingsPremiumDescription =>
+      'Permanently remove banner and interstitial ads.';
+
+  @override
+  String get settingsPremiumButton => 'Remove Ads';
+
+  @override
+  String settingsPremiumButtonPriced(String price) {
+    return 'Remove Ads — $price';
+  }
+
+  @override
+  String get settingsPremiumPurchasedTitle => 'Ads Removed';
+
+  @override
+  String get settingsPremiumPurchasedDescription =>
+      'Thank you for your support.';
+
+  @override
+  String get premiumMsgSuccess => 'Ads have been removed. Thank you!';
+
+  @override
+  String get premiumMsgCanceled => 'Purchase canceled.';
+
+  @override
+  String get premiumMsgError => 'Purchase failed. Please try again later.';
+
+  @override
+  String get premiumMsgStoreUnavailable =>
+      'Cannot connect to the store. Please try again later.';
+
+  @override
+  String get premiumMsgProductUnavailable =>
+      'This item is currently unavailable.';
 
   @override
   String get onboardingTitle => 'Yegamssi';
@@ -670,21 +903,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appInfoDataSource => 'Data Sources';
 
   @override
-  String get appInfoKma => 'Korea Meteorological Administration';
+  String get appInfoKma => 'Korea Meteorological Administration (KMA)';
 
   @override
-  String get appInfoKmaDescription => 'Provides weather and forecast data.';
+  String get appInfoKmaDescription =>
+      'Provides weather and forecast data for South Korea.';
 
   @override
   String get appInfoAirKorea => 'AirKorea';
 
   @override
   String get appInfoAirKoreaDescription =>
-      'Provides PM10, PM2.5, ozone, and integrated air quality data.';
+      'Provides PM10, PM2.5, ozone, and integrated air quality data for South Korea.';
+
+  @override
+  String get appInfoOpenWeather => 'OpenWeather';
+
+  @override
+  String get appInfoOpenWeatherDescription =>
+      'Provides international weather, forecast, and air quality (PM10, PM2.5, O3) data.';
+
+  @override
+  String get appInfoNominatim => 'OpenStreetMap Nominatim';
+
+  @override
+  String get appInfoNominatimDescription =>
+      'Converts coordinates to localized place names. (ODbL license)';
+
+  @override
+  String get appInfoNoaa => 'NOAA / National Weather Service';
+
+  @override
+  String get appInfoNoaaDescription =>
+      'Provides official weather forecasts and hourly data for the United States. (Public domain)';
+
+  @override
+  String get appInfoAirNow => 'U.S. EPA AirNow';
+
+  @override
+  String get appInfoAirNowDescription =>
+      'Provides real-time air quality data (PM2.5, PM10, Ozone) for the United States.';
 
   @override
   String get appInfoDataSourceNotice =>
-      'Some information follows public data portal and public Nuri attribution standards.';
+      'Some information follows KOGL attribution standards. International data is provided by OpenWeather API.';
 
   @override
   String get widgetScoreLabel => 'Score';
@@ -708,6 +970,19 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get widgetInstallManual =>
       'Long-press the home screen and add the Yegamssi widget.';
+
+  @override
+  String get appReviewTitle => 'Could you spare a moment? 🙏';
+
+  @override
+  String get appReviewMessage =>
+      'Thank you so much for using Yegamssi. As a small one-person project, a 5-star rating from you would mean the world to us. Would you mind leaving a 5-star review?';
+
+  @override
+  String get appReviewAction => 'Rate 5 Stars';
+
+  @override
+  String get appReviewLater => 'Maybe Later';
 
   @override
   String get updateNoticeTitle => 'Update Notice';
@@ -758,4 +1033,72 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUnknown => 'An unknown error occurred.';
+
+  @override
+  String get settingsBackgroundRefreshTitle => 'Background refresh';
+
+  @override
+  String get settingsBackgroundRefreshDescription =>
+      'Updates weather, air quality, outdoor score, and widget data about every 30 minutes. Battery optimization exception improves reliability.';
+
+  @override
+  String get settingsBackgroundRefreshStatusEnabled =>
+      'Battery exception enabled';
+
+  @override
+  String get settingsBackgroundRefreshStatusLimited =>
+      'Battery exception needed';
+
+  @override
+  String get settingsBackgroundRefreshAction => 'Open settings';
+
+  @override
+  String get batteryOptimizationReminderTitle =>
+      'Allow stable background refresh';
+
+  @override
+  String get batteryOptimizationReminderMessage =>
+      'Yegamssi can update weather, air quality, and widgets more reliably every 30 minutes when battery optimization is disabled for this app.';
+
+  @override
+  String get batteryOptimizationReminderLater => 'Later';
+
+  @override
+  String get batteryOptimizationReminderNever => 'Don\'t show again';
+
+  @override
+  String get batteryOptimizationReminderSettings => 'Open settings';
+
+  @override
+  String get settingsSupportTitle => 'Support';
+
+  @override
+  String get settingsSupportDescription =>
+      'Support Yegamssi with a review or a short ad view.';
+
+  @override
+  String get settingsSupportSheetDescription =>
+      'A small action helps keep Yegamssi improving.';
+
+  @override
+  String get settingsSupportReviewAction => 'Write a review';
+
+  @override
+  String get settingsSupportAdAction =>
+      'Watch an interstitial ad to support the developer';
+
+  @override
+  String get settingsSupportReviewFailed =>
+      'Could not open the review screen. Please try again later.';
+
+  @override
+  String get settingsSupportAdThanks => 'Thank you for supporting Yegamssi.';
+
+  @override
+  String get settingsSupportPremiumThanks =>
+      'You already supported Yegamssi by removing ads. Thank you.';
+
+  @override
+  String get settingsSupportAdFailed =>
+      'Could not load an ad. Please try again later.';
 }

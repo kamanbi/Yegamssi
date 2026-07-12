@@ -4,6 +4,31 @@
   "tabHome": "今日",
   "tabWeather": "天気",
   "tabScore": "スコア",
+  "tabMonthlyYegamssi": "今月",
+  "monthlyYegamssiTitle": "今月のイェガムシ",
+  "monthlyYegamssiSubtitle": "今月のカテゴリー別の良い日と気をつけたい日を確認しましょう。",
+  "monthlyGoodDaysLabel": "良い日",
+  "monthlyCautionDaysLabel": "注意する日",
+  "monthlyGeneratingMessage": "今月のイェガムシを準備しています。",
+  "monthlyFailedMessage": "今月のイェガムシを準備できませんでした。アプリを再起動してください。",
+  "monthlyDisclaimer": "今月のイェガムシは命理の流れをもとにした参考用のコンテンツです。大切な決断は現実の状況とあわせて判断してください。",
+  "monthlySummaryEarly": "今月は序盤の流れが良好です。早めに動くと有利に運びます。",
+  "monthlySummaryMid": "今月は中旬以降に流れが良くなります。急ぐより頃合いを見るのがおすすめです。",
+  "monthlySummaryLate": "今月は後半に力を入れると良い結果につながります。",
+  "monthlyCategoryLove": "恋愛",
+  "monthlyCategoryLoveMessage": "良い日は自分から気持ちを伝えるのに向いています。注意する日は落ち着いて話す方が良いでしょう。",
+  "monthlyCategoryWork": "仕事",
+  "monthlyCategoryWorkMessage": "良い日は新しいことを始めるのに向いています。注意する日は無理をせず、仕上げに集中する方が良いでしょう。",
+  "monthlyCategoryMoney": "お金",
+  "monthlyCategoryMoneyMessage": "良い日は家計を整えるのに向いています。注意する日は大きな出費の前にもう一度確認する方が良いでしょう。",
+  "monthlyCategoryRelationship": "人間関係",
+  "monthlyCategoryRelationshipMessage": "良い日は人と話すのに向いています。注意する日は誤解を招かないよう言葉を選ぶ方が良いでしょう。",
+  "monthlyCategoryHealth": "健康",
+  "monthlyCategoryHealthMessage": "良い日は体を動かすのに向いています。注意する日は無理をせず休息をとる方が良いでしょう。",
+  "monthlyCategoryDecision": "決断",
+  "monthlyCategoryDecisionMessage": "良い日は大事な判断を下すのに向いています。注意する日は決定を急がず、もう少し見極める方が良いでしょう。",
+  "monthlyCategoryTravel": "移動",
+  "monthlyCategoryTravelMessage": "良い日は外出や移動の計画に向いています。注意する日は予定に余裕をもたせる方が良いでしょう。",
   "tabFortune": "運勢",
   "tabSettings": "設定",
   "homeHeadline": "今日の天気と予感",
@@ -29,23 +54,65 @@
   "loadingAd": "広告を読み込み中...",
   "refresh": "更新",
   "refreshFailed": "更新に失敗しました: {error}",
-  "@refreshFailed": { "placeholders": { "error": { "type": "String" } } },
+  "@refreshFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "notFoundPage": "ページが見つかりません: {error}",
-  "@notFoundPage": { "placeholders": { "error": { "type": "String" } } },
+  "@notFoundPage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "weatherFeelsLike": "体感 {temp}°C",
-  "@weatherFeelsLike": { "placeholders": { "temp": { "type": "String" } } },
-  "weatherFeelsLikeShort": "体感 {temp}°",
-  "@weatherFeelsLikeShort": { "placeholders": { "temp": { "type": "String" } } },
+  "@weatherFeelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLikeShort": "体感 {temp}℃",
+  "@weatherFeelsLikeShort": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
   "weatherHumidity": "湿度 {value}%",
-  "@weatherHumidity": { "placeholders": { "value": { "type": "int" } } },
+  "@weatherHumidity": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
   "weatherWind": "風 {speed}m/s",
-  "@weatherWind": { "placeholders": { "speed": { "type": "String" } } },
+  "@weatherWind": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
   "weatherHumidityLabel": "湿度",
   "weatherWindLabel": "風",
   "weatherWindSpeedLabel": "風速",
   "weatherPrecipitationLabel": "降水",
   "weatherPrecipitationAmount": "降水量 {amount}",
-  "@weatherPrecipitationAmount": { "placeholders": { "amount": { "type": "String" } } },
+  "@weatherPrecipitationAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "weatherDustPm10": "PM10",
   "weatherDustPm25": "PM2.5",
   "weatherHourlyForecast": "時間別予報",
@@ -53,22 +120,64 @@
   "weatherLoading": "天気情報を読み込み中...",
   "weatherErrorTitle": "天気情報を取得できません",
   "weatherReturnCurrentLocation": "{seconds}秒後に現在地へ戻ります",
-  "@weatherReturnCurrentLocation": { "placeholders": { "seconds": { "type": "int" } } },
+  "@weatherReturnCurrentLocation": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "weatherToday": "今日",
   "weatherAm": "午前",
   "weatherPm": "午後",
   "weatherHour": "{hour}時",
-  "@weatherHour": { "placeholders": { "hour": { "type": "String" } } },
+  "@weatherHour": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
   "weatherUvVeryHigh": "{uv} 非常に高い",
   "weatherUvHigh": "{uv} 高い",
   "weatherUvModerateHigh": "{uv} やや高い",
   "weatherUvModerate": "{uv} 普通",
   "weatherUvLow": "{uv} 低い",
-  "@weatherUvVeryHigh": { "placeholders": { "uv": { "type": "int" } } },
-  "@weatherUvHigh": { "placeholders": { "uv": { "type": "int" } } },
-  "@weatherUvModerateHigh": { "placeholders": { "uv": { "type": "int" } } },
-  "@weatherUvModerate": { "placeholders": { "uv": { "type": "int" } } },
-  "@weatherUvLow": { "placeholders": { "uv": { "type": "int" } } },
+  "@weatherUvVeryHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerateHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerate": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvLow": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
   "weatherConditionSunny": "晴れ",
   "weatherConditionClearNight": "晴れた夜",
   "weatherConditionPartlyCloudy": "少し曇り",
@@ -91,7 +200,13 @@
   "locationCurrent": "現在地",
   "locationSelectClose": "位置選択を閉じる",
   "locationAdded": "{name}を追加しました",
-  "@locationAdded": { "placeholders": { "name": { "type": "String" } } },
+  "@locationAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "locationFavoriteLimit": "最大5件まで追加できます。",
   "locationFavoriteFull": "お気に入りが満杯です",
   "locationFavoriteAdd": "お気に入り追加",
@@ -119,7 +234,13 @@
   "scoreTierFair": "普通",
   "scoreTierPoor": "注意",
   "scorePointUnit": "{score}点",
-  "@scorePointUnit": { "placeholders": { "score": { "type": "int" } } },
+  "@scorePointUnit": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
   "activityRecommendOutdoor": "屋外活動おすすめ",
   "activityRecommendLight": "軽い活動に適合",
   "activityRecommendCaution": "注意が必要な日",
@@ -136,6 +257,13 @@
   "fortuneNeedProfileTitle": "運勢を見るには出生情報が必要です",
   "fortuneNeedProfileMessage": "生年月日と出生時刻を入力すると、今日の運勢を落ち着いたトーンで整理します。",
   "fortuneBirthInputAction": "出生情報を入力",
+  "fortuneHelpTooltip": "運勢ヘルプ",
+  "fortuneHelpTitle": "予感씨の運勢について",
+  "fortuneHelpIntro": "予感씨は、命理学をもとに今日の運勢の流れを読み取ります。",
+  "fortuneHelpMyeongri": "命理学は、生まれた日付と時刻をもとに四柱八字と五行のバランスを見る東洋の伝統的な運勢体系です。予感씨はユーザーの生年月日と出生時刻から基本的な気を計算し、今日の日付の流れと比べて、総合運、金運、恋愛運、仕事運、健康運、決断運を案内します。",
+  "fortuneHelpBirthTime": "出生時刻が分からない場合は、正午を基準にして利用できます。ただし、出生時刻を入力すると、より細かな解釈に役立ちます。",
+  "fortuneHelpWeather": "予感씨は運勢だけでなく、天気と活動スコアも一緒に反映します。そのため、今日の気が良くても天気が悪ければ外出のおすすめ度が下がることがあり、反対に運勢と天気がどちらも安定していれば、行動しやすい日と見ることができます。",
+  "fortuneHelpReference": "運勢は正解ではなく参考です。今日の流れを前もって確認し、連絡、外出、消費、契約、大切な決断などを少し慎重に選ぶために役立ててください。",
   "fortuneLoadFailedTitle": "運勢を読み込めません",
   "fortuneLoadFailedMessage": "しばらくしてからもう一度お試しください。",
   "fortuneCategoryAnalysis": "カテゴリ別解釈",
@@ -153,7 +281,13 @@
   "fortuneCaptureSaved": "運勢カードのキャプチャを保存しました。",
   "fortuneCaptureSaveDone": "運勢カードのキャプチャ保存完了",
   "fortuneCaptureFailed": "キャプチャに失敗しました: {error}",
-  "@fortuneCaptureFailed": { "placeholders": { "error": { "type": "String" } } },
+  "@fortuneCaptureFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "fortuneOpenFolder": "フォルダを開く",
   "fortuneAnalyzing": "分析中です。",
   "fortuneToneBase": "基本",
@@ -175,23 +309,78 @@
   "luckyColorGold": "ゴールド",
   "luckyColorSilver": "シルバー",
   "luckyColorSky": "空色",
+  "luckyColorRed": "赤",
+  "luckyColorOrange": "オレンジ",
+  "luckyColorYellow": "黄色",
+  "luckyColorTeal": "青緑",
+  "luckyColorBlue": "青",
+  "luckyColorPurple": "紫",
+  "luckyColorPink": "ピンク",
   "settingsLanguage": "言語",
   "settingsCountry": "地域",
+  "countryKorea": "韓国",
+  "countryUnitedStates": "米国",
+  "countryJapan": "日本",
+  "countryChina": "中国",
+  "countryGlobal": "グローバル",
   "settingsTheme": "テーマ",
+  "settingsThemeDescription": "基本テーマは、接続された場所の現地時間で午前6時から午後7時まで日中テーマを使用し、それ以外の時間は夜間テーマを使用します。日中テーマと夜間テーマは時間に関係なく固定されます。",
+  "settingsThemeAutomatic": "基本テーマ",
+  "settingsThemeAutomaticDescription": "接続された場所の現地時間で06:00-19:00は日中テーマ、19:00以降から翌日06:00前までは夜間テーマを自動で適用します。",
+  "settingsThemeDay": "日中テーマ",
+  "settingsThemeDayDescription": "時間に関係なく明るい日中テーマを常に使用します。",
+  "settingsThemeNight": "夜間テーマ",
+  "settingsThemeNightDescription": "時間に関係なく既存の暗い夜間テーマを常に使用します。",
   "settingsThemeDark": "ダーク",
   "settingsThemeLight": "ライト",
   "settingsBirthTitle": "生年月日",
   "settingsBirthDescription": "運勢計算に使う生年月日と出生時刻を管理します。",
   "settingsBirthEmpty": "未入力",
+  "settingsBirthEdit": "修正",
   "settingsBirthUnknownHour": "不明",
+  "onboardingGenderLabel": "性別",
+  "genderMale": "男性",
+  "genderFemale": "女性",
+  "genderUnspecified": "未回答",
+  "settingsGenderTitle": "性別",
   "settingsHourUnit": "{hour}時",
-  "@settingsHourUnit": { "placeholders": { "hour": { "type": "int" } } },
+  "@settingsHourUnit": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
   "settingsFortuneToneTitle": "メッセージトーン",
   "settingsFortuneToneDescription": "運勢メッセージを{tone}スタイルで表示します。",
-  "@settingsFortuneToneDescription": { "placeholders": { "tone": { "type": "String" } } },
+  "@settingsFortuneToneDescription": {
+    "placeholders": {
+      "tone": {
+        "type": "String"
+      }
+    }
+  },
   "settingsFortuneToneSheetDescription": "基本文は維持し、選択したスタイル文を優先して使用します。",
   "settingsAppInfoTitle": "アプリ情報",
   "settingsAppInfoDescription": "ホームページ、プライバシー案内、問い合わせメール、リンクを確認します。",
+  "settingsPremiumTitle": "広告を削除（永久）",
+  "settingsPremiumDescription": "バナー広告とインタースティシャル広告を完全に削除します。",
+  "settingsPremiumButton": "広告を削除",
+  "settingsPremiumButtonPriced": "広告を削除 — {price}",
+  "@settingsPremiumButtonPriced": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPremiumPurchasedTitle": "広告削除済み",
+  "settingsPremiumPurchasedDescription": "ご購入ありがとうございます。",
+  "premiumMsgSuccess": "広告が削除されました。ありがとうございます！",
+  "premiumMsgCanceled": "購入をキャンセルしました。",
+  "premiumMsgError": "購入に失敗しました。しばらくしてから再試行してください。",
+  "premiumMsgStoreUnavailable": "ストアに接続できません。しばらくしてから再試行してください。",
+  "premiumMsgProductUnavailable": "現在この商品はご利用いただけません。",
   "onboardingTitle": "イェガムシ",
   "onboardingSubtitle": "生年月日と出生時刻を入力すると\n今日の運勢をお知らせします。",
   "onboardingStart": "始める",
@@ -202,9 +391,27 @@
   "birthUnknownNoon": "不明（正午基準で計算）",
   "birthUnknownNoonShort": "不明（正午基準）",
   "dateYmd": "{year}年{month}月{day}日",
-  "@dateYmd": { "placeholders": { "year": { "type": "int" }, "month": { "type": "int" }, "day": { "type": "int" } } },
+  "@dateYmd": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
   "hourLabel": "{hour}時",
-  "@hourLabel": { "placeholders": { "hour": { "type": "int" } } },
+  "@hourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
   "appInfoHomepage": "ホームページ",
   "appInfoHomepageDescription": "イェガムシ紹介ページを開きます。",
   "appInfoPrivacy": "プライバシーポリシー",
@@ -219,14 +426,31 @@
   "appInfoStoreLinkCopied": "ストアリンクをコピーしました。",
   "appInfoVersionTitle": "アプリバージョン",
   "appInfoCurrentVersion": "現在のバージョン {version}+{buildNumber}",
-  "@appInfoCurrentVersion": { "placeholders": { "version": { "type": "String" }, "buildNumber": { "type": "String" } } },
+  "@appInfoCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
   "appInfoCheckingVersion": "バージョン確認中...",
   "appInfoDataSource": "データ出典",
-  "appInfoKma": "韓国気象庁",
-  "appInfoKmaDescription": "天気と予報データを提供します。",
+  "appInfoKma": "韓国気象庁 (KMA)",
+  "appInfoKmaDescription": "韓国の天気と予報データを提供します。",
   "appInfoAirKorea": "AirKorea",
-  "appInfoAirKoreaDescription": "PM10、PM2.5、オゾン、総合大気質情報を提供します。",
-  "appInfoDataSourceNotice": "一部情報は公共データポータルと公共ヌリの出典表示基準に従います。",
+  "appInfoAirKoreaDescription": "PM10、PM2.5、オゾン、総合大気質情報を提供します。(韓国専用)",
+  "appInfoOpenWeather": "OpenWeather",
+  "appInfoOpenWeatherDescription": "海外の天気・予報・大気質(PM10·PM2.5·O3)データを提供します。",
+  "appInfoNominatim": "OpenStreetMap Nominatim",
+  "appInfoNominatimDescription": "座標から選択言語の地名に変換します。(ODbLライセンス)",
+  "appInfoNoaa": "NOAA / 米国国立気象局",
+  "appInfoNoaaDescription": "米国の公式天気予報と時間別データを提供します。(パブリックドメイン)",
+  "appInfoAirNow": "米国EPA AirNow",
+  "appInfoAirNowDescription": "米国全域のリアルタイム大気質データ（PM2.5、PM10、オゾン）を提供します。",
+  "appInfoDataSourceNotice": "一部情報は公共データポータルと公共ヌリの出典表示基準に従います。海外データはOpenWeather APIを使用します。",
   "widgetScoreLabel": "スコア",
   "widgetFortuneLabel": "運勢",
   "widget_description": "イェガムシ今日の要約ウィジェット",
@@ -234,12 +458,31 @@
   "widgetInstallMessage": "ホーム画面で天気、気温、屋外スコア、運勢をすぐ確認できます。",
   "widgetInstallAction": "ウィジェットを設置",
   "widgetInstallManual": "ホーム画面を長押ししてイェガムシのウィジェットを追加してください。",
+  "appReviewTitle": "少しだけお時間よろしいですか? 🙏",
+  "appReviewMessage": "予感さんをご利用いただき、誠にありがとうございます。個人で開発している小さなアプリのため、★5の評価が本当に大きな励みになります。よろしければ★5の評価をいただけますでしょうか。",
+  "appReviewAction": "★5で評価する",
+  "appReviewLater": "また今度",
   "updateNoticeTitle": "更新のお知らせ",
   "updateRequiredTitle": "更新が必要です",
   "updateRequiredMessage": "現在のバージョン {currentVersion} はサポートされていません。\n最新バージョン {latestVersion} に更新してください。",
   "updateAvailableMessage": "新しいバージョン {latestVersion} が準備できました。\n今すぐ更新しますか？",
-  "@updateRequiredMessage": { "placeholders": { "currentVersion": { "type": "String" }, "latestVersion": { "type": "String" } } },
-  "@updateAvailableMessage": { "placeholders": { "latestVersion": { "type": "String" } } },
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "currentVersion": {
+        "type": "String"
+      },
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
   "updateAction": "更新",
   "updateNewVersionMessage": "新しいバージョンがリリースされました。\n今すぐ更新しますか？",
   "activityRunning": "ランニング",
@@ -250,5 +493,24 @@
   "errorNetwork": "インターネット接続を確認してください。",
   "errorServer": "サーバーエラーが発生しました。",
   "errorLocation": "位置情報を取得できません。",
-  "errorUnknown": "不明なエラーが発生しました。"
+  "errorUnknown": "不明なエラーが発生しました。",
+  "settingsBackgroundRefreshTitle": "バックグラウンド更新",
+  "settingsBackgroundRefreshDescription": "天気とウィジェットを約30分ごとに更新します。電池最適化の例外で安定します。",
+  "settingsBackgroundRefreshStatusEnabled": "バッテリー例外が有効",
+  "settingsBackgroundRefreshStatusLimited": "バッテリー例外が必要",
+  "settingsBackgroundRefreshAction": "設定を開く",
+  "batteryOptimizationReminderTitle": "バックグラウンド更新を安定化",
+  "batteryOptimizationReminderMessage": "バッテリー最適化の例外を許可すると、天気とウィジェットの更新が安定します。",
+  "batteryOptimizationReminderLater": "あとで",
+  "batteryOptimizationReminderNever": "今後表示しない",
+  "batteryOptimizationReminderSettings": "設定を開く",
+  "settingsSupportTitle": "応援",
+  "settingsSupportDescription": "レビューや広告の視聴でYegamssiを応援してください。",
+  "settingsSupportSheetDescription": "ちょっとした応援がYegamssiの改善に役立ちます。",
+  "settingsSupportReviewAction": "レビューを書く",
+  "settingsSupportAdAction": "開発者を応援するためにインタースティシャル広告を見る",
+  "settingsSupportReviewFailed": "レビュー画面を開けませんでした。しばらくしてからもう一度お試しください。",
+  "settingsSupportAdThanks": "Yegamssiを応援していただきありがとうございます。",
+  "settingsSupportPremiumThanks": "すでに広告削除でYegamssiを応援していただいています。ありがとうございます。",
+  "settingsSupportAdFailed": "広告を読み込めませんでした。しばらくしてからもう一度お試しください。"
 }

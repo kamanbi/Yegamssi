@@ -6,7 +6,7 @@ part of 'score_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentScoreHash() => r'7f2b440323f40439cc9df1b4f18d90d82fa4e67a';
+String _$currentScoreHash() => r'79ef7364f89e9ba008e399611ebf63b72e09046d';
 
 /// 현재 날씨 기반 활동 점수 provider.
 /// 국가 코드에 따라 가중치 계산기를 자동 선택.

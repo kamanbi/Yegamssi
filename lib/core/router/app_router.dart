@@ -6,8 +6,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/fortune/presentation/fortune_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/home/presentation/home_tab_screen.dart';
+import '../../features/monthly/presentation/monthly_yegamssi_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
-import '../../features/score/presentation/score_screen.dart';
 import '../../features/settings/presentation/app_info_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
@@ -17,42 +17,70 @@ import 'app_routes.dart';
 
 part 'app_router.g.dart';
 
+Page<T> _noTransition<T>({required LocalKey key, required Widget child}) {
+  return CustomTransitionPage<T>(
+    key: key,
+    child: child,
+    transitionDuration: Duration.zero,
+    reverseTransitionDuration: Duration.zero,
+    transitionsBuilder: (_, __, ___, child) => child,
+  );
+}
+
 @riverpod
 GoRouter appRouter(Ref ref) {
   return GoRouter(
     initialLocation: AppRoutes.splash,
     routes: [
-      GoRoute(path: AppRoutes.splash, builder: (_, __) => const SplashScreen()),
+      GoRoute(
+        path: AppRoutes.splash,
+        pageBuilder: (_, state) =>
+            _noTransition(key: state.pageKey, child: const SplashScreen()),
+      ),
       GoRoute(
         path: AppRoutes.onboarding,
-        builder: (_, __) => const OnboardingScreen(),
+        pageBuilder: (_, state) =>
+            _noTransition(key: state.pageKey, child: const OnboardingScreen()),
       ),
       ShellRoute(
-        builder: (_, __, child) => HomeScreen(child: child),
+        pageBuilder: (_, state, child) => _noTransition(
+          key: state.pageKey,
+          child: HomeScreen(child: child),
+        ),
         routes: [
           GoRoute(
             path: AppRoutes.home,
-            builder: (_, __) => const HomeTabScreen(),
+            pageBuilder: (_, state) =>
+                _noTransition(key: state.pageKey, child: const HomeTabScreen()),
           ),
           GoRoute(
             path: AppRoutes.weather,
-            builder: (_, __) => const WeatherScreen(),
-          ),
-          GoRoute(
-            path: AppRoutes.score,
-            builder: (_, __) => const ScoreScreen(),
+            pageBuilder: (_, state) =>
+                _noTransition(key: state.pageKey, child: const WeatherScreen()),
           ),
           GoRoute(
             path: AppRoutes.fortune,
-            builder: (_, __) => const FortuneScreen(),
+            pageBuilder: (_, state) =>
+                _noTransition(key: state.pageKey, child: const FortuneScreen()),
+          ),
+          GoRoute(
+            path: AppRoutes.monthlyYegamssi,
+            pageBuilder: (_, state) => _noTransition(
+              key: state.pageKey,
+              child: const MonthlyYegamssiScreen(),
+            ),
           ),
           GoRoute(
             path: AppRoutes.settings,
-            builder: (_, __) => const SettingsScreen(),
+            pageBuilder: (_, state) => _noTransition(
+              key: state.pageKey,
+              child: const SettingsScreen(),
+            ),
           ),
           GoRoute(
             path: AppRoutes.appInfo,
-            builder: (_, __) => const AppInfoScreen(),
+            pageBuilder: (_, state) =>
+                _noTransition(key: state.pageKey, child: const AppInfoScreen()),
           ),
         ],
       ),

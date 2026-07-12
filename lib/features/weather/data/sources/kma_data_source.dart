@@ -3,10 +3,9 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../core/config/app_config.dart';
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/extensions/datetime_ext.dart';
-import '../../../../core/network/dio_client.dart';
+import '../../../../core/network/weather_proxy_dio.dart';
 import '../../../../core/utils/geocoding_service.dart';
 import '../../domain/entities/weather_entity.dart';
 import '../models/weather_response.dart';
@@ -16,7 +15,7 @@ import 'weather_data_source.dart';
 
 class KmaDataSource implements WeatherDataSource {
   KmaDataSource()
-    : _dio = DioClient.create(baseUrl: AppConfig.kmaBaseUrl),
+    : _dio = WeatherProxyDio.create(WeatherProxyProvider.kma),
       _airKorea = AirKoreaDataSource();
 
   final Dio _dio;
@@ -175,7 +174,6 @@ class KmaDataSource implements WeatherDataSource {
     final response = await _dio.get(
       path,
       queryParameters: {
-        'authKey': AppConfig.kmaApiKey,
         'dataType': 'JSON',
         'numOfRows': numOfRows,
         'pageNo': 1,
@@ -264,14 +262,20 @@ class KmaDataSource implements WeatherDataSource {
         continue;
       }
 
+      final precipitationAmount = _precipAmount(
+        entry.value['RN1'] ?? entry.value['PCP'],
+      );
       forecasts.add(
         HourlyForecast(
           time: forecastTime,
           tempCelsius: temperature,
+          precipitationAmountMm: precipitationAmount > 0
+              ? precipitationAmount
+              : null,
           condition: _mapCondition(
             entry.value['PTY'] ?? '0',
             entry.value['SKY'] ?? '1',
-            _precipAmount(entry.value['RN1'] ?? entry.value['PCP']),
+            precipitationAmount,
           ),
         ),
       );
@@ -494,7 +498,7 @@ class KmaDataSource implements WeatherDataSource {
   }
 
   bool _isNightByHour(DateTime time) {
-    return time.hour < 6 || time.hour >= 20;
+    return time.hour < 6 || time.hour >= 19;
   }
 
   DateTime _ncstBaseTime(DateTime now) {
@@ -577,7 +581,6 @@ class KmaDataSource implements WeatherDataSource {
     final landRes = await _dio.get(
       _midLandPath,
       queryParameters: {
-        'authKey': AppConfig.kmaApiKey,
         'dataType': 'JSON',
         'numOfRows': 999,
         'pageNo': 1,
@@ -604,7 +607,6 @@ class KmaDataSource implements WeatherDataSource {
       final taRes = await _dio.get(
         _midTaWcPath,
         queryParameters: {
-          'authKey': AppConfig.kmaApiKey,
           'reg': cityId,
           'tmfc1': tmfc10,
           'tmfc2': tmfc10,

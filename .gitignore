@@ -95,6 +95,7 @@ widget_check.png
 FYegamssietcfortune_styleshumor_base_samples.txt
 CON
 captures/
+device_widget_check.png
 temp_widget_icons/
 tool/_debug*/
 tool/_debug_*.png
@@ -111,8 +112,14 @@ etc/*.zip
 .env
 .env.*
 *.env
+etc/*.local.py
+etc/*_local.py
+etc/.secrets/
+etc/_secrets.py
+tool/.local/
 env.dart
 lib/config/env.dart
 secrets.json
 google-services.json
 GoogleService-Info.plist
+supabase/.temp/

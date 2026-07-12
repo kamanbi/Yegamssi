@@ -17,6 +17,8 @@ class WidgetDataWriter {
     required int score,
     required String dateLabel,
     required String timeLabel,
+    required String language,
+    required String countryIso,
     required double latitude,
     required double longitude,
   }) async {
@@ -38,6 +40,8 @@ class WidgetDataWriter {
       HomeWidget.saveWidgetData(WidgetCacheKeys.score, score),
       HomeWidget.saveWidgetData(WidgetCacheKeys.date, dateLabel),
       HomeWidget.saveWidgetData(WidgetCacheKeys.time, timeLabel),
+      HomeWidget.saveWidgetData(WidgetCacheKeys.language, language),
+      HomeWidget.saveWidgetData(WidgetCacheKeys.countryIso, countryIso),
       HomeWidget.saveWidgetData(WidgetCacheKeys.latitude, latitude),
       HomeWidget.saveWidgetData(WidgetCacheKeys.longitude, longitude),
       HomeWidget.saveWidgetData(

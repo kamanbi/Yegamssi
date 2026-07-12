@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">예감씨</string>
-    <string name="widget_name">예감씨 위젯</string>
+    <string name="app_name">Yegamssi</string>
+    <string name="widget_name">Yegamssi Widget</string>
     <string name="widget_description">날씨, 운세, 야외 점수를 빠르게 보는 5x1 위젯</string>
+    <string name="widget_feels_like_label">체감</string>
+    <string name="widget_outdoor_label">야외</string>
+    <string name="widget_fortune_label">운세</string>
+    <string name="capture_open_chooser">예감씨 캡처 열기</string>
 </resources>

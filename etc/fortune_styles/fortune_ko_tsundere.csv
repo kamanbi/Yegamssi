@@ -1,4 +1,4 @@
-﻿code,type,text,weight
+code,type,text,weight
 overall_A,intro,종합운은 좋아. 이런 날까지 망설이면 좀 아깝지.,1
 overall_A,intro,하루 흐름은 꽤 잘 살아 있어. 오늘은 믿어도 되겠네.,1
 overall_A,effect,오늘 하루는 원하는 쪽으로 잘 풀릴 가능성이 높아.,1
@@ -331,12 +331,12 @@ overall_B_to_ex_wood,intro,종합운은 안정감이 잘 살아 있어. 이번�
 overall_B_to_ex_wood,effect,오늘 하루는 좋은 쪽으로 풀릴 수 있어. 느려도 크게 흔들리진 않아.,1
 overall_B_to_ex_wood,action,중요한 일정부터 정리해. 망설이지 말고 해봐.,1
 overall_B_to_ex_wood,state,안정감이 강하게 살아 있어. 잘 쓰면 꽤 도움 돼. 변화도 좋은 쪽으로 움직여.,1
-overall_B1,intro,종합운은 중간은 넘어. 방심만 하지 마.,1
-overall_B1,intro,하루 흐름은 나쁘진 않은데 너무 믿진 마.,1
-overall_B1,effect,오늘 하루는 확인한 만큼만 안정돼.,1
-overall_B1,effect,작은 점검 하나가 피곤함을 줄여.,1
-overall_B1,action,일정부터 줄여. 한 번 더 보고 움직여.,1
-overall_B1,action,평소 루틴이나 지켜. 대충 넘기면 티 나.,1
+overall_B1,intro,종합운은 중간은 넘어. 기본만 지키면 꽤 괜찮아.,1
+overall_B1,intro,하루 흐름은 나쁘지 않아. 과하지만 않으면 괜찮게 간다.,1
+overall_B1,effect,오늘 하루은 확인할수록 더 안정돼.,1
+overall_B1,effect,작은 점검 하나가 흐름을 더 편하게 해줘.,1
+overall_B1,action,일정부터 정리해. 한 번 더 보면 더 편하게 움직일 수 있어.,1
+overall_B1,action,평소 루틴을 지켜. 그 정도면 충분히 괜찮아.,1
 overall_B1_geum_df_earth,intro,종합운은 판단을 한 번 더 봐. 넘기면 귀찮아져.,1
 overall_B1_geum_df_earth,effect,오늘 하루는 확인한 만큼 안정돼. 기준은 있는데 말이 좀 딱딱할 수 있어.,1
 overall_B1_geum_df_earth,action,평소 루틴이나 지켜. 한 번 더 보고 움직여.,1
@@ -1327,12 +1327,12 @@ decision_B_to_ex_wood,intro,결정운은 안정감이 잘 살아 있어. 이번�
 decision_B_to_ex_wood,effect,선택은 좋은 쪽으로 풀릴 수 있어. 느려도 크게 흔들리진 않아.,1
 decision_B_to_ex_wood,action,오래 붙잡던 문제를 정리해. 망설이지 말고 해봐.,1
 decision_B_to_ex_wood,state,안정감이 강하게 살아 있어. 잘 쓰면 꽤 도움 돼. 변화도 좋은 쪽으로 움직여.,1
-decision_B1,intro,결정운은 중간은 넘어. 방심만 하지 마.,1
-decision_B1,intro,판단은 나쁘진 않은데 너무 믿진 마.,1
-decision_B1,effect,선택은 확인한 만큼만 안정돼.,1
-decision_B1,effect,작은 점검 하나가 피곤함을 줄여.,1
-decision_B1,action,기준부터 다시 세워. 한 번 더 보고 움직여.,1
-decision_B1,action,선택지를 줄여. 대충 넘기면 티 나.,1
+decision_B1,intro,결정운은 중간은 넘어. 기본만 지키면 꽤 괜찮아.,1
+decision_B1,intro,판단은 나쁘지 않아. 과하지만 않으면 괜찮게 간다.,1
+decision_B1,effect,선택은 확인할수록 더 안정돼.,1
+decision_B1,effect,작은 점검 하나가 흐름을 더 편하게 해줘.,1
+decision_B1,action,기준부터 다시 세워. 한 번 더 보면 더 편하게 움직일 수 있어.,1
+decision_B1,action,선택지를 줄여. 그 정도면 충분히 괜찮아.,1
 decision_B1_geum_df_earth,intro,결정운은 판단을 한 번 더 봐. 넘기면 귀찮아져.,1
 decision_B1_geum_df_earth,effect,선택은 확인한 만큼 안정돼. 기준은 있는데 말이 좀 딱딱할 수 있어.,1
 decision_B1_geum_df_earth,action,기준부터 다시 세워. 한 번 더 보고 움직여.,1
@@ -2323,12 +2323,12 @@ money_B_to_ex_wood,intro,재물운은 안정감이 잘 살아 있어. 이번엔 
 money_B_to_ex_wood,effect,재정은 좋은 쪽으로 풀릴 수 있어. 느려도 크게 흔들리진 않아.,1
 money_B_to_ex_wood,action,쓸 돈과 묶을 돈을 나눠. 망설이지 말고 해봐.,1
 money_B_to_ex_wood,state,안정감이 강하게 살아 있어. 잘 쓰면 꽤 도움 돼. 변화도 좋은 쪽으로 움직여.,1
-money_B1,intro,재물운은 중간은 넘어. 방심만 하지 마.,1
-money_B1,intro,돈 흐름은 나쁘진 않은데 너무 믿진 마.,1
-money_B1,effect,재정은 확인한 만큼만 안정돼.,1
-money_B1,effect,작은 점검 하나가 피곤함을 줄여.,1
-money_B1,action,지출 기준부터 봐. 한 번 더 보고 움직여.,1
-money_B1,action,잔돈 새는 곳부터 막아. 대충 넘기면 티 나.,1
+money_B1,intro,재물운은 중간은 넘어. 기본만 지키면 꽤 괜찮아.,1
+money_B1,intro,돈 흐름은 나쁘지 않아. 과하지만 않으면 괜찮게 간다.,1
+money_B1,effect,재정은 확인할수록 더 안정돼.,1
+money_B1,effect,작은 점검 하나가 흐름을 더 편하게 해줘.,1
+money_B1,action,지출 기준부터 봐. 한 번 더 보면 더 편하게 움직일 수 있어.,1
+money_B1,action,잔돈 새는 곳부터 정리해. 그 정도면 충분히 괜찮아.,1
 money_B1_geum_df_earth,intro,재물운은 판단을 한 번 더 봐. 넘기면 귀찮아져.,1
 money_B1_geum_df_earth,effect,재정은 확인한 만큼 안정돼. 기준은 있는데 말이 좀 딱딱할 수 있어.,1
 money_B1_geum_df_earth,action,잔돈 새는 곳부터 막아. 한 번 더 보고 움직여.,1
@@ -3319,12 +3319,12 @@ work_B_to_ex_wood,intro,업무운은 안정감이 잘 살아 있어. 이번엔 �
 work_B_to_ex_wood,effect,업무는 좋은 쪽으로 풀릴 수 있어. 느려도 크게 흔들리진 않아.,1
 work_B_to_ex_wood,action,중요한 일부터 처리해. 망설이지 말고 해봐.,1
 work_B_to_ex_wood,state,안정감이 강하게 살아 있어. 잘 쓰면 꽤 도움 돼. 변화도 좋은 쪽으로 움직여.,1
-work_B1,intro,업무운은 중간은 넘어. 방심만 하지 마.,1
-work_B1,intro,일 흐름은 나쁘진 않은데 너무 믿진 마.,1
-work_B1,effect,업무는 확인한 만큼만 안정돼.,1
-work_B1,effect,작은 점검 하나가 피곤함을 줄여.,1
-work_B1,action,일 순서부터 다시 정해. 한 번 더 보고 움직여.,1
-work_B1,action,속도보다 확인부터 해. 대충 넘기면 티 나.,1
+work_B1,intro,업무운은 중간은 넘어. 기본만 지키면 꽤 괜찮아.,1
+work_B1,intro,일 흐름은 나쁘지 않아. 과하지만 않으면 괜찮게 간다.,1
+work_B1,effect,업무은 확인할수록 더 안정돼.,1
+work_B1,effect,작은 점검 하나가 흐름을 더 편하게 해줘.,1
+work_B1,action,일 순서부터 다시 정해. 한 번 더 보면 더 편하게 움직일 수 있어.,1
+work_B1,action,속도보다 확인부터 해. 그 정도면 충분히 괜찮아.,1
 work_B1_geum_df_earth,intro,업무운은 판단을 한 번 더 봐. 넘기면 귀찮아져.,1
 work_B1_geum_df_earth,effect,업무는 확인한 만큼 안정돼. 기준은 있는데 말이 좀 딱딱할 수 있어.,1
 work_B1_geum_df_earth,action,일 순서부터 다시 정해. 한 번 더 보고 움직여.,1
@@ -4315,12 +4315,12 @@ love_B_to_ex_wood,intro,연애운은 안정감이 잘 살아 있어. 이번엔 �
 love_B_to_ex_wood,effect,관계는 좋은 쪽으로 풀릴 수 있어. 느려도 크게 흔들리진 않아.,1
 love_B_to_ex_wood,action,먼저 짧게 말 걸어. 망설이지 말고 해봐.,1
 love_B_to_ex_wood,state,안정감이 강하게 살아 있어. 잘 쓰면 꽤 도움 돼. 변화도 좋은 쪽으로 움직여.,1
-love_B1,intro,연애운은 중간은 넘어. 방심만 하지 마.,1
-love_B1,intro,마음은 나쁘진 않은데 너무 믿진 마.,1
-love_B1,effect,관계는 확인한 만큼만 안정돼.,1
-love_B1,effect,작은 점검 하나가 피곤함을 줄여.,1
-love_B1,action,말의 온도부터 낮춰. 한 번 더 보고 움직여.,1
-love_B1,action,상대 속도에 맞춰. 대충 넘기면 티 나.,1
+love_B1,intro,연애운은 중간은 넘어. 기본만 지키면 꽤 괜찮아.,1
+love_B1,intro,마음은 나쁘지 않아. 과하지만 않으면 괜찮게 간다.,1
+love_B1,effect,관계은 확인할수록 더 안정돼.,1
+love_B1,effect,작은 점검 하나가 흐름을 더 편하게 해줘.,1
+love_B1,action,말의 온도부터 낮춰. 한 번 더 보면 더 편하게 움직일 수 있어.,1
+love_B1,action,상대 속도에 맞춰. 그 정도면 충분히 괜찮아.,1
 love_B1_geum_df_earth,intro,연애운은 판단을 한 번 더 봐. 넘기면 귀찮아져.,1
 love_B1_geum_df_earth,effect,관계는 확인한 만큼 안정돼. 기준은 있는데 말이 좀 딱딱할 수 있어.,1
 love_B1_geum_df_earth,action,말의 온도부터 낮춰. 한 번 더 보고 움직여.,1
@@ -5311,12 +5311,12 @@ health_B_to_ex_wood,intro,건강운은 안정감이 잘 살아 있어. 이번엔
 health_B_to_ex_wood,effect,몸 상태는 좋은 쪽으로 풀릴 수 있어. 느려도 크게 흔들리진 않아.,1
 health_B_to_ex_wood,action,가벼운 활동부터 해. 망설이지 말고 해봐.,1
 health_B_to_ex_wood,state,안정감이 강하게 살아 있어. 잘 쓰면 꽤 도움 돼. 변화도 좋은 쪽으로 움직여.,1
-health_B1,intro,건강운은 중간은 넘어. 방심만 하지 마.,1
-health_B1,intro,컨디션은 나쁘진 않은데 너무 믿진 마.,1
-health_B1,effect,몸 상태는 확인한 만큼만 안정돼.,1
-health_B1,effect,작은 점검 하나가 피곤함을 줄여.,1
-health_B1,action,몸 상태부터 살펴. 한 번 더 보고 움직여.,1
-health_B1,action,무리 말고 일상만 유지해. 대충 넘기면 티 나.,1
+health_B1,intro,건강운은 중간은 넘어. 기본만 지키면 꽤 괜찮아.,1
+health_B1,intro,컨디션은 나쁘지 않아. 과하지만 않으면 괜찮게 간다.,1
+health_B1,effect,몸 상태은 확인할수록 더 안정돼.,1
+health_B1,effect,작은 점검 하나가 흐름을 더 편하게 해줘.,1
+health_B1,action,몸 상태부터 살펴. 한 번 더 보면 더 편하게 움직일 수 있어.,1
+health_B1,action,무리 말고 일상을 유지해. 그 정도면 충분히 괜찮아.,1
 health_B1_geum_df_earth,intro,건강운은 판단을 한 번 더 봐. 넘기면 귀찮아져.,1
 health_B1_geum_df_earth,effect,몸 상태는 확인한 만큼 안정돼. 기준은 있는데 말이 좀 딱딱할 수 있어.,1
 health_B1_geum_df_earth,action,몸 상태부터 살펴. 한 번 더 보고 움직여.,1

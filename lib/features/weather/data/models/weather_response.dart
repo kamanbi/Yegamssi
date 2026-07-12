@@ -62,6 +62,7 @@ class WeatherResponse {
             (forecast) => HourlyForecast(
               time: forecast.time,
               tempCelsius: forecast.tempCelsius,
+              precipitationAmountMm: forecast.precipitationAmountMm,
               condition: _applyTempOverrides(
                 forecast.condition,
                 forecast.tempCelsius,

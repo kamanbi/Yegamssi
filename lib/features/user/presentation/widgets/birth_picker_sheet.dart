@@ -16,8 +16,8 @@ class BirthPickerSheet {
   BirthPickerSheet._();
 
   static const int minBirthYear = 1900;
-  static const double wheelItemExtent = 40;
-  static const double sheetPickerHeight = 196;
+  static const double wheelItemExtent = 48;
+  static const double sheetPickerHeight = 220;
 
   static Future<DateTime?> pickBirthDate(
     BuildContext context, {
@@ -38,7 +38,17 @@ class BirthPickerSheet {
           title: l10n.birthDate,
           onConfirm: () => Navigator.of(sheetContext).pop(selectedDate),
           child: CupertinoTheme(
-            data: const CupertinoThemeData(brightness: Brightness.dark),
+            data: const CupertinoThemeData(
+              brightness: Brightness.dark,
+              textTheme: CupertinoTextThemeData(
+                dateTimePickerTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ),
             child: SizedBox(
               height: sheetPickerHeight,
               child: CupertinoDatePicker(
@@ -78,11 +88,23 @@ class BirthPickerSheet {
           onConfirm: () =>
               Navigator.of(sheetContext).pop(options[selectedIndex]),
           child: CupertinoTheme(
-            data: const CupertinoThemeData(brightness: Brightness.dark),
+            data: const CupertinoThemeData(
+              brightness: Brightness.dark,
+              textTheme: CupertinoTextThemeData(
+                pickerTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
             child: SizedBox(
               height: sheetPickerHeight,
               child: CupertinoPicker(
                 itemExtent: wheelItemExtent,
+                magnification: 1.15,
+                useMagnifier: true,
+                squeeze: 1.1,
                 scrollController: FixedExtentScrollController(
                   initialItem: selectedIndex,
                 ),
@@ -94,11 +116,6 @@ class BirthPickerSheet {
                       (hour) => Center(
                         child: Text(
                           _hourLabel(l10n, hour),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
                         ),
                       ),
                     )

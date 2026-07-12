@@ -3,11 +3,13 @@ class HourlyForecast {
     required this.time,
     required this.tempCelsius,
     required this.condition,
+    this.precipitationAmountMm,
   });
 
   final DateTime time;
   final double tempCelsius;
   final WeatherCondition condition;
+  final double? precipitationAmountMm;
 }
 
 class DailyForecast {

@@ -15,11 +15,22 @@ enum FortuneTone {
 
   String tableNameForLang(String lang) {
     final supportedLang = switch (lang) {
-      'ko' || 'en' || 'ja' => lang,
+      'ko' ||
+          'en' ||
+          'ja' ||
+          'ro' ||
+          'hi' ||
+          'zh' ||
+          'es' ||
+          'pt' ||
+          'de' ||
+          'fr' ||
+          'vi' => lang,
       _ => 'ko',
     };
     final baseTableName = 'fortune_$supportedLang';
-    if (tableSuffix.isEmpty) {
+    // 한국어만 다중 톤 지원 — 영어/일본어는 기본 톤만 제공
+    if (supportedLang != 'ko' || tableSuffix.isEmpty) {
       return baseTableName;
     }
     return '${baseTableName}_$tableSuffix';

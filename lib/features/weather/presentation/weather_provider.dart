@@ -6,7 +6,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/locale/country_code.dart';
 import '../../../core/locale/country_resolver.dart';
+import '../../../core/locale/locale_provider.dart';
+import '../../../core/refresh/refresh_policy.dart';
 import '../../../core/storage/weather_cache_store.dart';
+import '../../../core/utils/geocoding_service.dart';
 import '../../../core/utils/location_provider.dart';
 import '../data/repositories/weather_repository_impl.dart';
 import '../data/sources/fallback_weather_data_source.dart';
@@ -18,9 +21,12 @@ import '../domain/repositories/weather_repository.dart';
 
 part 'weather_provider.g.dart';
 
-const Duration _weatherAutoRefreshInterval = Duration(minutes: 15);
-
 DateTime? _lastPassiveWeatherRefreshAt;
+
+/// 포그라운드 복귀 시 15분 쓰로틀 초기화 — HomeScreen에서 호출
+void resetPassiveWeatherThrottle() {
+  _lastPassiveWeatherRefreshAt = null;
+}
 
 @Riverpod(keepAlive: true)
 Future<WeatherRepository> weatherRepository(Ref ref) async {
@@ -28,9 +34,9 @@ Future<WeatherRepository> weatherRepository(Ref ref) async {
   final source = switch (country) {
     CountryCode.kr => FallbackWeatherDataSource([KmaDataSource()]),
     CountryCode.us => FallbackWeatherDataSource([
-        NoaaDataSource(),
-        OpenWeatherDataSource(),
-      ]),
+      NoaaDataSource(),
+      OpenWeatherDataSource(),
+    ]),
     _ => FallbackWeatherDataSource([OpenWeatherDataSource()]),
   };
   debugPrint('[Weather] repository country=${country.isoCode}');
@@ -39,24 +45,36 @@ Future<WeatherRepository> weatherRepository(Ref ref) async {
 
 @Riverpod(keepAlive: true)
 Future<WeatherEntity> currentWeather(Ref ref) async {
-  final timer = Timer(_weatherAutoRefreshInterval, () {
+  final language = ref.watch(appLanguageNotifierProvider);
+  final timer = Timer(RefreshPolicy.weatherRefreshInterval, () {
     ref.invalidate(currentPositionProvider);
     ref.invalidateSelf();
   });
   ref.onDispose(timer.cancel);
 
-  final cachedWeather = await WeatherCacheStore.load();
-  if (cachedWeather != null) {
-    debugPrint(
-      '[Weather] cache hit condition=${cachedWeather.condition.name}'
-      ' temp=${cachedWeather.tempCelsius.round()}'
-      ' feelsLike=${cachedWeather.feelsLikeCelsius.round()}',
+  final position = await ref.watch(currentPositionProvider.future);
+  final country = await ref.watch(resolvedCountryProvider.future);
+  final cachedWeather = await WeatherCacheStore.load(allowStale: true);
+  if (cachedWeather != null && hasUsableForecastSnapshot(cachedWeather)) {
+    final localizedWeather = await _withLocalizedLocationName(
+      cachedWeather,
+      lat: position.lat,
+      lon: position.lon,
+      language: language,
+      country: country,
     );
-    _refreshWeatherInBackground(ref, cachedWeather);
-    return cachedWeather;
+    debugPrint(
+      '[Weather] cache hit fresh=${WeatherCacheStore.isFresh(cachedWeather)}'
+      ' condition=${localizedWeather.condition.name}'
+      ' temp=${localizedWeather.tempCelsius.round()}'
+      ' feelsLike=${localizedWeather.feelsLikeCelsius.round()}',
+    );
+    if (RefreshPolicy.isWeatherRefreshDue(cachedWeather)) {
+      _refreshWeatherInBackground(ref, localizedWeather);
+    }
+    return localizedWeather;
   }
 
-  final position = await ref.watch(currentPositionProvider.future);
   final repo = await ref.watch(weatherRepositoryProvider.future);
   final result = await repo.getCurrentWeather(
     lat: position.lat,
@@ -67,7 +85,13 @@ Future<WeatherEntity> currentWeather(Ref ref) async {
     throw result.error!;
   }
 
-  final weather = result.data!;
+  final weather = await _withLocalizedLocationName(
+    result.data!,
+    lat: position.lat,
+    lon: position.lon,
+    language: language,
+    country: country,
+  );
   debugPrint(
     '[Weather] fetch ok condition=${weather.condition.name}'
     ' temp=${weather.tempCelsius.round()}'
@@ -86,7 +110,7 @@ void _refreshWeatherInBackground(Ref ref, WeatherEntity cachedWeather) {
   final now = DateTime.now();
   final lastRefreshAt = _lastPassiveWeatherRefreshAt;
   if (lastRefreshAt != null &&
-      now.difference(lastRefreshAt) < _weatherAutoRefreshInterval) {
+      now.difference(lastRefreshAt) < RefreshPolicy.weatherRefreshInterval) {
     return;
   }
 
@@ -94,6 +118,8 @@ void _refreshWeatherInBackground(Ref ref, WeatherEntity cachedWeather) {
   unawaited(() async {
     try {
       final position = await ref.read(currentPositionProvider.future);
+      final language = ref.read(appLanguageNotifierProvider);
+      final country = await ref.read(resolvedCountryProvider.future);
       final repo = await ref.read(weatherRepositoryProvider.future);
       final result = await repo.getCurrentWeather(
         lat: position.lat,
@@ -103,9 +129,16 @@ void _refreshWeatherInBackground(Ref ref, WeatherEntity cachedWeather) {
         return;
       }
 
-      final weather = mergeWeatherSnapshot(
+      final mergedWeather = mergeWeatherSnapshot(
         nextWeather: result.data!,
         cachedWeather: cachedWeather,
+      );
+      final weather = await _withLocalizedLocationName(
+        mergedWeather,
+        lat: position.lat,
+        lon: position.lon,
+        language: language,
+        country: country,
       );
       debugPrint(
         '[Weather] bg refresh ok condition=${weather.condition.name}'
@@ -132,12 +165,16 @@ class WeatherNotifier extends _$WeatherNotifier {
   }
 
   Future<void> fetch({required double lat, required double lon}) async {
-    state = const AsyncValue.loading();
-    final cachedWeather = await WeatherCacheStore.load();
+    final cachedWeather = await WeatherCacheStore.load(allowStale: true);
+    if (cachedWeather != null && hasUsableForecastSnapshot(cachedWeather)) {
+      state = AsyncValue.data(cachedWeather);
+    } else {
+      state = const AsyncValue.loading();
+    }
     final repo = await ref.read(weatherRepositoryProvider.future);
     final result = await repo.getCurrentWeather(lat: lat, lon: lon);
     if (result.error != null) {
-      if (cachedWeather != null) {
+      if (cachedWeather != null && hasUsableForecastSnapshot(cachedWeather)) {
         state = AsyncValue.data(cachedWeather);
         return;
       }
@@ -145,52 +182,134 @@ class WeatherNotifier extends _$WeatherNotifier {
       return;
     }
 
+    final country = await ref.read(resolvedCountryProvider.future);
     final mergedWeather = mergeWeatherSnapshot(
       nextWeather: result.data!,
       cachedWeather: cachedWeather,
     );
+    final localizedWeather = await _withLocalizedLocationName(
+      mergedWeather,
+      lat: lat,
+      lon: lon,
+      language: ref.read(appLanguageNotifierProvider),
+      country: country,
+    );
     if (shouldPersistWeatherSnapshot(
-      nextWeather: mergedWeather,
+      nextWeather: localizedWeather,
       cachedWeather: cachedWeather,
     )) {
-      await WeatherCacheStore.save(mergedWeather);
+      await WeatherCacheStore.save(localizedWeather);
     }
-    state = AsyncValue.data(mergedWeather);
+    state = AsyncValue.data(localizedWeather);
   }
+}
+
+Future<WeatherEntity> localizedWeatherLocation(
+  Ref ref,
+  WeatherEntity weather, {
+  required double lat,
+  required double lon,
+}) async {
+  final country = await ref.read(resolvedCountryProvider.future);
+  return _withLocalizedLocationName(
+    weather,
+    lat: lat,
+    lon: lon,
+    language: ref.read(appLanguageNotifierProvider),
+    country: country,
+  );
+}
+
+Future<WeatherEntity> _withLocalizedLocationName(
+  WeatherEntity weather, {
+  required double lat,
+  required double lon,
+  required AppLanguage language,
+  required CountryCode country,
+}) async {
+  final locationName = await GeocodingService.reverseGeocode(
+    lat,
+    lon,
+    language: language,
+    fallbackCountry: country,
+  );
+  return weather.copyWith(locationName: locationName);
 }
 
 WeatherEntity mergeWeatherSnapshot({
   required WeatherEntity nextWeather,
   WeatherEntity? cachedWeather,
 }) {
+  final now = DateTime.now();
+  final nextHourlyForecasts = _upcomingHourlyForecasts(
+    nextWeather.hourlyForecasts,
+    now,
+  );
+  final cachedHourlyForecasts = _upcomingHourlyForecasts(
+    cachedWeather?.hourlyForecasts ?? const <HourlyForecast>[],
+    now,
+  );
+  final nextDailyForecasts = _upcomingDailyForecasts(
+    nextWeather.dailyForecasts,
+    now,
+  );
+  final cachedDailyForecasts = _upcomingDailyForecasts(
+    cachedWeather?.dailyForecasts ?? const <DailyForecast>[],
+    now,
+  );
+
   return nextWeather.copyWith(
     pm10: nextWeather.pm10 ?? cachedWeather?.pm10,
     pm25: nextWeather.pm25 ?? cachedWeather?.pm25,
     o3: nextWeather.o3 ?? cachedWeather?.o3,
     khaiValue: nextWeather.khaiValue ?? cachedWeather?.khaiValue,
     khaiGrade: nextWeather.khaiGrade ?? cachedWeather?.khaiGrade,
-    hourlyForecasts: nextWeather.hourlyForecasts.isEmpty
-        ? (cachedWeather?.hourlyForecasts ?? nextWeather.hourlyForecasts)
-        : nextWeather.hourlyForecasts,
-    dailyForecasts: nextWeather.dailyForecasts.isEmpty
-        ? (cachedWeather?.dailyForecasts ?? nextWeather.dailyForecasts)
-        : nextWeather.dailyForecasts,
+    hourlyForecasts: nextHourlyForecasts.isNotEmpty
+        ? nextHourlyForecasts
+        : cachedHourlyForecasts,
+    dailyForecasts: nextDailyForecasts.isNotEmpty
+        ? nextDailyForecasts
+        : cachedDailyForecasts,
   );
+}
+
+bool hasUsableForecastSnapshot(WeatherEntity weather) {
+  final now = DateTime.now();
+  return _upcomingHourlyForecasts(weather.hourlyForecasts, now).isNotEmpty &&
+      _upcomingDailyForecasts(weather.dailyForecasts, now).isNotEmpty;
+}
+
+List<HourlyForecast> _upcomingHourlyForecasts(
+  List<HourlyForecast> forecasts,
+  DateTime now,
+) {
+  final cutoff = now.subtract(RefreshPolicy.forecastCutoffGrace);
+  return forecasts.where((forecast) => !forecast.time.isBefore(cutoff)).toList()
+    ..sort((left, right) => left.time.compareTo(right.time));
+}
+
+List<DailyForecast> _upcomingDailyForecasts(
+  List<DailyForecast> forecasts,
+  DateTime now,
+) {
+  final today = DateTime(now.year, now.month, now.day);
+  return forecasts.where((forecast) => !forecast.date.isBefore(today)).toList()
+    ..sort((left, right) => left.date.compareTo(right.date));
 }
 
 bool shouldPersistWeatherSnapshot({
   required WeatherEntity nextWeather,
   WeatherEntity? cachedWeather,
 }) {
-  final hasFreshForecasts =
-      nextWeather.hourlyForecasts.isNotEmpty &&
-      nextWeather.dailyForecasts.isNotEmpty;
+  final hasFreshForecasts = hasUsableForecastSnapshot(nextWeather);
   final hasFreshAirQuality =
       nextWeather.pm10 != null ||
       nextWeather.pm25 != null ||
       nextWeather.o3 != null ||
       nextWeather.khaiValue != null ||
       nextWeather.khaiGrade != null;
-  final hasNoCachedSnapshot = cachedWeather == null;
-  return hasFreshForecasts || hasFreshAirQuality || hasNoCachedSnapshot;
+  final hasNewObservation =
+      cachedWeather == null ||
+      nextWeather.observedAt.isAfter(cachedWeather.observedAt);
+  return hasFreshForecasts || hasFreshAirQuality || hasNewObservation;
 }

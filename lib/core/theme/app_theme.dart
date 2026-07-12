@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_text_styles.dart';
 import '../design/app_radius.dart';
+
+class _NoTransitionPageTransitionsBuilder extends PageTransitionsBuilder {
+  const _NoTransitionPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) => child;
+}
 
 class AppTheme {
   AppTheme._();
@@ -21,6 +35,12 @@ class AppTheme {
       brightness: colorScheme.brightness,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.surface,
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: _NoTransitionPageTransitionsBuilder(),
+          TargetPlatform.iOS: _NoTransitionPageTransitionsBuilder(),
+        },
+      ),
       textTheme: TextTheme(
         displayLarge: AppTextStyles.displayLarge.copyWith(color: titleColor),
         displayMedium: AppTextStyles.displayMedium.copyWith(color: titleColor),
@@ -44,6 +64,13 @@ class AppTheme {
         titleTextStyle: AppTextStyles.headlineMedium.copyWith(
           color: titleColor,
         ),
+        systemOverlayStyle: isDark
+            ? SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.transparent,
+              )
+            : SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.transparent,
+              ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

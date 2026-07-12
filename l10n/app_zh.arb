@@ -1,0 +1,516 @@
+{
+  "@@locale": "zh",
+  "appName": "预感氏",
+  "tabHome": "今天",
+  "tabWeather": "天气",
+  "tabScore": "评分",
+  "tabMonthlyYegamssi": "本月",
+  "monthlyYegamssiTitle": "本月预感氏",
+  "monthlyYegamssiSubtitle": "查看本月各类别的宜行日与留意日。",
+  "monthlyGoodDaysLabel": "宜行日",
+  "monthlyCautionDaysLabel": "留意日",
+  "monthlyGeneratingMessage": "正在准备本月预感氏。",
+  "monthlyFailedMessage": "未能准备本月预感氏，请重新启动应用。",
+  "monthlyDisclaimer": "本月预感氏是基于命理走势的参考内容。重要决定请结合现实情况一并判断。",
+  "monthlySummaryEarly": "本月上旬走势较好，提前行动更为有利。",
+  "monthlySummaryMid": "本月中旬之后走势转好，与其急于求成，不如静待时机。",
+  "monthlySummaryLate": "本月后段发力，会有不错的结果。",
+  "monthlyCategoryLove": "恋爱",
+  "monthlyCategoryLoveMessage": "宜行日适合主动表达心意。留意日则以平和的交流为宜。",
+  "monthlyCategoryWork": "工作",
+  "monthlyCategoryWorkMessage": "宜行日适合开启新的事务。留意日不宜勉强，专注于收尾为宜。",
+  "monthlyCategoryMoney": "金钱",
+  "monthlyCategoryMoneyMessage": "宜行日适合梳理财务。留意日在大额支出前多确认一次为宜。",
+  "monthlyCategoryRelationship": "人际",
+  "monthlyCategoryRelationshipMessage": "宜行日适合与人交流。留意日说话宜谨慎，以免产生误会。",
+  "monthlyCategoryHealth": "健康",
+  "monthlyCategoryHealthMessage": "宜行日适合活动身体。留意日不宜过度，注意休息为宜。",
+  "monthlyCategoryDecision": "决断",
+  "monthlyCategoryDecisionMessage": "宜行日适合做出重要判断。留意日宜暂缓决定，多加斟酌。",
+  "monthlyCategoryTravel": "出行",
+  "monthlyCategoryTravelMessage": "宜行日适合安排外出或出行。留意日的行程宜留有余地。",
+  "tabFortune": "运势",
+  "tabSettings": "设置",
+  "homeHeadline": "今日天气与信号",
+  "homeWeatherLoadingTitle": "正在加载当前天气",
+  "homeWeatherLoadingMessage": "正在准备位置和天气数据。",
+  "homeWeatherErrorTitle": "无法加载当前天气",
+  "homeWeatherErrorMessage": "请打开天气页面重试。",
+  "homeWeatherAction": "查看天气",
+  "homeFortuneLoadingTitle": "正在准备今日运势",
+  "homeFortuneLoadingMessage": "简短摘要即将显示。",
+  "homeFortuneErrorTitle": "运势尚未就绪",
+  "homeFortuneErrorMessage": "请检查个人资料并在运势页面重试。",
+  "homeFortuneAction": "查看运势",
+  "homeFortuneHeadline": "一句话今日运势",
+  "appExitTitle": "退出应用",
+  "appExitMessage": "确定要关闭预感氏吗？",
+  "cancel": "取消",
+  "confirm": "确定",
+  "close": "关闭",
+  "later": "稍后",
+  "exit": "退出",
+  "search": "搜索",
+  "loadingAd": "广告加载中...",
+  "refresh": "刷新",
+  "refreshFailed": "刷新失败：{error}",
+  "@refreshFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notFoundPage": "未找到页面：{error}",
+  "@notFoundPage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLike": "体感 {temp}°C",
+  "@weatherFeelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLikeShort": "体感 {temp}℃",
+  "@weatherFeelsLikeShort": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidity": "湿度 {value}%",
+  "@weatherHumidity": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherWind": "风速 {speed}m/s",
+  "@weatherWind": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidityLabel": "湿度",
+  "weatherWindLabel": "风速",
+  "weatherWindSpeedLabel": "风速",
+  "weatherPrecipitationLabel": "降雨",
+  "weatherPrecipitationAmount": "降雨量 {amount}",
+  "@weatherPrecipitationAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDustPm10": "PM10",
+  "weatherDustPm25": "PM2.5",
+  "weatherHourlyForecast": "逐时预报",
+  "weatherWeeklyForecast": "每周预报",
+  "weatherLoading": "天气加载中...",
+  "weatherErrorTitle": "无法获取天气数据",
+  "weatherReturnCurrentLocation": "{seconds}秒后返回当前位置",
+  "@weatherReturnCurrentLocation": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherToday": "今天",
+  "weatherAm": "上午",
+  "weatherPm": "下午",
+  "weatherHour": "{hour}:00",
+  "@weatherHour": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherUvVeryHigh": "{uv} 极强",
+  "weatherUvHigh": "{uv} 强",
+  "weatherUvModerateHigh": "{uv} 中强",
+  "weatherUvModerate": "{uv} 中等",
+  "weatherUvLow": "{uv} 弱",
+  "@weatherUvVeryHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerateHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerate": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvLow": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherConditionSunny": "晴天",
+  "weatherConditionClearNight": "晴夜",
+  "weatherConditionPartlyCloudy": "局部多云",
+  "weatherConditionPartlyCloudyNight": "局部多云夜",
+  "weatherConditionCloudy": "多云",
+  "weatherConditionHazy": "雾霾",
+  "weatherConditionWindy": "大风",
+  "weatherConditionSlightRain": "小雨",
+  "weatherConditionRain": "雨",
+  "weatherConditionHeavyRain": "大雨",
+  "weatherConditionThunderstorm": "雷暴",
+  "weatherConditionRainThunder": "雷雨",
+  "weatherConditionLightSnow": "小雪",
+  "weatherConditionSnow": "雪",
+  "weatherConditionSleet": "雨夹雪",
+  "weatherConditionHot": "高温",
+  "weatherConditionHotNight": "热夜",
+  "weatherConditionColdWave": "寒流",
+  "weatherConditionUnknown": "未知",
+  "locationCurrent": "当前位置",
+  "locationSelectClose": "关闭位置选择器",
+  "locationAdded": "已添加 {name}",
+  "@locationAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "locationFavoriteLimit": "最多可添加5个位置。",
+  "locationFavoriteFull": "收藏已满",
+  "locationFavoriteAdd": "添加收藏",
+  "locationSearchTitle": "搜索位置",
+  "locationSearchHint": "示例：首尔、釜山、东京",
+  "locationSearchEmpty": "未找到结果",
+  "scoreLabel": "户外活动评分",
+  "scoreLoading": "正在计算户外活动评分...",
+  "scoreErrorTitle": "无法计算评分",
+  "scoreBreakdownTitle": "扣分项",
+  "scoreNoDeduction": "户外条件良好，几乎没有扣分因素。",
+  "scoreInfo": "户外活动评分根据降雨、风速、体感温度、空气质量和紫外线数据计算。",
+  "scoreDeductionRain": "降雨和积雪",
+  "scoreDeductionWind": "风速",
+  "scoreDeductionTemp": "温度",
+  "scoreDeductionAir": "空气质量",
+  "scoreDeductionUv": "紫外线",
+  "scoreDeductionOzone": "臭氧",
+  "scoreAdviceExcellent": "今天非常适合户外活动。\n轻松出门，提振状态。",
+  "scoreAdviceGood": "户外活动没问题，但请再确认一下风速和紫外线。",
+  "scoreAdviceFair": "户外活动可行，做好准备会更轻松。",
+  "scoreAdvicePoor": "今天建议以室内活动为主。",
+  "scoreTierExcellent": "优秀",
+  "scoreTierGood": "良好",
+  "scoreTierFair": "一般",
+  "scoreTierPoor": "注意",
+  "scorePointUnit": "{score}分",
+  "@scorePointUnit": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "activityRecommendOutdoor": "推荐户外活动",
+  "activityRecommendLight": "适合轻度活动",
+  "activityRecommendCaution": "请注意",
+  "activityRecommendIndoor": "推荐室内活动",
+  "airQualityTitle": "空气质量",
+  "airQualityIntegrated": "综合空气质量",
+  "airQualityUnknown": "无数据",
+  "airGradeGood": "优",
+  "airGradeModerate": "良",
+  "airGradeBad": "差",
+  "airGradeVeryBad": "极差",
+  "pointUnit": "分",
+  "fortuneTitle": "今日运势",
+  "fortuneNeedProfileTitle": "需要生日信息",
+  "fortuneNeedProfileMessage": "请输入您的出生日期和时间以获取今日运势。",
+  "fortuneBirthInputAction": "输入生日信息",
+  "fortuneHelpTooltip": "运势帮助",
+  "fortuneHelpTitle": "Yegamssi 运势说明",
+  "fortuneHelpIntro": "Yegamssi 基于命理学解读今天的运势流动。",
+  "fortuneHelpMyeongri": "命理学是一种东方传统运势体系，会根据出生日期和时间观察四柱八字与五行平衡。Yegamssi 使用你的出生日期和出生时间计算个人的基本气场，并与今天的日期流动进行比较，提供综合运、财运、恋爱运、事业运、健康运和决策运。",
+  "fortuneHelpBirthTime": "如果不知道出生时间，也可以使用正午作为默认时间。不过，输入出生时间有助于获得更细致的解读。",
+  "fortuneHelpWeather": "Yegamssi 不只参考运势，也会结合天气和活动分数。因此，即使今天的气场不错，如果天气不好，外出推荐度也可能降低；相反，如果运势和天气都稳定，就可以视为更适合行动的一天。",
+  "fortuneHelpReference": "运势不是标准答案，而是参考。你可以提前了解今天的流动，在联系、外出、消费、签约和重要决定上做出更谨慎的选择。",
+  "fortuneLoadFailedTitle": "无法加载运势",
+  "fortuneLoadFailedMessage": "请稍后重试。",
+  "fortuneCategoryAnalysis": "分类分析",
+  "fortuneOverall": "综合运势",
+  "fortuneCategoryMoney": "财运",
+  "fortuneCategoryLove": "爱情",
+  "fortuneCategoryWork": "事业",
+  "fortuneCategoryHealth": "健康",
+  "fortuneCategoryDecision": "决断",
+  "fortuneLuckyColor": "幸运色",
+  "fortuneLuckyNumber": "幸运数字",
+  "fortuneOhengBalance": "五行平衡",
+  "fortuneOhengDescription": "今日情绪流动的辅助信号。",
+  "fortuneCaptureTooltip": "截取运势卡片",
+  "fortuneCaptureSaved": "运势卡片截图已保存。",
+  "fortuneCaptureSaveDone": "运势卡片截图完成",
+  "fortuneCaptureFailed": "截图失败：{error}",
+  "@fortuneCaptureFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fortuneOpenFolder": "打开文件夹",
+  "fortuneAnalyzing": "分析中。",
+  "fortuneToneBase": "基础",
+  "fortuneToneHumor": "幽默",
+  "fortuneToneTsundere": "傲娇",
+  "fortuneToneCynical": "讽刺",
+  "fortuneToneEmotional": "感性",
+  "fortuneToneHistorical": "古风",
+  "fortuneToneAi": "AI",
+  "fortuneTimeMorning": "上午",
+  "fortuneTimeAfternoon": "下午",
+  "ohengMok": "木",
+  "ohengHwa": "火",
+  "ohengTo": "土",
+  "ohengGeum": "金",
+  "ohengSu": "水",
+  "luckyColorGreen": "绿色",
+  "luckyColorCoral": "珊瑚色",
+  "luckyColorGold": "金色",
+  "luckyColorSilver": "银色",
+  "luckyColorSky": "天蓝色",
+  "luckyColorRed": "红色",
+  "luckyColorOrange": "橙色",
+  "luckyColorYellow": "黄色",
+  "luckyColorTeal": "青绿色",
+  "luckyColorBlue": "蓝色",
+  "luckyColorPurple": "紫色",
+  "luckyColorPink": "粉色",
+  "settingsLanguage": "语言",
+  "settingsCountry": "地区",
+  "countryKorea": "韩国",
+  "countryUnitedStates": "美国",
+  "countryJapan": "日本",
+  "countryChina": "中国",
+  "countryGlobal": "全球",
+  "settingsTheme": "外观",
+  "settingsThemeDescription": "默认主题会根据连接位置的当地时间，在上午6点到晚上7点使用日间主题，其余时间使用夜间主题。日间主题和夜间主题会不受时间影响而固定显示。",
+  "settingsThemeAutomatic": "默认主题",
+  "settingsThemeAutomaticDescription": "连接位置当地时间 06:00-19:00 自动使用日间主题，19:00 后到次日 06:00 前自动使用夜间主题。",
+  "settingsThemeDay": "日间主题",
+  "settingsThemeDayDescription": "无论时间如何，始终使用明亮的日间主题。",
+  "settingsThemeNight": "夜间主题",
+  "settingsThemeNightDescription": "无论时间如何，始终使用现有的深色夜间主题。",
+  "settingsThemeDark": "深色",
+  "settingsThemeLight": "浅色",
+  "settingsBirthTitle": "出生日期",
+  "settingsBirthDescription": "管理用于运势计算的出生日期和时间。",
+  "settingsBirthEmpty": "未填写",
+  "settingsBirthEdit": "修改",
+  "settingsBirthUnknownHour": "未知",
+  "onboardingGenderLabel": "性别",
+  "genderMale": "男",
+  "genderFemale": "女",
+  "genderUnspecified": "不愿透露",
+  "settingsGenderTitle": "性别",
+  "settingsHourUnit": "{hour}:00",
+  "@settingsHourUnit": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFortuneToneTitle": "风格",
+  "settingsFortuneToneDescription": "运势以{tone}风格显示。",
+  "@settingsFortuneToneDescription": {
+    "placeholders": {
+      "tone": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsFortuneToneSheetDescription": "保留基础内容，优先显示所选风格。",
+  "settingsAppInfoTitle": "应用信息",
+  "settingsAppInfoDescription": "查看主页、隐私指南、联系邮箱和相关链接。",
+  "settingsPremiumTitle": "移除广告（永久）",
+  "settingsPremiumDescription": "永久移除横幅广告和插页广告。",
+  "settingsPremiumButton": "移除广告",
+  "settingsPremiumButtonPriced": "移除广告 — {price}",
+  "@settingsPremiumButtonPriced": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPremiumPurchasedTitle": "广告已移除",
+  "settingsPremiumPurchasedDescription": "感谢您的支持。",
+  "premiumMsgSuccess": "广告已移除，感谢您的支持！",
+  "premiumMsgCanceled": "已取消购买。",
+  "premiumMsgError": "购买失败，请稍后重试。",
+  "premiumMsgStoreUnavailable": "无法连接到商店，请稍后重试。",
+  "premiumMsgProductUnavailable": "该商品当前不可用。",
+  "onboardingTitle": "预感氏",
+  "onboardingSubtitle": "请输入您的出生日期和时间\n以获取今日运势。",
+  "onboardingStart": "开始",
+  "birthDate": "出生日期",
+  "birthHour": "出生时间",
+  "birthHourOptional": "出生时间（可选）",
+  "birthSelectDate": "选择日期",
+  "birthUnknownNoon": "未知（以中午计算）",
+  "birthUnknownNoonShort": "未知（中午）",
+  "dateYmd": "{year}年{month}月{day}日",
+  "@dateYmd": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "hourLabel": "{hour}:00",
+  "@hourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "appInfoHomepage": "主页",
+  "appInfoHomepageDescription": "打开预感氏介绍页面。",
+  "appInfoPrivacy": "隐私政策",
+  "appInfoPrivacyDescription": "打开隐私政策页面。",
+  "appInfoEmail": "联系邮箱",
+  "appInfoEmailDescription": "打开邮件应用进行咨询。",
+  "appInfoShare": "分享预感氏",
+  "appInfoShareDescription": "显示链接到商店的二维码。",
+  "appInfoShareQrDescription": "扫描二维码打开预感氏商店页面。",
+  "appInfoCopyLink": "复制链接",
+  "appInfoOpenStore": "打开商店",
+  "appInfoStoreLinkCopied": "商店链接已复制。",
+  "appInfoVersionTitle": "应用版本",
+  "appInfoCurrentVersion": "当前版本 {version}+{buildNumber}",
+  "@appInfoCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "appInfoCheckingVersion": "检查版本中...",
+  "appInfoDataSource": "数据来源",
+  "appInfoKma": "韩国气象厅（KMA）",
+  "appInfoKmaDescription": "提供韩国天气和预报数据。",
+  "appInfoAirKorea": "AirKorea",
+  "appInfoAirKoreaDescription": "提供韩国PM10、PM2.5、臭氧和综合空气质量数据。",
+  "appInfoOpenWeather": "OpenWeather",
+  "appInfoOpenWeatherDescription": "提供国际天气、预报和空气质量（PM10、PM2.5、O3）数据。",
+  "appInfoNominatim": "OpenStreetMap Nominatim",
+  "appInfoNominatimDescription": "将坐标转换为本地化地名。（ODbL许可证）",
+  "appInfoNoaa": "NOAA / 美国国家气象局",
+  "appInfoNoaaDescription": "为美国提供官方天气预报和小时数据。（公共领域）",
+  "appInfoAirNow": "美国EPA AirNow",
+  "appInfoAirNowDescription": "为美国提供实时空气质量数据（PM2.5、PM10、臭氧）。",
+  "appInfoDataSourceNotice": "部分信息遵循KOGL署名标准。国际数据由OpenWeather API提供。",
+  "widgetScoreLabel": "评分",
+  "widgetFortuneLabel": "运势",
+  "widget_description": "预感氏每日摘要小组件",
+  "widgetInstallTitle": "添加预感氏小组件",
+  "widgetInstallMessage": "直接在主屏幕查看天气、温度、户外评分和运势。",
+  "widgetInstallAction": "安装小组件",
+  "widgetInstallManual": "长按主屏幕并添加预感氏小组件。",
+  "appReviewTitle": "可以打扰您一下吗? 🙏",
+  "appReviewMessage": "非常感谢您使用预感氏。这是一款由个人开发者制作的小应用,您的五星好评对我们来说意义重大。方便的话,可以给个五星好评吗?",
+  "appReviewAction": "给五星好评",
+  "appReviewLater": "下次吧",
+  "updateNoticeTitle": "更新通知",
+  "updateRequiredTitle": "需要更新",
+  "updateRequiredMessage": "当前版本 {currentVersion} 不再受支持。\n请更新到 {latestVersion} 版本。",
+  "updateAvailableMessage": "版本 {latestVersion} 已就绪。\n立即更新？",
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "currentVersion": {
+        "type": "String"
+      },
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAction": "更新",
+  "updateNewVersionMessage": "新版本已发布。\n立即更新？",
+  "activityRunning": "跑步",
+  "activityCycling": "骑行",
+  "activityHiking": "登山",
+  "activityWalking": "步行",
+  "activityOutdoor": "户外工作",
+  "errorNetwork": "请检查您的网络连接。",
+  "errorServer": "服务器错误。",
+  "errorLocation": "无法获取位置。",
+  "errorUnknown": "发生未知错误。",
+  "settingsBackgroundRefreshTitle": "后台刷新",
+  "settingsBackgroundRefreshDescription": "约每30分钟刷新天气、空气质量、户外分数和小组件。允许电池优化例外可提升稳定性。",
+  "settingsBackgroundRefreshStatusEnabled": "已启用电池例外",
+  "settingsBackgroundRefreshStatusLimited": "需要电池例外",
+  "settingsBackgroundRefreshAction": "打开设置",
+  "batteryOptimizationReminderTitle": "让后台刷新更稳定",
+  "batteryOptimizationReminderMessage": "允许此应用不受电池优化限制后，Yegamssi 可更稳定地刷新天气、空气质量和小组件。",
+  "batteryOptimizationReminderLater": "稍后",
+  "batteryOptimizationReminderNever": "不再显示",
+  "batteryOptimizationReminderSettings": "打开设置",
+  "settingsSupportTitle": "支持",
+  "settingsSupportDescription": "通过评价或观看一个短广告来支持Yegamssi。",
+  "settingsSupportSheetDescription": "一个小小的举动有助于Yegamssi持续改进。",
+  "settingsSupportReviewAction": "写评价",
+  "settingsSupportAdAction": "观看插入式广告以支持开发者",
+  "settingsSupportReviewFailed": "无法打开评价页面，请稍后重试。",
+  "settingsSupportAdThanks": "感谢您对Yegamssi的支持。",
+  "settingsSupportPremiumThanks": "您已通过去除广告支持过Yegamssi，谢谢您。",
+  "settingsSupportAdFailed": "无法加载广告，请稍后重试。"
+}

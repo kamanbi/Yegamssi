@@ -16,13 +16,17 @@ class AppInfoScreen extends StatelessWidget {
   static const String _homepage = 'https://yegamssi.netlify.app/';
   static const String _privacyPolicy = 'https://yegamssi.netlify.app/privacy';
   static const String _email = 'kamanbi23@naver.com';
-  static const double _bottomClearance = 152;
+  static const double _baseBottomClearance = 61;
   static const double _qrSize = 236;
 
   @override
   Widget build(BuildContext context) {
     final versionFuture = PackageInfo.fromPlatform();
     final l10n = AppLocalizations.of(context);
+    // 외부 ShellRoute의 bottomNavigationBar(탭바+광고배너)는 extendBody로 인해
+    // 이 화면의 콘텐츠 위에 겹쳐지므로, 시스템 네비게이션 바 높이까지 더해 가려지지 않게 함.
+    final bottomClearance =
+        _baseBottomClearance + MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -36,10 +40,10 @@ class AppInfoScreen extends StatelessWidget {
         children: [
           const _InfoLinkCard(),
           const SizedBox(height: AppSpacing.x3),
-          const _DataSourceSection(),
-          const SizedBox(height: AppSpacing.x3),
           _VersionCard(versionFuture: versionFuture),
-          const SizedBox(height: _bottomClearance),
+          const SizedBox(height: AppSpacing.x3),
+          const _DataSourceSection(),
+          SizedBox(height: bottomClearance),
         ],
       ),
     );
@@ -285,20 +289,46 @@ class _DataSourceSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _SourceRowWithLogo(
-                icon: Icons.cloud_outlined,
-                iconColor: const Color(0xFF64B5F6),
                 sourceName: l10n.appInfoKma,
                 description: l10n.appInfoKmaDescription,
                 logoAsset: 'assets/images/kogl_type0_ko.png',
+                titleColor: titleColor,
                 bodyColor: bodyColor,
               ),
-              const Divider(height: 24, color: Colors.white12),
+              Divider(height: 24, color: Theme.of(context).dividerColor),
               _SourceRowWithLogo(
-                icon: Icons.masks_rounded,
-                iconColor: const Color(0xFFCE93D8),
                 sourceName: l10n.appInfoAirKorea,
                 description: l10n.appInfoAirKoreaDescription,
                 logoAsset: 'assets/images/kogl_type3.png',
+                titleColor: titleColor,
+                bodyColor: bodyColor,
+              ),
+              Divider(height: 24, color: Theme.of(context).dividerColor),
+              _SourceRow(
+                sourceName: l10n.appInfoOpenWeather,
+                description: l10n.appInfoOpenWeatherDescription,
+                titleColor: titleColor,
+                bodyColor: bodyColor,
+              ),
+              Divider(height: 24, color: Theme.of(context).dividerColor),
+              _SourceRow(
+                sourceName: l10n.appInfoNominatim,
+                description: l10n.appInfoNominatimDescription,
+                titleColor: titleColor,
+                bodyColor: bodyColor,
+              ),
+              Divider(height: 24, color: Theme.of(context).dividerColor),
+              _SourceRow(
+                sourceName: l10n.appInfoNoaa,
+                description: l10n.appInfoNoaaDescription,
+                titleColor: titleColor,
+                bodyColor: bodyColor,
+              ),
+              Divider(height: 24, color: Theme.of(context).dividerColor),
+              _SourceRow(
+                sourceName: l10n.appInfoAirNow,
+                description: l10n.appInfoAirNowDescription,
+                titleColor: titleColor,
                 bodyColor: bodyColor,
               ),
             ],
@@ -317,56 +347,82 @@ class _DataSourceSection extends StatelessWidget {
   }
 }
 
-class _SourceRowWithLogo extends StatelessWidget {
-  const _SourceRowWithLogo({
-    required this.icon,
-    required this.iconColor,
+/// 로고 없는 출처 행 (OpenWeather, Nominatim 등 외부 서비스용)
+class _SourceRow extends StatelessWidget {
+  const _SourceRow({
     required this.sourceName,
     required this.description,
-    required this.logoAsset,
+    required this.titleColor,
     required this.bodyColor,
   });
 
-  final IconData icon;
-  final Color iconColor;
   final String sourceName;
   final String description;
-  final String logoAsset;
+  final Color titleColor;
   final Color bodyColor;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: iconColor, size: 18),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                sourceName,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                description,
-                style: TextStyle(color: bodyColor, fontSize: 12),
-              ),
-              const SizedBox(height: 8),
-              Image.asset(
-                logoAsset,
-                height: 28,
-                fit: BoxFit.contain,
-                alignment: Alignment.centerLeft,
-              ),
-            ],
+        Text(
+          sourceName,
+          style: TextStyle(
+            color: titleColor,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
           ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          description,
+          style: TextStyle(color: bodyColor, fontSize: 12),
+        ),
+      ],
+    );
+  }
+}
+
+class _SourceRowWithLogo extends StatelessWidget {
+  const _SourceRowWithLogo({
+    required this.sourceName,
+    required this.description,
+    required this.logoAsset,
+    required this.titleColor,
+    required this.bodyColor,
+  });
+
+  final String sourceName;
+  final String description;
+  final String logoAsset;
+  final Color titleColor;
+  final Color bodyColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          sourceName,
+          style: TextStyle(
+            color: titleColor,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          description,
+          style: TextStyle(color: bodyColor, fontSize: 12),
+        ),
+        const SizedBox(height: 8),
+        Image.asset(
+          logoAsset,
+          height: 28,
+          fit: BoxFit.contain,
+          alignment: Alignment.centerLeft,
         ),
       ],
     );

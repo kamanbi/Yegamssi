@@ -1,0 +1,516 @@
+{
+  "@@locale": "pt",
+  "appName": "Yegamssi",
+  "tabHome": "Hoje",
+  "tabWeather": "Clima",
+  "tabScore": "Pontuação",
+  "tabMonthlyYegamssi": "Mensal",
+  "monthlyYegamssiTitle": "Yegamssi mensal",
+  "monthlyYegamssiSubtitle": "Veja os dias bons e os dias de atenção deste mês por categoria.",
+  "monthlyGoodDaysLabel": "Dias bons",
+  "monthlyCautionDaysLabel": "Atenção",
+  "monthlyGeneratingMessage": "Preparando o Yegamssi mensal deste mês.",
+  "monthlyFailedMessage": "Não foi possível preparar o Yegamssi mensal deste mês. Reinicie o aplicativo.",
+  "monthlyDisclaimer": "O Yegamssi mensal é um conteúdo de referência baseado no fluxo do Myeongri. Pondere as decisões importantes junto com as condições reais.",
+  "monthlySummaryEarly": "Neste mês o fluxo é bom no começo, então agir cedo joga a seu favor.",
+  "monthlySummaryMid": "Neste mês o fluxo melhora a partir da metade; vale mais esperar o momento certo do que ter pressa.",
+  "monthlySummaryLate": "Neste mês, se você se esforçar na reta final, bons resultados virão.",
+  "monthlyCategoryLove": "Amor",
+  "monthlyCategoryLoveMessage": "Os dias bons são ótimos para expressar primeiro o que sente. Nos dias de atenção, uma conversa tranquila funciona melhor.",
+  "monthlyCategoryWork": "Trabalho",
+  "monthlyCategoryWorkMessage": "Os dias bons são ótimos para começar algo novo. Nos dias de atenção, não force e foque em concluir o que já começou.",
+  "monthlyCategoryMoney": "Dinheiro",
+  "monthlyCategoryMoneyMessage": "Os dias bons são ótimos para organizar as finanças. Nos dias de atenção, confira duas vezes antes de um gasto grande.",
+  "monthlyCategoryRelationship": "Relações",
+  "monthlyCategoryRelationshipMessage": "Os dias bons são ótimos para conversar com as pessoas. Nos dias de atenção, escolha bem as palavras para evitar mal-entendidos.",
+  "monthlyCategoryHealth": "Saúde",
+  "monthlyCategoryHealthMessage": "Os dias bons são ótimos para se movimentar. Nos dias de atenção, não exagere e reserve tempo para descansar.",
+  "monthlyCategoryDecision": "Decisões",
+  "monthlyCategoryDecisionMessage": "Os dias bons são ótimos para tomar uma decisão importante. Nos dias de atenção, é melhor esperar e revisar mais um pouco.",
+  "monthlyCategoryTravel": "Deslocamentos",
+  "monthlyCategoryTravelMessage": "Os dias bons são ótimos para planejar um passeio ou viagem. Nos dias de atenção, deixe uma folga na programação.",
+  "tabFortune": "Fortuna",
+  "tabSettings": "Configurações",
+  "homeHeadline": "O clima e os sinais de hoje",
+  "homeWeatherLoadingTitle": "Carregando clima atual",
+  "homeWeatherLoadingMessage": "Preparando dados de localização e clima.",
+  "homeWeatherErrorTitle": "Não foi possível carregar o clima atual",
+  "homeWeatherErrorMessage": "Abra a tela do clima e tente novamente.",
+  "homeWeatherAction": "Ver clima",
+  "homeFortuneLoadingTitle": "Preparando a fortuna de hoje",
+  "homeFortuneLoadingMessage": "O resumo aparecerá em breve.",
+  "homeFortuneErrorTitle": "A fortuna ainda não está pronta",
+  "homeFortuneErrorMessage": "Verifique seu perfil e tente novamente na tela de fortuna.",
+  "homeFortuneAction": "Ver fortuna",
+  "homeFortuneHeadline": "A fortuna de hoje em uma frase",
+  "appExitTitle": "Sair do aplicativo",
+  "appExitMessage": "Deseja fechar o Yegamssi?",
+  "cancel": "Cancelar",
+  "confirm": "OK",
+  "close": "Fechar",
+  "later": "Depois",
+  "exit": "Sair",
+  "search": "Buscar",
+  "loadingAd": "Carregando anúncio...",
+  "refresh": "Atualizar",
+  "refreshFailed": "Falha ao atualizar: {error}",
+  "@refreshFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notFoundPage": "Página não encontrada: {error}",
+  "@notFoundPage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLike": "Sensação {temp}°C",
+  "@weatherFeelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLikeShort": "Sens. {temp}℃",
+  "@weatherFeelsLikeShort": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidity": "Umidade {value}%",
+  "@weatherHumidity": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherWind": "Vento {speed}m/s",
+  "@weatherWind": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidityLabel": "Umidade",
+  "weatherWindLabel": "Vento",
+  "weatherWindSpeedLabel": "Vel. vento",
+  "weatherPrecipitationLabel": "Chuva",
+  "weatherPrecipitationAmount": "Chuva {amount}",
+  "@weatherPrecipitationAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDustPm10": "PM10",
+  "weatherDustPm25": "PM2.5",
+  "weatherHourlyForecast": "Previsão por hora",
+  "weatherWeeklyForecast": "Previsão semanal",
+  "weatherLoading": "Carregando clima...",
+  "weatherErrorTitle": "Não foi possível obter dados do clima",
+  "weatherReturnCurrentLocation": "Voltando para a localização atual em {seconds}s",
+  "@weatherReturnCurrentLocation": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherToday": "Hoje",
+  "weatherAm": "AM",
+  "weatherPm": "PM",
+  "weatherHour": "{hour}:00",
+  "@weatherHour": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherUvVeryHigh": "{uv} Muito alto",
+  "weatherUvHigh": "{uv} Alto",
+  "weatherUvModerateHigh": "{uv} Moderado-alto",
+  "weatherUvModerate": "{uv} Moderado",
+  "weatherUvLow": "{uv} Baixo",
+  "@weatherUvVeryHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerateHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerate": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvLow": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherConditionSunny": "Ensolarado",
+  "weatherConditionClearNight": "Noite clara",
+  "weatherConditionPartlyCloudy": "Parcialmente nublado",
+  "weatherConditionPartlyCloudyNight": "Noite parcialmente nublada",
+  "weatherConditionCloudy": "Nublado",
+  "weatherConditionHazy": "Névoa",
+  "weatherConditionWindy": "Ventoso",
+  "weatherConditionSlightRain": "Chuva fraca",
+  "weatherConditionRain": "Chuva",
+  "weatherConditionHeavyRain": "Chuva forte",
+  "weatherConditionThunderstorm": "Tempestade",
+  "weatherConditionRainThunder": "Chuva com trovões",
+  "weatherConditionLightSnow": "Neve fraca",
+  "weatherConditionSnow": "Neve",
+  "weatherConditionSleet": "Granizo",
+  "weatherConditionHot": "Calor",
+  "weatherConditionHotNight": "Noite quente",
+  "weatherConditionColdWave": "Onda de frio",
+  "weatherConditionUnknown": "Desconhecido",
+  "locationCurrent": "Localização atual",
+  "locationSelectClose": "Fechar seletor de localização",
+  "locationAdded": "{name} adicionado",
+  "@locationAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "locationFavoriteLimit": "Você pode adicionar até 5 localizações.",
+  "locationFavoriteFull": "Favoritos cheios",
+  "locationFavoriteAdd": "Adicionar favorito",
+  "locationSearchTitle": "Buscar localização",
+  "locationSearchHint": "Exemplo: Seoul, Busan, Tóquio",
+  "locationSearchEmpty": "Nenhum resultado encontrado",
+  "scoreLabel": "Pontuação atividade ao ar livre",
+  "scoreLoading": "Calculando pontuação de atividade ao ar livre...",
+  "scoreErrorTitle": "Não foi possível calcular a pontuação",
+  "scoreBreakdownTitle": "Deduções",
+  "scoreNoDeduction": "Condições externas estáveis, quase sem fatores de dedução.",
+  "scoreInfo": "A pontuação de atividade ao ar livre é calculada com chuva, vento, sensação térmica, qualidade do ar e dados UV.",
+  "scoreDeductionRain": "Chuva e neve",
+  "scoreDeductionWind": "Vento",
+  "scoreDeductionTemp": "Temperatura",
+  "scoreDeductionAir": "Qualidade do ar",
+  "scoreDeductionUv": "UV",
+  "scoreDeductionOzone": "Ozônio",
+  "scoreAdviceExcellent": "Hoje é ótimo para atividades ao ar livre.\nSaia e aproveite.",
+  "scoreAdviceGood": "Atividades ao ar livre estão bem, mas verifique o vento e o UV.",
+  "scoreAdviceFair": "Atividades ao ar livre são possíveis, mas é melhor se preparar.",
+  "scoreAdvicePoor": "Hoje é mais seguro planejar atividades internas.",
+  "scoreTierExcellent": "Excelente",
+  "scoreTierGood": "Bom",
+  "scoreTierFair": "Regular",
+  "scoreTierPoor": "Cuidado",
+  "scorePointUnit": "{score} pts",
+  "@scorePointUnit": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "activityRecommendOutdoor": "Atividade ao ar livre recomendada",
+  "activityRecommendLight": "Atividade leve adequada",
+  "activityRecommendCaution": "Cuidado necessário",
+  "activityRecommendIndoor": "Atividade interna recomendada",
+  "airQualityTitle": "Qualidade do ar",
+  "airQualityIntegrated": "Qualidade do ar integrada",
+  "airQualityUnknown": "Sem dados",
+  "airGradeGood": "Boa",
+  "airGradeModerate": "Moderada",
+  "airGradeBad": "Ruim",
+  "airGradeVeryBad": "Muito ruim",
+  "pointUnit": "pts",
+  "fortuneTitle": "Sua fortuna diária",
+  "fortuneNeedProfileTitle": "Informação de nascimento necessária",
+  "fortuneNeedProfileMessage": "Insira sua data e hora de nascimento para receber a fortuna de hoje.",
+  "fortuneBirthInputAction": "Inserir dados de nascimento",
+  "fortuneHelpTooltip": "Ajuda da fortuna",
+  "fortuneHelpTitle": "Como o Yegamssi lê a fortuna",
+  "fortuneHelpIntro": "O Yegamssi lê o fluxo da fortuna de hoje com base no Myeongri.",
+  "fortuneHelpMyeongri": "Myeongri é um sistema tradicional oriental de fortuna que observa os Quatro Pilares e o equilíbrio dos cinco elementos a partir da data e da hora de nascimento. O Yegamssi calcula sua energia pessoal básica usando sua data e hora de nascimento, compara com o fluxo de hoje e orienta a fortuna geral, financeira, amorosa, profissional, de saúde e de decisões.",
+  "fortuneHelpBirthTime": "Se você não souber a hora de nascimento, pode usar o meio-dia como referência. Ainda assim, informar a hora de nascimento ajuda a obter uma interpretação mais detalhada.",
+  "fortuneHelpWeather": "O Yegamssi também considera o clima e a pontuação de atividade, não apenas a fortuna. Por isso, mesmo que a energia do dia esteja boa, se o clima estiver ruim a recomendação para sair pode ser menor. Se a fortuna e o clima estiverem estáveis, pode ser um dia melhor para agir.",
+  "fortuneHelpReference": "A fortuna não é uma resposta definitiva, mas uma referência. Use-a para observar o fluxo do dia e escolher com mais cuidado contatos, saídas, gastos, contratos e decisões importantes.",
+  "fortuneLoadFailedTitle": "Não foi possível carregar a fortuna",
+  "fortuneLoadFailedMessage": "Tente novamente mais tarde.",
+  "fortuneCategoryAnalysis": "Análise por categoria",
+  "fortuneOverall": "Fortuna geral",
+  "fortuneCategoryMoney": "Dinheiro",
+  "fortuneCategoryLove": "Amor",
+  "fortuneCategoryWork": "Trabalho",
+  "fortuneCategoryHealth": "Saúde",
+  "fortuneCategoryDecision": "Decisão",
+  "fortuneLuckyColor": "Cor da sorte",
+  "fortuneLuckyNumber": "Número da sorte",
+  "fortuneOhengBalance": "Equilíbrio elemental",
+  "fortuneOhengDescription": "Um sinal de apoio para o fluxo emocional de hoje.",
+  "fortuneCaptureTooltip": "Capturar cartão de fortuna",
+  "fortuneCaptureSaved": "Captura do cartão salva.",
+  "fortuneCaptureSaveDone": "Captura do cartão concluída",
+  "fortuneCaptureFailed": "Falha na captura: {error}",
+  "@fortuneCaptureFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fortuneOpenFolder": "Abrir pasta",
+  "fortuneAnalyzing": "Analisando.",
+  "fortuneToneBase": "Base",
+  "fortuneToneHumor": "Humor",
+  "fortuneToneTsundere": "Tsundere",
+  "fortuneToneCynical": "Cínico",
+  "fortuneToneEmotional": "Emocional",
+  "fortuneToneHistorical": "Histórico",
+  "fortuneToneAi": "IA",
+  "fortuneTimeMorning": "Manhã",
+  "fortuneTimeAfternoon": "Tarde",
+  "ohengMok": "Madeira",
+  "ohengHwa": "Fogo",
+  "ohengTo": "Terra",
+  "ohengGeum": "Metal",
+  "ohengSu": "Água",
+  "luckyColorGreen": "Verde",
+  "luckyColorCoral": "Coral",
+  "luckyColorGold": "Dourado",
+  "luckyColorSilver": "Prata",
+  "luckyColorSky": "Azul céu",
+  "luckyColorRed": "Vermelho",
+  "luckyColorOrange": "Laranja",
+  "luckyColorYellow": "Amarelo",
+  "luckyColorTeal": "Turquesa",
+  "luckyColorBlue": "Azul",
+  "luckyColorPurple": "Roxo",
+  "luckyColorPink": "Rosa",
+  "settingsLanguage": "Idioma",
+  "settingsCountry": "Região",
+  "countryKorea": "Coreia",
+  "countryUnitedStates": "Estados Unidos",
+  "countryJapan": "Japão",
+  "countryChina": "China",
+  "countryGlobal": "Global",
+  "settingsTheme": "Aparência",
+  "settingsThemeDescription": "O tema padrão usa o tema diurno das 06:00 às 19:00 com base na hora local da localização conectada, e o tema noturno fora desse período. Os temas diurno e noturno ficam fixos independentemente da hora.",
+  "settingsThemeAutomatic": "Tema padrão",
+  "settingsThemeAutomaticDescription": "Usa automaticamente o tema diurno das 06:00 às 19:00 na localização conectada, e o tema noturno das 19:00 até antes das 06:00 do dia seguinte.",
+  "settingsThemeDay": "Tema diurno",
+  "settingsThemeDayDescription": "Usa sempre o tema diurno claro, independentemente da hora.",
+  "settingsThemeNight": "Tema noturno",
+  "settingsThemeNightDescription": "Usa sempre o tema noturno escuro existente, independentemente da hora.",
+  "settingsThemeDark": "Escuro",
+  "settingsThemeLight": "Claro",
+  "settingsBirthTitle": "Data de nascimento",
+  "settingsBirthDescription": "Gerencie a data e hora de nascimento para o cálculo da fortuna.",
+  "settingsBirthEmpty": "Não inserido",
+  "settingsBirthEdit": "Editar",
+  "settingsBirthUnknownHour": "Desconhecido",
+  "onboardingGenderLabel": "Gênero",
+  "genderMale": "Masculino",
+  "genderFemale": "Feminino",
+  "genderUnspecified": "Prefiro não dizer",
+  "settingsGenderTitle": "Gênero",
+  "settingsHourUnit": "{hour}:00",
+  "@settingsHourUnit": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFortuneToneTitle": "Tom",
+  "settingsFortuneToneDescription": "As mensagens de fortuna são mostradas no estilo {tone}.",
+  "@settingsFortuneToneDescription": {
+    "placeholders": {
+      "tone": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsFortuneToneSheetDescription": "As mensagens base são mantidas e o estilo selecionado tem prioridade.",
+  "settingsAppInfoTitle": "Informações do app",
+  "settingsAppInfoDescription": "Veja a página inicial, guia de privacidade, e-mail de contato e links.",
+  "settingsPremiumTitle": "Remover anúncios (vitalício)",
+  "settingsPremiumDescription": "Remove permanentemente os anúncios em banner e intersticiais.",
+  "settingsPremiumButton": "Remover anúncios",
+  "settingsPremiumButtonPriced": "Remover anúncios — {price}",
+  "@settingsPremiumButtonPriced": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPremiumPurchasedTitle": "Anúncios removidos",
+  "settingsPremiumPurchasedDescription": "Obrigado pelo seu apoio.",
+  "premiumMsgSuccess": "Os anúncios foram removidos. Obrigado!",
+  "premiumMsgCanceled": "Compra cancelada.",
+  "premiumMsgError": "Falha na compra. Tente novamente mais tarde.",
+  "premiumMsgStoreUnavailable": "Não foi possível conectar à loja. Tente novamente mais tarde.",
+  "premiumMsgProductUnavailable": "Este item não está disponível no momento.",
+  "onboardingTitle": "Yegamssi",
+  "onboardingSubtitle": "Insira sua data e hora de nascimento\npara receber a fortuna de hoje.",
+  "onboardingStart": "Começar",
+  "birthDate": "Data de nascimento",
+  "birthHour": "Hora de nascimento",
+  "birthHourOptional": "Hora de nascimento (opcional)",
+  "birthSelectDate": "Selecione uma data",
+  "birthUnknownNoon": "Desconhecido (calculado ao meio-dia)",
+  "birthUnknownNoonShort": "Desconhecido (meio-dia)",
+  "dateYmd": "{day}/{month}/{year}",
+  "@dateYmd": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "hourLabel": "{hour}:00",
+  "@hourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "appInfoHomepage": "Página inicial",
+  "appInfoHomepageDescription": "Abrir a página de apresentação do Yegamssi.",
+  "appInfoPrivacy": "Política de privacidade",
+  "appInfoPrivacyDescription": "Abrir a página de política de privacidade.",
+  "appInfoEmail": "E-mail de contato",
+  "appInfoEmailDescription": "Abrir o app de e-mail para consultas.",
+  "appInfoShare": "Compartilhar Yegamssi",
+  "appInfoShareDescription": "Mostrar um código QR vinculado à loja.",
+  "appInfoShareQrDescription": "Escaneie o código QR para abrir a página da loja do Yegamssi.",
+  "appInfoCopyLink": "Copiar link",
+  "appInfoOpenStore": "Abrir loja",
+  "appInfoStoreLinkCopied": "Link da loja copiado.",
+  "appInfoVersionTitle": "Versão do app",
+  "appInfoCurrentVersion": "Versão atual {version}+{buildNumber}",
+  "@appInfoCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "appInfoCheckingVersion": "Verificando versão...",
+  "appInfoDataSource": "Fontes de dados",
+  "appInfoKma": "Serviço Meteorológico da Coreia (KMA)",
+  "appInfoKmaDescription": "Fornece dados meteorológicos e de previsão para a Coreia do Sul.",
+  "appInfoAirKorea": "AirKorea",
+  "appInfoAirKoreaDescription": "Fornece dados de PM10, PM2.5, ozônio e qualidade do ar integrada para a Coreia do Sul.",
+  "appInfoOpenWeather": "OpenWeather",
+  "appInfoOpenWeatherDescription": "Fornece dados meteorológicos internacionais, previsões e qualidade do ar (PM10, PM2.5, O3).",
+  "appInfoNominatim": "OpenStreetMap Nominatim",
+  "appInfoNominatimDescription": "Converte coordenadas em nomes de lugares localizados. (Licença ODbL)",
+  "appInfoNoaa": "NOAA / Serviço Meteorológico Nacional dos EUA",
+  "appInfoNoaaDescription": "Fornece previsões meteorológicas oficiais e dados horários para os Estados Unidos. (Domínio público)",
+  "appInfoAirNow": "U.S. EPA AirNow",
+  "appInfoAirNowDescription": "Fornece dados de qualidade do ar em tempo real (PM2.5, PM10, Ozônio) para os Estados Unidos.",
+  "appInfoDataSourceNotice": "Algumas informações seguem os padrões de atribuição KOGL. Dados internacionais são fornecidos pela API OpenWeather.",
+  "widgetScoreLabel": "Pontuação",
+  "widgetFortuneLabel": "Fortuna",
+  "widget_description": "Widget de resumo diário do Yegamssi",
+  "widgetInstallTitle": "Adicionar o widget do Yegamssi",
+  "widgetInstallMessage": "Veja clima, temperatura, pontuação ao ar livre e fortuna diretamente na sua tela inicial.",
+  "widgetInstallAction": "Instalar widget",
+  "widgetInstallManual": "Pressione e segure a tela inicial e adicione o widget do Yegamssi.",
+  "appReviewTitle": "Você tem um momento? 🙏",
+  "appReviewMessage": "Muito obrigado por usar o Yegamssi. É um pequeno app desenvolvido por uma só pessoa, e uma avaliação de 5 estrelas significaria muito para nós. Você poderia deixar uma avaliação de 5 estrelas, por favor?",
+  "appReviewAction": "Avaliar com 5 estrelas",
+  "appReviewLater": "Talvez depois",
+  "updateNoticeTitle": "Aviso de atualização",
+  "updateRequiredTitle": "Atualização necessária",
+  "updateRequiredMessage": "A versão atual {currentVersion} não é mais suportada.\nAtualize para a versão {latestVersion}.",
+  "updateAvailableMessage": "A versão {latestVersion} está pronta.\nAtualizar agora?",
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "currentVersion": {
+        "type": "String"
+      },
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAction": "Atualizar",
+  "updateNewVersionMessage": "Uma nova versão foi lançada.\nAtualizar agora?",
+  "activityRunning": "Corrida",
+  "activityCycling": "Ciclismo",
+  "activityHiking": "Caminhada",
+  "activityWalking": "Passeio",
+  "activityOutdoor": "Trabalho ao ar livre",
+  "errorNetwork": "Verifique sua conexão com a internet.",
+  "errorServer": "Erro no servidor.",
+  "errorLocation": "Não foi possível obter a localização.",
+  "errorUnknown": "Ocorreu um erro desconhecido.",
+  "settingsBackgroundRefreshTitle": "Atualizacao em segundo plano",
+  "settingsBackgroundRefreshDescription": "Atualiza clima, qualidade do ar, pontuacao externa e widget a cada cerca de 30 minutos. A excecao de bateria melhora a confiabilidade.",
+  "settingsBackgroundRefreshStatusEnabled": "Excecao de bateria ativada",
+  "settingsBackgroundRefreshStatusLimited": "Excecao de bateria necessaria",
+  "settingsBackgroundRefreshAction": "Abrir configuracoes",
+  "batteryOptimizationReminderTitle": "Permita atualizacao estavel",
+  "batteryOptimizationReminderMessage": "O Yegamssi atualiza clima, qualidade do ar e widgets com mais estabilidade a cada 30 minutos quando a otimizacao de bateria e desativada para este app.",
+  "batteryOptimizationReminderLater": "Depois",
+  "batteryOptimizationReminderNever": "Nao mostrar novamente",
+  "batteryOptimizationReminderSettings": "Abrir configuracoes",
+  "settingsSupportTitle": "Apoio",
+  "settingsSupportDescription": "Apoie o Yegamssi com uma avaliação ou assistindo a um breve anúncio.",
+  "settingsSupportSheetDescription": "Um pequeno gesto ajuda o Yegamssi a continuar melhorando.",
+  "settingsSupportReviewAction": "Escrever uma avaliação",
+  "settingsSupportAdAction": "Assistir a um anúncio intersticial para apoiar o desenvolvedor",
+  "settingsSupportReviewFailed": "Não foi possível abrir a tela de avaliação. Tente novamente mais tarde.",
+  "settingsSupportAdThanks": "Obrigado por apoiar o Yegamssi.",
+  "settingsSupportPremiumThanks": "Você já apoiou o Yegamssi ao remover os anúncios. Muito obrigado.",
+  "settingsSupportAdFailed": "Não foi possível carregar o anúncio. Tente novamente mais tarde."
+}

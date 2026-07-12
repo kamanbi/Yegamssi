@@ -1,42 +1,43 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../core/config/app_config.dart';
-import '../../../../core/network/dio_client.dart';
+import '../../../../core/network/weather_proxy_dio.dart';
 
 /// 한국환경공단 에어코리아 실시간 대기오염 정보
 /// 출처: 한국환경공단_에어코리아 (공공누리 제0유형)
 /// https://apis.data.go.kr/B552584/ArpltnInforInqireSvc
 class AirKoreaDataSource {
   AirKoreaDataSource()
-      : _dio = DioClient.create(baseUrl: AppConfig.airkoreaBaseUrl);
+    : _dio = WeatherProxyDio.create(WeatherProxyProvider.airKorea);
 
   final Dio _dio;
   final Logger _logger = Logger();
 
-  static const _path =
-      '/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty';
+  static const _path = '/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty';
 
   /// 위경도 기반으로 해당 시도의 실시간 대기오염 정보 조회
   /// 반환: (pm10 μg/m³, pm25 μg/m³, o3 ppm, khaiValue 통합지수, khaiGrade 1~4)
-  Future<(double? pm10, double? pm25, double? o3, double? khaiValue, int? khaiGrade)>
-      fetchAirQuality({
-    required double lat,
-    required double lon,
-  }) async {
+  Future<
+    (double? pm10, double? pm25, double? o3, double? khaiValue, int? khaiGrade)
+  >
+  fetchAirQuality({required double lat, required double lon}) async {
     try {
       final sidoName = _sidoName(lat, lon);
-      final response = await _dio.get(_path, queryParameters: {
-        'serviceKey': AppConfig.airkoreaApiKey,
-        'returnType': 'json',
-        'numOfRows': 100,
-        'pageNo': 1,
-        'sidoName': sidoName,
-        'ver': '1.0',
-      });
+      final response = await _dio.get(
+        _path,
+        queryParameters: {
+          'returnType': 'json',
+          'numOfRows': 100,
+          'pageNo': 1,
+          'sidoName': sidoName,
+          'ver': '1.0',
+        },
+      );
 
       final items = response.data?['response']?['body']?['items'];
-      if (items is! List || items.isEmpty) return (null, null, null, null, null);
+      if (items is! List || items.isEmpty) {
+        return (null, null, null, null, null);
+      }
 
       // 유효한 pm10 값을 가진 첫 번째 측정소 사용
       for (final item in items) {

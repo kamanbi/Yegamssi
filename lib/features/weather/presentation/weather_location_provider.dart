@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/storage/weather_cache_store.dart';
 import '../../../core/storage/favorite_location_store.dart';
+import '../../../core/storage/selected_location_weather_cache_store.dart';
 import '../domain/entities/saved_location.dart';
 import '../domain/entities/weather_entity.dart';
 import 'weather_provider.dart';
@@ -77,9 +77,14 @@ Stream<WeatherEntity> selectedLocationWeather(
   Ref ref,
   SavedLocation location,
 ) async* {
-  final cachedWeather = await WeatherCacheStore.load();
-  if (cachedWeather != null) {
-    yield cachedWeather;
+  final cachedWeather = await SelectedLocationWeatherCacheStore.load(location);
+  if (cachedWeather != null && hasUsableForecastSnapshot(cachedWeather)) {
+    yield await localizedWeatherLocation(
+      ref,
+      cachedWeather,
+      lat: location.lat,
+      lon: location.lon,
+    );
   }
 
   final repo = await ref.watch(weatherRepositoryProvider.future);
@@ -95,21 +100,26 @@ Stream<WeatherEntity> selectedLocationWeather(
   }
 
   final weather = result.data!;
-  final mergedWeather = weather.copyWith(
-    hourlyForecasts: weather.hourlyForecasts.isEmpty
-        ? (cachedWeather?.hourlyForecasts ?? weather.hourlyForecasts)
-        : weather.hourlyForecasts,
-    dailyForecasts: weather.dailyForecasts.isEmpty
-        ? (cachedWeather?.dailyForecasts ?? weather.dailyForecasts)
-        : weather.dailyForecasts,
+  final mergedWeather = mergeWeatherSnapshot(
+    nextWeather: weather,
+    cachedWeather: cachedWeather,
+  );
+  final localizedWeather = await localizedWeatherLocation(
+    ref,
+    mergedWeather,
+    lat: location.lat,
+    lon: location.lon,
   );
   if (shouldPersistWeatherSnapshot(
-    nextWeather: mergedWeather,
+    nextWeather: localizedWeather,
     cachedWeather: cachedWeather,
   )) {
-    await WeatherCacheStore.save(mergedWeather);
+    await SelectedLocationWeatherCacheStore.save(
+      location: location,
+      weather: localizedWeather,
+    );
   }
-  yield mergedWeather;
+  yield localizedWeather;
 }
 
 // ─── 지역명 검색 (geocoding) ─────────────────────────────────
@@ -119,11 +129,13 @@ Future<List<SavedLocation>> searchLocation(Ref ref, String query) async {
   try {
     final geoLocations = await geo.locationFromAddress(query);
     return geoLocations
-        .map((l) => SavedLocation(
-              name: query.trim(),
-              lat: l.latitude,
-              lon: l.longitude,
-            ))
+        .map(
+          (l) => SavedLocation(
+            name: query.trim(),
+            lat: l.latitude,
+            lon: l.longitude,
+          ),
+        )
         .take(3)
         .toList();
   } catch (_) {

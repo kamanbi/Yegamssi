@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yegamssi Day/Night Theme Proposal</title>
+  <style>
+    :root {
+      --ink: #101826;
+      --muted: #5c6578;
+      --line: rgba(24, 36, 58, 0.14);
+      --blue: #4b68f2;
+      --gold: #d6b168;
+      --green: #5fc98a;
+      --coral: #e78c7d;
+      --panel-radius: 22px;
+      --card-radius: 18px;
+      font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: #eef4fb;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 48px;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 26px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .rule {
+      border: 1px solid var(--line);
+      border-radius: var(--card-radius);
+      background: rgba(255, 255, 255, 0.72);
+      padding: 16px;
+      box-shadow: 0 18px 50px rgba(42, 80, 130, 0.12);
+    }
+
+    .rule strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .rule span {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(320px, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .theme-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--panel-radius);
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.62);
+      box-shadow: 0 24px 70px rgba(36, 74, 123, 0.14);
+    }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge.night {
+      color: #dce8ff;
+      background: rgba(8, 20, 42, 0.86);
+    }
+
+    .badge.day {
+      color: #164069;
+      background: #dff1ff;
+    }
+
+    .phone {
+      position: relative;
+      overflow: hidden;
+      min-height: 720px;
+      border-radius: 34px;
+      padding: 24px 18px 18px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .phone.night {
+      color: #f8faff;
+      background:
+        linear-gradient(135deg, #08142a 0%, #102044 30%, #163160 66%, #23457a 100%);
+    }
+
+    .phone.day {
+      color: #102033;
+      background:
+        linear-gradient(160deg, #eaf7ff 0%, #cfeeff 36%, #f7fbff 68%, #d9f2ff 100%);
+    }
+
+    .phone::before,
+    .phone::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .phone.night::before {
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(223, 234, 255, 0.13), transparent 16%),
+        radial-gradient(circle at 78% 64%, rgba(143, 168, 255, 0.10), transparent 18%);
+    }
+
+    .phone.day::before {
+      inset: 0;
+      background:
+        linear-gradient(125deg, rgba(255, 255, 255, 0.56), transparent 34%),
+        linear-gradient(180deg, rgba(255, 218, 139, 0.28), transparent 30%);
+    }
+
+    .phone.day::after {
+      left: -20%;
+      right: -20%;
+      bottom: -11%;
+      height: 28%;
+      border-radius: 50%;
+      background: rgba(94, 190, 232, 0.18);
+      box-shadow: 0 -26px 70px rgba(94, 190, 232, 0.12);
+    }
+
+    .phone-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .date {
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0.74;
+    }
+
+    .tools {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tool {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .night .tool {
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #dce8ff;
+    }
+
+    .day .tool {
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(56, 107, 150, 0.12);
+      color: #315a80;
+    }
+
+    .headline {
+      margin: 0 0 22px;
+      max-width: 280px;
+      font-size: 31px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .card {
+      border-radius: var(--card-radius);
+      padding: 20px;
+      margin-bottom: 14px;
+      border: 1px solid;
+    }
+
+    .night .card {
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.20);
+    }
+
+    .day .card {
+      background: rgba(255, 255, 255, 0.78);
+      border-color: rgba(54, 104, 150, 0.13);
+      box-shadow: 0 18px 46px rgba(62, 114, 160, 0.16);
+    }
+
+    .weather-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 88px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .place {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .condition {
+      margin: 0 0 14px;
+      font-size: 14px;
+      opacity: 0.78;
+    }
+
+    .temp {
+      display: flex;
+      align-items: end;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .temp b {
+      font-size: 58px;
+      line-height: 0.9;
+      letter-spacing: 0;
+    }
+
+    .temp span {
+      padding-bottom: 7px;
+      font-size: 14px;
+      opacity: 0.78;
+      font-weight: 700;
+    }
+
+    .weather-icon {
+      display: grid;
+      place-items: center;
+      width: 86px;
+      height: 86px;
+      border-radius: 26px;
+      font-size: 44px;
+    }
+
+    .night .weather-icon {
+      background: rgba(255, 255, 255, 0.10);
+    }
+
+    .day .weather-icon {
+      background: linear-gradient(145deg, #fff7d7, #dff4ff);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .night .chip {
+      background: rgba(255, 255, 255, 0.11);
+      color: rgba(248, 250, 255, 0.88);
+    }
+
+    .day .chip {
+      background: rgba(75, 104, 242, 0.08);
+      color: #244b78;
+    }
+
+    .fortune-title {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .fortune-copy {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.62;
+    }
+
+    .night .fortune-copy {
+      color: rgba(248, 250, 255, 0.76);
+    }
+
+    .day .fortune-copy {
+      color: #4d6078;
+    }
+
+    .nav {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      border-radius: 18px;
+      padding: 8px;
+      border: 1px solid;
+    }
+
+    .night .nav {
+      background: rgba(17, 29, 53, 0.88);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .day .nav {
+      background: rgba(255, 255, 255, 0.82);
+      border-color: rgba(54, 104, 150, 0.13);
+      box-shadow: 0 16px 42px rgba(65, 120, 160, 0.16);
+    }
+
+    .nav-item {
+      display: grid;
+      place-items: center;
+      gap: 4px;
+      min-height: 50px;
+      border-radius: 14px;
+      font-size: 11px;
+      font-weight: 800;
+      opacity: 0.72;
+    }
+
+    .nav-item.active {
+      opacity: 1;
+    }
+
+    .night .nav-item.active {
+      color: #b9c7ff;
+      background: rgba(150, 168, 255, 0.14);
+    }
+
+    .day .nav-item.active {
+      color: var(--blue);
+      background: rgba(75, 104, 242, 0.10);
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .note {
+      border-radius: var(--card-radius);
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      padding: 16px;
+    }
+
+    .note h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .note p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .intro,
+      .comparison,
+      .notes {
+        grid-template-columns: 1fr;
+      }
+
+      .phone {
+        min-height: 680px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="intro">
+      <div>
+        <h1>예감씨 주간/야간 디자인 제안</h1>
+        <p class="lead">현재의 짙은 하늘과 글래스모피즘은 야간 모드로 유지하고, 접속된 위치의 현지 시간이 오전 6시부터 오후 7시 사이일 때는 더 밝은 하늘, 투명한 물빛, 흰색 유리 표면을 사용하는 주간 모드를 제안합니다.</p>
+      </div>
+      <aside class="rule">
+        <strong>테마 전환 규칙</strong>
+        <span>연결된 위치의 현지 시간 기준 06:00-19:00은 주간, 그 외 시간은 기존 야간 디자인을 사용합니다. 위치 시간이 없으면 기존 야간 디자인을 기본값으로 두는 것이 안전합니다.</span>
+      </aside>
+    </section>
+
+    <section class="comparison" aria-label="디자인 비교">
+      <article class="theme-panel">
+        <div class="panel-title">
+          <h2>현재 디자인</h2>
+          <span class="badge night">야간 유지</span>
+        </div>
+        <div class="phone night">
+          <div class="phone-content">
+            <div class="topline">
+              <div class="date">6월 16일 화요일 · 21:34</div>
+              <div class="tools"><div class="tool">언</div><div class="tool">↻</div></div>
+            </div>
+            <h3 class="headline">오늘의 흐름을 조용히 확인하세요</h3>
+            <section class="card">
+              <div class="weather-row">
+                <div>
+                  <p class="place">서울특별시 중구</p>
+                  <p class="condition">맑음 · 밤공기 안정</p>
+                  <div class="temp"><b>24°</b><span>체감 23°</span></div>
+                </div>
+                <div class="weather-icon">🌙</div>
+              </div>
+              <div class="chips">
+                <span class="chip">습도 62%</span>
+                <span class="chip">바람 1.8m/s</span>
+                <span class="chip">야외 82점 좋음</span>
+              </div>
+            </section>
+            <section class="card">
+              <p class="fortune-title">오늘의 한 줄 운세</p>
+              <p class="fortune-copy">차분하게 정리하면 좋은 방향이 보입니다. 중요한 연락은 서두르지 말고 맥락을 확인하세요.</p>
+            </section>
+          </div>
+          <nav class="nav" aria-label="야간 내비게이션">
+            <div class="nav-item active">⌂<span>홈</span></div>
+            <div class="nav-item">☀<span>날씨</span></div>
+            <div class="nav-item">★<span>점수</span></div>
+            <div class="nav-item">✦<span>운세</span></div>
+            <div class="nav-item">⚙<span>설정</span></div>
+          </nav>
+        </div>
+      </article>
+
+      <article class="theme-panel">
+        <div class="panel-title">
+          <h2>제안 디자인</h2>
+          <span class="badge day">주간 06:00-19:00</span>
+        </div>
+        <div class="phone day">
+          <div class="phone-content">
+            <div class="topline">
+              <div class="date">6월 16일 화요일 · 09:18</div>
+              <div class="tools"><div class="tool">언</div><div class="tool">↻</div></div>
+            </div>
+            <h3 class="headline">오늘 움직이기 좋은 시간을 확인하세요</h3>
+            <section class="card">
+              <div class="weather-row">
+                <div>
+                  <p class="place">서울특별시 중구</p>
+                  <p class="condition">맑음 · 햇빛 선명</p>
+                  <div class="temp"><b>26°</b><span>체감 27°</span></div>
+                </div>
+                <div class="weather-icon">☀️</div>
+              </div>
+              <div class="chips">
+                <span class="chip">습도 54%</span>
+                <span class="chip">바람 2.1m/s</span>
+                <span class="chip">야외 88점 좋음</span>
+              </div>
+            </section>
+            <section class="card">
+              <p class="fortune-title">오늘의 한 줄 운세</p>
+              <p class="fortune-copy">기운이 비교적 안정적입니다. 오전에는 정리, 오후에는 가벼운 실행에 무게를 두면 좋습니다.</p>
+            </section>
+          </div>
+          <nav class="nav" aria-label="주간 내비게이션">
+            <div class="nav-item active">⌂<span>홈</span></div>
+            <div class="nav-item">☀<span>날씨</span></div>
+            <div class="nav-item">★<span>점수</span></div>
+            <div class="nav-item">✦<span>운세</span></div>
+            <div class="nav-item">⚙<span>설정</span></div>
+          </nav>
+        </div>
+      </article>
+    </section>
+
+    <section class="notes">
+      <article class="note">
+        <h3>유지할 것</h3>
+        <p>카드 구조, 글래스 표면, 하늘과 물의 정체성은 유지합니다. 사용자가 밤낮이 바뀌어도 같은 앱으로 느껴야 합니다.</p>
+      </article>
+      <article class="note">
+        <h3>바꿀 것</h3>
+        <p>주간에는 배경을 밝은 하늘색으로, 카드 표면을 흰색 유리로, 텍스트를 짙은 남청색으로 바꿔 가독성을 확보합니다.</p>
+      </article>
+      <article class="note">
+        <h3>구현 주의</h3>
+        <p>테마 판단은 기기 시간이 아니라 현재 날씨 위치의 현지 시간 기준이어야 합니다. 위치 시간 실패 시 야간을 기본값으로 둡니다.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

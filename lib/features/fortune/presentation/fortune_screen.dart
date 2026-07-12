@@ -12,11 +12,14 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/design/app_spacing.dart';
 import '../../../core/error/app_exception.dart';
+import '../../../core/locale/country_code.dart';
+import '../../../core/locale/locale_provider.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/utils/date_format_helper.dart';
 import '../../../core/widgets/app_buttons.dart';
 import '../../../core/widgets/premium_card.dart';
 import '../../../l10n/app_localizations.dart';
+import '../domain/entities/lucky_color.dart';
 import '../domain/entities/fortune_result.dart';
 import '../domain/entities/oheng.dart';
 import 'fortune_provider.dart';
@@ -134,16 +137,16 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-class _FortuneDataView extends StatefulWidget {
+class _FortuneDataView extends ConsumerStatefulWidget {
   const _FortuneDataView({required this.fortune});
 
   final FortuneResult fortune;
 
   @override
-  State<_FortuneDataView> createState() => _FortuneDataViewState();
+  ConsumerState<_FortuneDataView> createState() => _FortuneDataViewState();
 }
 
-class _FortuneDataViewState extends State<_FortuneDataView> {
+class _FortuneDataViewState extends ConsumerState<_FortuneDataView> {
   static const double _capturePreviewOpacity = 0.01;
   static const double _captureMaxPixelRatio = 2.5;
 
@@ -153,6 +156,7 @@ class _FortuneDataViewState extends State<_FortuneDataView> {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final l10n = AppLocalizations.of(context);
+    final language = ref.watch(appLanguageNotifierProvider);
     final fortune = widget.fortune;
 
     return ListView(
@@ -160,42 +164,47 @@ class _FortuneDataViewState extends State<_FortuneDataView> {
         AppSpacing.x2,
         AppSpacing.x1,
         AppSpacing.x2,
-        120,
+        72,
       ),
       children: [
-        Row(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${AppDateFormat.format(fortune.date)} · ${_slotLabel(l10n, fortune.slot)}',
-                    style: AppTextStyles.labelMedium.copyWith(
-                      color: AppColors.body(brightness),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.x1),
-                  Text(
-                    l10n.fortuneTitle,
-                    style: AppTextStyles.headlineLarge.copyWith(
-                      color: AppColors.title(brightness),
-                    ),
-                  ),
-                ],
+            Text(
+              '${AppDateFormat.formatWithTime(DateTime.now(), language: language)} · update ${_slotAmPm(fortune.slot, language)}',
+              style: AppTextStyles.pageDateTime.copyWith(
+                color: AppColors.body(brightness),
               ),
             ),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                SizedBox(height: AppSpacing.x2),
-                _FortuneBrandLogo(width: 132, height: 52),
-              ],
+            const SizedBox(height: AppSpacing.x1),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final logoWidth = (constraints.maxWidth * 0.28).clamp(
+                  96.0,
+                  124.0,
+                );
+                return Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        l10n.fortuneTitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.headlineLarge.copyWith(
+                          color: AppColors.title(brightness),
+                        ),
+                      ),
+                    ),
+                    const _FortuneHelpButton(),
+                    const SizedBox(width: 8),
+                    _FortuneBrandLogo(width: logoWidth, height: 44),
+                  ],
+                );
+              },
             ),
           ],
         ),
-        const SizedBox(height: AppSpacing.x3),
+        const SizedBox(height: AppSpacing.x2),
         _FortuneContentSections(
           fortune: fortune,
           captureButton: _FortuneCaptureButton(
@@ -240,7 +249,10 @@ class _FortuneDataViewState extends State<_FortuneDataView> {
                   data: mediaQuery,
                   child: RepaintBoundary(
                     key: captureBoundaryKey,
-                    child: _FortuneCapturePage(fortune: widget.fortune),
+                    child: _FortuneCapturePage(
+                      fortune: widget.fortune,
+                      language: ref.read(appLanguageNotifierProvider),
+                    ),
                   ),
                 ),
               ),
@@ -312,19 +324,28 @@ class _FortuneDataViewState extends State<_FortuneDataView> {
 }
 
 class _FortuneBrandLogo extends StatelessWidget {
-  const _FortuneBrandLogo({required this.width, required this.height});
+  const _FortuneBrandLogo({
+    required this.width,
+    required this.height,
+  });
 
   final double width;
   final double height;
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: SizedBox(
-        width: width,
-        height: height,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
+
+    final logo = SizedBox(
+      width: width,
+      height: height,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: ColorFiltered(
+          colorFilter: isDark
+              ? const ColorFilter.mode(Colors.transparent, BlendMode.dst)
+              : const ColorFilter.mode(Color(0xFF1D2A3D), BlendMode.srcATop),
           child: Transform.scale(
             scale: 2.35,
             child: Image.asset(AppAssets.yegamssiLogo, fit: BoxFit.cover),
@@ -332,6 +353,7 @@ class _FortuneBrandLogo extends StatelessWidget {
         ),
       ),
     );
+    return IgnorePointer(child: logo);
   }
 }
 
@@ -374,10 +396,80 @@ class _FortuneCaptureButton extends StatelessWidget {
   }
 }
 
+class _FortuneHelpButton extends StatelessWidget {
+  const _FortuneHelpButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final l10n = AppLocalizations.of(context);
+
+    return IconButton(
+      tooltip: l10n.fortuneHelpTooltip,
+      visualDensity: VisualDensity.compact,
+      onPressed: () => _showFortuneHelp(context),
+      icon: Icon(
+        Icons.info_outline_rounded,
+        color: AppColors.title(brightness),
+      ),
+    );
+  }
+
+  void _showFortuneHelp(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        final brightness = Theme.of(sheetContext).brightness;
+        final l10n = AppLocalizations.of(sheetContext);
+        final paragraphs = [
+          l10n.fortuneHelpIntro,
+          l10n.fortuneHelpMyeongri,
+          l10n.fortuneHelpBirthTime,
+          l10n.fortuneHelpWeather,
+          l10n.fortuneHelpReference,
+        ];
+
+        return SafeArea(
+          child: FractionallySizedBox(
+            heightFactor: 0.82,
+            child: SingleChildScrollView(
+              padding: AppSpacing.screen,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.fortuneHelpTitle,
+                    style: AppTextStyles.titleLarge.copyWith(
+                      color: AppColors.title(brightness),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.x2),
+                  for (final paragraph in paragraphs) ...[
+                    Text(
+                      paragraph,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.body(brightness),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.x2),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class _FortuneCapturePage extends StatelessWidget {
-  const _FortuneCapturePage({required this.fortune});
+  const _FortuneCapturePage({required this.fortune, required this.language});
 
   final FortuneResult fortune;
+  final AppLanguage language;
 
   @override
   Widget build(BuildContext context) {
@@ -405,8 +497,8 @@ class _FortuneCapturePage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '${AppDateFormat.format(fortune.date)} · ${_slotLabel(l10n, fortune.slot)}',
-                    style: AppTextStyles.labelMedium.copyWith(
+                    '${AppDateFormat.formatWithTime(DateTime.now(), language: language)} · update ${_slotAmPm(fortune.slot, language)}',
+                    style: AppTextStyles.pageDateTime.copyWith(
                       color: AppColors.body(brightness),
                     ),
                   ),
@@ -504,7 +596,6 @@ class _FortuneOverviewCard extends StatelessWidget {
     final accent = _scoreColor(score);
 
     return PremiumCard(
-      tone: PremiumCardTone.accent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -577,7 +668,13 @@ class _LuckyFortuneChips extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final luckyNumber = _luckyNumberFor(fortune, score);
-    final luckyColor = _luckyColorFor(l10n, _dominantOheng(fortune.ohengRatio));
+    final luckyColor = fortune.luckyColor;
+    final luckyColorValue = HSLColor.fromAHSL(
+      1,
+      luckyColor.hue,
+      luckyColor.saturation,
+      luckyColor.lightness,
+    ).toColor();
 
     return Wrap(
       spacing: AppSpacing.x1,
@@ -601,14 +698,14 @@ class _LuckyFortuneChips extends StatelessWidget {
                 width: 10,
                 height: 10,
                 decoration: BoxDecoration(
-                  color: luckyColor.color,
+                  color: luckyColorValue,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white.withAlpha(120)),
                 ),
               ),
               const SizedBox(width: 6),
               Text(
-                luckyColor.name,
+                _luckyColorLabel(l10n, luckyColor.family),
                 style: AppTextStyles.labelLarge.copyWith(
                   color: AppColors.accentGold,
                 ),
@@ -653,13 +750,6 @@ class _LuckyPill extends StatelessWidget {
       ),
     );
   }
-}
-
-class _LuckyColorInfo {
-  const _LuckyColorInfo({required this.name, required this.color});
-
-  final String name;
-  final Color color;
 }
 
 class _OhengSummaryCard extends StatelessWidget {
@@ -784,13 +874,6 @@ class _SectionMessage extends StatelessWidget {
   }
 }
 
-String _slotLabel(AppLocalizations l10n, TimeSlot slot) {
-  return switch (slot) {
-    TimeSlot.morning => l10n.fortuneTimeMorning,
-    TimeSlot.afternoon => l10n.fortuneTimeAfternoon,
-  };
-}
-
 String _ohengLabel(AppLocalizations l10n, Oheng oheng) {
   return switch (oheng) {
     Oheng.mok => l10n.ohengMok,
@@ -819,40 +902,16 @@ int _luckyNumberFor(FortuneResult fortune, int score) {
   return seed % 99 + 1;
 }
 
-Oheng _dominantOheng(Map<Oheng, double> ratios) {
-  var bestOheng = Oheng.to;
-  var bestValue = -1.0;
-  for (final entry in ratios.entries) {
-    if (entry.value > bestValue) {
-      bestOheng = entry.key;
-      bestValue = entry.value;
-    }
-  }
-  return bestOheng;
-}
-
-_LuckyColorInfo _luckyColorFor(AppLocalizations l10n, Oheng oheng) {
-  return switch (oheng) {
-    Oheng.mok => _LuckyColorInfo(
-      name: l10n.luckyColorGreen,
-      color: const Color(0xFF79C68A),
-    ),
-    Oheng.hwa => _LuckyColorInfo(
-      name: l10n.luckyColorCoral,
-      color: const Color(0xFFE68A80),
-    ),
-    Oheng.to => _LuckyColorInfo(
-      name: l10n.luckyColorGold,
-      color: const Color(0xFFD6B168),
-    ),
-    Oheng.geum => _LuckyColorInfo(
-      name: l10n.luckyColorSilver,
-      color: const Color(0xFFB8C3D6),
-    ),
-    Oheng.su => _LuckyColorInfo(
-      name: l10n.luckyColorSky,
-      color: const Color(0xFF7DAFE8),
-    ),
+String _luckyColorLabel(AppLocalizations l10n, LuckyColorFamily family) {
+  return switch (family) {
+    LuckyColorFamily.red => l10n.luckyColorRed,
+    LuckyColorFamily.orange => l10n.luckyColorOrange,
+    LuckyColorFamily.yellow => l10n.luckyColorYellow,
+    LuckyColorFamily.green => l10n.luckyColorGreen,
+    LuckyColorFamily.teal => l10n.luckyColorTeal,
+    LuckyColorFamily.blue => l10n.luckyColorBlue,
+    LuckyColorFamily.purple => l10n.luckyColorPurple,
+    LuckyColorFamily.pink => l10n.luckyColorPink,
   };
 }
 
@@ -863,5 +922,15 @@ Color _ohengColor(Oheng oheng) {
     Oheng.to => const Color(0xFFD6B168),
     Oheng.geum => const Color(0xFF9FB3CC),
     Oheng.su => const Color(0xFF7DAFE8),
+  };
+}
+
+String _slotAmPm(TimeSlot slot, AppLanguage language) {
+  final isMorning = slot == TimeSlot.morning;
+  return switch (language) {
+    AppLanguage.ko => isMorning ? '오전' : '오후',
+    AppLanguage.ja => isMorning ? '午前' : '午後',
+    AppLanguage.zh => isMorning ? '上午' : '下午',
+    _ => isMorning ? 'AM' : 'PM',
   };
 }

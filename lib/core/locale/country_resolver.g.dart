@@ -6,10 +6,11 @@ part of 'country_resolver.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$resolvedCountryHash() => r'b4b316277f3d358a1b62c18cc8e5d06026267a02';
+String _$resolvedCountryHash() => r'f9e0b757dc5aa845b02a605eb2a55bfcf5da7d51';
 
 /// GPS 위치 → CountryCode 결정
-/// 위치 권한 없을 시 한국(kr) 기본값
+/// reverse geocoding 실패(타임아웃/네트워크 오류) 시 직전에 정상 판별된
+/// 국가를 유지하고, 캐시도 없는 최초 실행에 한해 한국(kr) 기본값을 사용한다.
 ///
 /// Copied from [resolvedCountry].
 @ProviderFor(resolvedCountry)

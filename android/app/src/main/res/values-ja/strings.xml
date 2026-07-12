@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">予感さん</string>
+    <string name="widget_name">予感さんウィジェット</string>
+    <string name="widget_description">天気、運勢、屋外スコアを素早く確認できる5x1ウィジェット</string>
+    <string name="widget_feels_like_label">体感</string>
+    <string name="widget_outdoor_label">屋外</string>
+    <string name="widget_fortune_label">運勢</string>
+    <string name="capture_open_chooser">予感さんキャプチャを開く</string>
+</resources>

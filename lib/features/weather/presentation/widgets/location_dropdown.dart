@@ -17,6 +17,7 @@ class LocationDropdown extends ConsumerWidget {
     final locationState = ref.watch(weatherLocationNotifierProvider);
     final selectedLocation = locationState.location;
     final l10n = AppLocalizations.of(context);
+    final brightness = Theme.of(context).brightness;
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -28,17 +29,17 @@ class LocationDropdown extends ConsumerWidget {
             child: Text(
               selectedLocation?.name ?? l10n.locationCurrent,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: AppColors.title(brightness),
                 fontSize: 26,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
           const SizedBox(width: 6),
-          const Icon(
+          Icon(
             Icons.expand_more_rounded,
-            color: AppColors.textSecondary,
+            color: AppColors.body(brightness),
             size: 22,
           ),
         ],
@@ -110,10 +111,7 @@ class LocationDropdown extends ConsumerWidget {
 }
 
 class _TopLocationMenu extends ConsumerWidget {
-  const _TopLocationMenu({
-    required this.onClose,
-    required this.onAddFavorite,
-  });
+  const _TopLocationMenu({required this.onClose, required this.onAddFavorite});
 
   final VoidCallback onClose;
   final VoidCallback onAddFavorite;
@@ -268,11 +266,7 @@ class _MenuDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      color: Colors.white.withAlpha(18),
-    );
+    return Divider(height: 1, thickness: 1, color: Colors.white.withAlpha(18));
   }
 }
 

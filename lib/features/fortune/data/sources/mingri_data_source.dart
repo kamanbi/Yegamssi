@@ -22,7 +22,9 @@ class MingriDataSource implements FortuneDataSource {
       final rows = await client
           .from(tableName)
           .select('code, type, text, weight')
-          .inFilter('code', codes);
+          .inFilter('code', codes)
+          .order('type')
+          .order('text');
 
       return (rows as List<dynamic>)
           .map(

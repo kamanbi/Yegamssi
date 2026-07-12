@@ -1,0 +1,516 @@
+{
+  "@@locale": "ro",
+  "appName": "Yegamssi",
+  "tabHome": "Astăzi",
+  "tabWeather": "Vreme",
+  "tabScore": "Scor",
+  "tabMonthlyYegamssi": "Lunar",
+  "monthlyYegamssiTitle": "Yegamssi lunar",
+  "monthlyYegamssiSubtitle": "Vezi zilele bune și zilele de atenție din această lună, pe categorii.",
+  "monthlyGoodDaysLabel": "Zile bune",
+  "monthlyCautionDaysLabel": "Atenție",
+  "monthlyGeneratingMessage": "Se pregătește Yegamssi lunar pentru luna aceasta.",
+  "monthlyFailedMessage": "Nu am putut pregăti Yegamssi lunar pentru luna aceasta. Te rugăm să repornești aplicația.",
+  "monthlyDisclaimer": "Yegamssi lunar este un conținut orientativ bazat pe fluxul Myeongri. Cântărește deciziile importante împreună cu condițiile reale.",
+  "monthlySummaryEarly": "Luna aceasta fluxul e bun la început, așa că e în avantajul tău să acționezi devreme.",
+  "monthlySummaryMid": "Luna aceasta fluxul se îmbunătățește de la mijloc; e mai bine să aștepți momentul potrivit decât să te grăbești.",
+  "monthlySummaryLate": "Luna aceasta, dacă îți dai silința spre final, vor urma rezultate bune.",
+  "monthlyCategoryLove": "Dragoste",
+  "monthlyCategoryLoveMessage": "Zilele bune sunt potrivite să-ți exprimi primul sentimentele. În zilele de atenție, o discuție calmă e mai bună.",
+  "monthlyCategoryWork": "Muncă",
+  "monthlyCategoryWorkMessage": "Zilele bune sunt potrivite să începi ceva nou. În zilele de atenție, nu forța și concentrează-te pe a finaliza.",
+  "monthlyCategoryMoney": "Bani",
+  "monthlyCategoryMoneyMessage": "Zilele bune sunt potrivite să-ți pui finanțele în ordine. În zilele de atenție, verifică de două ori înainte de o cheltuială mare.",
+  "monthlyCategoryRelationship": "Relații",
+  "monthlyCategoryRelationshipMessage": "Zilele bune sunt potrivite pentru discuții cu ceilalți. În zilele de atenție, alege-ți cuvintele cu grijă ca să eviți neînțelegerile.",
+  "monthlyCategoryHealth": "Sănătate",
+  "monthlyCategoryHealthMessage": "Zilele bune sunt potrivite să te miști. În zilele de atenție, nu exagera și fă loc pentru odihnă.",
+  "monthlyCategoryDecision": "Decizii",
+  "monthlyCategoryDecisionMessage": "Zilele bune sunt potrivite pentru o decizie importantă. În zilele de atenție, e mai bine să aștepți și să mai analizezi.",
+  "monthlyCategoryTravel": "Deplasări",
+  "monthlyCategoryTravelMessage": "Zilele bune sunt potrivite să planifici o ieșire sau o călătorie. În zilele de atenție, lasă puțin spațiu liber în program.",
+  "tabFortune": "Horoscop",
+  "tabSettings": "Setări",
+  "homeHeadline": "Vremea și semnalele zilei de azi",
+  "homeWeatherLoadingTitle": "Se încarcă vremea curentă",
+  "homeWeatherLoadingMessage": "Se pregătesc datele de locație și vreme.",
+  "homeWeatherErrorTitle": "Vremea curentă nu a putut fi încărcată",
+  "homeWeatherErrorMessage": "Deschide ecranul Vreme și încearcă din nou.",
+  "homeWeatherAction": "Vezi vremea",
+  "homeFortuneLoadingTitle": "Se pregătește horoscopul de azi",
+  "homeFortuneLoadingMessage": "Un scurt rezumat va apărea în curând.",
+  "homeFortuneErrorTitle": "Horoscopul nu este încă pregătit",
+  "homeFortuneErrorMessage": "Verifică-ți profilul și încearcă din nou pe ecranul de horoscop.",
+  "homeFortuneAction": "Vezi horoscopul",
+  "homeFortuneHeadline": "Horoscopul de azi pe scurt",
+  "appExitTitle": "Ieșire din aplicație",
+  "appExitMessage": "Vrei să închizi Yegamssi?",
+  "cancel": "Anulează",
+  "confirm": "OK",
+  "close": "Închide",
+  "later": "Mai târziu",
+  "exit": "Ieșire",
+  "search": "Căutare",
+  "loadingAd": "Se încarcă reclama...",
+  "refresh": "Reîmprospătează",
+  "refreshFailed": "Reîmprospătare eșuată: {error}",
+  "@refreshFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notFoundPage": "Pagină negăsită: {error}",
+  "@notFoundPage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLike": "Se simte ca {temp}°C",
+  "@weatherFeelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLikeShort": "Se simte {temp}℃",
+  "@weatherFeelsLikeShort": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidity": "Umiditate {value}%",
+  "@weatherHumidity": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherWind": "Vânt {speed}m/s",
+  "@weatherWind": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherHumidityLabel": "Umiditate",
+  "weatherWindLabel": "Vânt",
+  "weatherWindSpeedLabel": "Viteza vântului",
+  "weatherPrecipitationLabel": "Ploaie",
+  "weatherPrecipitationAmount": "Cantitate de precipitații {amount}",
+  "@weatherPrecipitationAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDustPm10": "PM10",
+  "weatherDustPm25": "PM2.5",
+  "weatherHourlyForecast": "Prognoză orară",
+  "weatherWeeklyForecast": "Prognoză săptămânală",
+  "weatherLoading": "Se încarcă vremea...",
+  "weatherErrorTitle": "Datele despre vreme nu pot fi obținute",
+  "weatherReturnCurrentLocation": "Revii la locația curentă în {seconds} sec",
+  "@weatherReturnCurrentLocation": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherToday": "Astăzi",
+  "weatherAm": "AM",
+  "weatherPm": "PM",
+  "weatherHour": "{hour}:00",
+  "@weatherHour": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherUvVeryHigh": "{uv} Foarte ridicat",
+  "weatherUvHigh": "{uv} Ridicat",
+  "weatherUvModerateHigh": "{uv} Moderat-ridicat",
+  "weatherUvModerate": "{uv} Moderat",
+  "weatherUvLow": "{uv} Scăzut",
+  "@weatherUvVeryHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerateHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerate": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvLow": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "weatherConditionSunny": "Însorit",
+  "weatherConditionClearNight": "Noapte senină",
+  "weatherConditionPartlyCloudy": "Parțial noros",
+  "weatherConditionPartlyCloudyNight": "Noapte parțial noroasă",
+  "weatherConditionCloudy": "Noros",
+  "weatherConditionHazy": "Ceață ușoară",
+  "weatherConditionWindy": "Vântos",
+  "weatherConditionSlightRain": "Ploaie ușoară",
+  "weatherConditionRain": "Ploaie",
+  "weatherConditionHeavyRain": "Ploaie torențială",
+  "weatherConditionThunderstorm": "Furtună",
+  "weatherConditionRainThunder": "Ploaie cu tunete",
+  "weatherConditionLightSnow": "Ninsoare ușoară",
+  "weatherConditionSnow": "Ninsoare",
+  "weatherConditionSleet": "Lapoviță",
+  "weatherConditionHot": "Caniculă",
+  "weatherConditionHotNight": "Noapte tropicală",
+  "weatherConditionColdWave": "Val de frig",
+  "weatherConditionUnknown": "Necunoscut",
+  "locationCurrent": "Locația curentă",
+  "locationSelectClose": "Închide selectorul de locații",
+  "locationAdded": "{name} a fost adăugat",
+  "@locationAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "locationFavoriteLimit": "Poți adăuga până la 5 locații.",
+  "locationFavoriteFull": "Lista de favorite este plină",
+  "locationFavoriteAdd": "Adaugă la favorite",
+  "locationSearchTitle": "Caută locație",
+  "locationSearchHint": "Exemplu: Seul, Busan, Tokyo",
+  "locationSearchEmpty": "Niciun rezultat găsit",
+  "scoreLabel": "Scor activitate în aer liber",
+  "scoreLoading": "Se calculează scorul de activitate în aer liber...",
+  "scoreErrorTitle": "Scorul nu poate fi calculat",
+  "scoreBreakdownTitle": "Deduceri",
+  "scoreNoDeduction": "Condiții stabile pentru activități în aer liber, aproape fără factori de deducere.",
+  "scoreInfo": "Scorul de activitate în aer liber este calculat pe baza ploii, vântului, temperaturii resimțite, calității aerului și indicelui UV.",
+  "scoreDeductionRain": "Ploaie și ninsoare",
+  "scoreDeductionWind": "Vânt",
+  "scoreDeductionTemp": "Temperatură",
+  "scoreDeductionAir": "Calitatea aerului",
+  "scoreDeductionUv": "UV",
+  "scoreDeductionOzone": "Ozon",
+  "scoreAdviceExcellent": "Astăzi este o zi bună pentru activități în aer liber.\nIeși afară și bucură-te de ea.",
+  "scoreAdviceGood": "Activitățile în aer liber sunt în regulă, dar mai verifică o dată vântul și indicele UV.",
+  "scoreAdviceFair": "Activitățile în aer liber sunt posibile, iar o pregătire mai bună le va ușura.",
+  "scoreAdvicePoor": "Astăzi este mai sigur să planifici activități în interior.",
+  "scoreTierExcellent": "Excelent",
+  "scoreTierGood": "Bun",
+  "scoreTierFair": "Acceptabil",
+  "scoreTierPoor": "Atenție",
+  "scorePointUnit": "{score} pct",
+  "@scorePointUnit": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "activityRecommendOutdoor": "Activitate în aer liber recomandată",
+  "activityRecommendLight": "O activitate ușoară este potrivită",
+  "activityRecommendCaution": "Este nevoie de prudență",
+  "activityRecommendIndoor": "Activitate în interior recomandată",
+  "airQualityTitle": "Calitatea aerului",
+  "airQualityIntegrated": "Calitatea aerului integrată",
+  "airQualityUnknown": "Fără date",
+  "airGradeGood": "Bună",
+  "airGradeModerate": "Moderată",
+  "airGradeBad": "Proastă",
+  "airGradeVeryBad": "Foarte proastă",
+  "pointUnit": "pct",
+  "fortuneTitle": "Horoscopul tău zilnic",
+  "fortuneNeedProfileTitle": "Sunt necesare informații despre naștere",
+  "fortuneNeedProfileMessage": "Introdu data și ora nașterii pentru a primi horoscopul de azi într-un ton calm.",
+  "fortuneBirthInputAction": "Introdu data nașterii",
+  "fortuneHelpTooltip": "Ajutor pentru horoscop",
+  "fortuneHelpTitle": "Cum citește Yegamssi horoscopul",
+  "fortuneHelpIntro": "Yegamssi citește fluxul horoscopului de azi pe baza Myeongri.",
+  "fortuneHelpMyeongri": "Myeongri este un sistem tradițional oriental de interpretare care analizează Cei Patru Stâlpi și echilibrul celor cinci elemente folosind data și ora nașterii. Yegamssi calculează energia personală de bază din data și ora nașterii, o compară cu fluxul zilei și oferă indicații pentru norocul general, bani, dragoste, muncă, sănătate și decizii.",
+  "fortuneHelpBirthTime": "Dacă nu îți cunoști ora nașterii, poți folosi prânzul ca reper. Totuși, introducerea orei nașterii ajută la o interpretare mai detaliată.",
+  "fortuneHelpWeather": "Yegamssi ia în calcul și vremea și scorul de activitate, nu doar horoscopul. De aceea, chiar dacă energia zilei este bună, vremea nefavorabilă poate reduce recomandarea de ieșire. Dacă horoscopul și vremea sunt stabile, poate fi o zi mai bună pentru acțiune.",
+  "fortuneHelpReference": "Horoscopul nu este un răspuns fix, ci un reper. Folosește-l pentru a privi din timp fluxul zilei și pentru a alege mai atent contactele, ieșirile, cheltuielile, contractele și deciziile importante.",
+  "fortuneLoadFailedTitle": "Horoscopul nu a putut fi încărcat",
+  "fortuneLoadFailedMessage": "Te rugăm să încerci din nou mai târziu.",
+  "fortuneCategoryAnalysis": "Analiză pe categorii",
+  "fortuneOverall": "Horoscop general",
+  "fortuneCategoryMoney": "Bani",
+  "fortuneCategoryLove": "Dragoste",
+  "fortuneCategoryWork": "Muncă",
+  "fortuneCategoryHealth": "Sănătate",
+  "fortuneCategoryDecision": "Decizii",
+  "fortuneLuckyColor": "Culoare norocoasă",
+  "fortuneLuckyNumber": "Număr norocos",
+  "fortuneOhengBalance": "Echilibrul elementelor",
+  "fortuneOhengDescription": "Un semnal de sprijin pentru starea ta emoțională din această zi.",
+  "fortuneCaptureTooltip": "Capturează cardul de horoscop",
+  "fortuneCaptureSaved": "Captura cardului de horoscop a fost salvată.",
+  "fortuneCaptureSaveDone": "Captura cardului de horoscop este completă",
+  "fortuneCaptureFailed": "Capturare eșuată: {error}",
+  "@fortuneCaptureFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fortuneOpenFolder": "Deschide folderul",
+  "fortuneAnalyzing": "Se analizează.",
+  "fortuneToneBase": "De bază",
+  "fortuneToneHumor": "Umor",
+  "fortuneToneTsundere": "Tsundere",
+  "fortuneToneCynical": "Cinic",
+  "fortuneToneEmotional": "Emoțional",
+  "fortuneToneHistorical": "Istoric",
+  "fortuneToneAi": "AI",
+  "fortuneTimeMorning": "Dimineață",
+  "fortuneTimeAfternoon": "După-amiază",
+  "ohengMok": "Lemn",
+  "ohengHwa": "Foc",
+  "ohengTo": "Pământ",
+  "ohengGeum": "Metal",
+  "ohengSu": "Apă",
+  "luckyColorGreen": "Verde",
+  "luckyColorCoral": "Coral",
+  "luckyColorGold": "Auriu",
+  "luckyColorSilver": "Argintiu",
+  "luckyColorSky": "Albastru deschis",
+  "luckyColorRed": "Roșu",
+  "luckyColorOrange": "Portocaliu",
+  "luckyColorYellow": "Galben",
+  "luckyColorTeal": "Turcoaz",
+  "luckyColorBlue": "Albastru",
+  "luckyColorPurple": "Mov",
+  "luckyColorPink": "Roz",
+  "settingsLanguage": "Limbă",
+  "settingsCountry": "Regiune",
+  "countryKorea": "Coreea",
+  "countryUnitedStates": "Statele Unite",
+  "countryJapan": "Japonia",
+  "countryChina": "China",
+  "countryGlobal": "Global",
+  "settingsTheme": "Aspect",
+  "settingsThemeDescription": "Tema implicită folosește tema de zi între 06:00 și 19:00 pe baza orei locale a locației conectate, iar în afara acestui interval folosește tema de noapte. Temele de zi și de noapte rămân fixe indiferent de oră.",
+  "settingsThemeAutomatic": "Tema implicită",
+  "settingsThemeAutomaticDescription": "Aplică automat tema de zi între 06:00 și 19:00 la locația conectată, apoi tema de noapte de la 19:00 până înainte de 06:00 a zilei următoare.",
+  "settingsThemeDay": "Tema de zi",
+  "settingsThemeDayDescription": "Folosește mereu tema luminoasă de zi, indiferent de oră.",
+  "settingsThemeNight": "Tema de noapte",
+  "settingsThemeNightDescription": "Folosește mereu tema întunecată de noapte existentă, indiferent de oră.",
+  "settingsThemeDark": "Întunecat",
+  "settingsThemeLight": "Luminos",
+  "settingsBirthTitle": "Data nașterii",
+  "settingsBirthDescription": "Gestionează data și ora nașterii folosite pentru calculul horoscopului.",
+  "settingsBirthEmpty": "Neintrodusă",
+  "settingsBirthEdit": "Editare",
+  "settingsBirthUnknownHour": "Necunoscută",
+  "onboardingGenderLabel": "Gen",
+  "genderMale": "Bărbat",
+  "genderFemale": "Femeie",
+  "genderUnspecified": "Prefer să nu spun",
+  "settingsGenderTitle": "Gen",
+  "settingsHourUnit": "{hour}:00",
+  "@settingsHourUnit": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFortuneToneTitle": "Ton",
+  "settingsFortuneToneDescription": "Mesajele de horoscop sunt afișate în stilul {tone}.",
+  "@settingsFortuneToneDescription": {
+    "placeholders": {
+      "tone": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsFortuneToneSheetDescription": "Mesajele de bază sunt păstrate, iar stilul ales este prioritizat.",
+  "settingsAppInfoTitle": "Despre aplicație",
+  "settingsAppInfoDescription": "Verifică pagina principală, ghidul de confidențialitate, e-mailul de contact și linkurile.",
+  "settingsPremiumTitle": "Eliminare reclame (pe viață)",
+  "settingsPremiumDescription": "Elimină permanent reclamele banner și interstițiale.",
+  "settingsPremiumButton": "Elimină reclamele",
+  "settingsPremiumButtonPriced": "Elimină reclamele — {price}",
+  "@settingsPremiumButtonPriced": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPremiumPurchasedTitle": "Reclame eliminate",
+  "settingsPremiumPurchasedDescription": "Îți mulțumim pentru sprijin.",
+  "premiumMsgSuccess": "Reclamele au fost eliminate. Mulțumim!",
+  "premiumMsgCanceled": "Achiziție anulată.",
+  "premiumMsgError": "Achiziția a eșuat. Te rugăm să încerci din nou mai târziu.",
+  "premiumMsgStoreUnavailable": "Nu se poate conecta la magazin. Te rugăm să încerci din nou mai târziu.",
+  "premiumMsgProductUnavailable": "Acest produs nu este disponibil momentan.",
+  "onboardingTitle": "Yegamssi",
+  "onboardingSubtitle": "Introdu data și ora nașterii\npentru a primi horoscopul de azi.",
+  "onboardingStart": "Începe",
+  "birthDate": "Data nașterii",
+  "birthHour": "Ora nașterii",
+  "birthHourOptional": "Ora nașterii (opțional)",
+  "birthSelectDate": "Selectează o dată",
+  "birthUnknownNoon": "Necunoscută (calculată la prânz)",
+  "birthUnknownNoonShort": "Necunoscută (prânz)",
+  "dateYmd": "{day}.{month}.{year}",
+  "@dateYmd": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "hourLabel": "{hour}:00",
+  "@hourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "appInfoHomepage": "Pagina principală",
+  "appInfoHomepageDescription": "Deschide pagina de prezentare Yegamssi.",
+  "appInfoPrivacy": "Politica de confidențialitate",
+  "appInfoPrivacyDescription": "Deschide pagina politicii de confidențialitate.",
+  "appInfoEmail": "E-mail de contact",
+  "appInfoEmailDescription": "Deschide aplicația de e-mail pentru întrebări.",
+  "appInfoShare": "Distribuie Yegamssi",
+  "appInfoShareDescription": "Afișează un cod QR către magazin.",
+  "appInfoShareQrDescription": "Scanează codul QR pentru a deschide pagina Yegamssi din magazin.",
+  "appInfoCopyLink": "Copiază linkul",
+  "appInfoOpenStore": "Deschide magazinul",
+  "appInfoStoreLinkCopied": "Linkul magazinului a fost copiat.",
+  "appInfoVersionTitle": "Versiunea aplicației",
+  "appInfoCurrentVersion": "Versiunea curentă {version}+{buildNumber}",
+  "@appInfoCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "appInfoCheckingVersion": "Se verifică versiunea...",
+  "appInfoDataSource": "Surse de date",
+  "appInfoKma": "Administrația Meteorologică din Coreea (KMA)",
+  "appInfoKmaDescription": "Furnizează date meteo și de prognoză pentru Coreea de Sud.",
+  "appInfoAirKorea": "AirKorea",
+  "appInfoAirKoreaDescription": "Furnizează date despre PM10, PM2.5, ozon și calitatea integrată a aerului pentru Coreea de Sud.",
+  "appInfoOpenWeather": "OpenWeather",
+  "appInfoOpenWeatherDescription": "Furnizează date meteo internaționale, de prognoză și de calitate a aerului (PM10, PM2.5, O3).",
+  "appInfoNominatim": "OpenStreetMap Nominatim",
+  "appInfoNominatimDescription": "Convertește coordonatele în nume de locuri localizate. (licență ODbL)",
+  "appInfoNoaa": "NOAA / Serviciul Meteorologic Național SUA",
+  "appInfoNoaaDescription": "Furnizează prognoze meteo oficiale și date orare pentru Statele Unite. (Domeniu public)",
+  "appInfoAirNow": "U.S. EPA AirNow",
+  "appInfoAirNowDescription": "Furnizează date în timp real privind calitatea aerului (PM2.5, PM10, Ozon) pentru Statele Unite.",
+  "appInfoDataSourceNotice": "Unele informații respectă standardele de atribuire KOGL. Datele internaționale sunt furnizate de API-ul OpenWeather.",
+  "widgetScoreLabel": "Scor",
+  "widgetFortuneLabel": "Horoscop",
+  "widget_description": "Widgetul cu rezumatul zilnic Yegamssi",
+  "widgetInstallTitle": "Adaugă widgetul Yegamssi",
+  "widgetInstallMessage": "Verifică vremea, temperatura, scorul de activitate în aer liber și horoscopul direct de pe ecranul de start.",
+  "widgetInstallAction": "Instalează widgetul",
+  "widgetInstallManual": "Apasă lung pe ecranul de start și adaugă widgetul Yegamssi.",
+  "appReviewTitle": "Ai un moment, te rog? 🙏",
+  "appReviewMessage": "Îți mulțumim mult că folosești Yegamssi. Este o aplicație mică, dezvoltată de o singură persoană, iar o recenzie de 5 stele din partea ta ar însemna enorm pentru noi. Ne-ai putea lăsa o recenzie de 5 stele, te rog?",
+  "appReviewAction": "Acordă 5 stele",
+  "appReviewLater": "Poate mai târziu",
+  "updateNoticeTitle": "Notă de actualizare",
+  "updateRequiredTitle": "Actualizare necesară",
+  "updateRequiredMessage": "Versiunea curentă {currentVersion} nu mai este acceptată.\nTe rugăm să actualizezi la versiunea {latestVersion}.",
+  "updateAvailableMessage": "Versiunea {latestVersion} este pregătită.\nActualizezi acum?",
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "currentVersion": {
+        "type": "String"
+      },
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAction": "Actualizează",
+  "updateNewVersionMessage": "A apărut o versiune nouă.\nActualizezi acum?",
+  "activityRunning": "Alergare",
+  "activityCycling": "Ciclism",
+  "activityHiking": "Drumeție",
+  "activityWalking": "Plimbare",
+  "activityOutdoor": "Muncă în aer liber",
+  "errorNetwork": "Te rugăm să verifici conexiunea la internet.",
+  "errorServer": "A apărut o eroare de server.",
+  "errorLocation": "Locația nu a putut fi obținută.",
+  "errorUnknown": "A apărut o eroare necunoscută.",
+  "settingsBackgroundRefreshTitle": "Actualizare in fundal",
+  "settingsBackgroundRefreshDescription": "Actualizeaza vremea, calitatea aerului, scorul de exterior si widgetul aproximativ la fiecare 30 de minute. Exceptia de baterie creste fiabilitatea.",
+  "settingsBackgroundRefreshStatusEnabled": "Exceptie baterie activa",
+  "settingsBackgroundRefreshStatusLimited": "Este necesara exceptia de baterie",
+  "settingsBackgroundRefreshAction": "Deschide setarile",
+  "batteryOptimizationReminderTitle": "Permite actualizarea stabila",
+  "batteryOptimizationReminderMessage": "Yegamssi poate actualiza mai fiabil vremea, calitatea aerului si widgeturile la fiecare 30 de minute daca dezactivezi optimizarea bateriei pentru aceasta aplicatie.",
+  "batteryOptimizationReminderLater": "Mai tarziu",
+  "batteryOptimizationReminderNever": "Nu mai afisa",
+  "batteryOptimizationReminderSettings": "Deschide setarile",
+  "settingsSupportTitle": "Susținere",
+  "settingsSupportDescription": "Susține Yegamssi printr-o recenzie sau vizionarea unei reclame scurte.",
+  "settingsSupportSheetDescription": "Un gest mic ajută Yegamssi să continue să se îmbunătățească.",
+  "settingsSupportReviewAction": "Scrie o recenzie",
+  "settingsSupportAdAction": "Vizionează o reclamă interstițială pentru a susține dezvoltatorul",
+  "settingsSupportReviewFailed": "Ecranul de recenzii nu a putut fi deschis. Încearcă din nou mai târziu.",
+  "settingsSupportAdThanks": "Îți mulțumim că susții Yegamssi.",
+  "settingsSupportPremiumThanks": "Ai susținut deja Yegamssi eliminând reclamele. Îți mulțumim.",
+  "settingsSupportAdFailed": "Reclama nu a putut fi încărcată. Încearcă din nou mai târziu."
+}

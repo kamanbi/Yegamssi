@@ -1,29 +1,31 @@
-# Plan: Yegamssi Language Pack Follow-up
+# Widget Weather Mirror Plan
 
-## Completed
-- Limit app languages to Korean, Japanese, and English.
-- Apply saved language to the full Flutter app locale.
-- Show language selection on the main page.
-- Replace visible Flutter UI text with ARB-based localization across major screens and app-level prompts.
-- Keep fortune data work separate while wiring language-specific fortune table selection.
-- Remove Chinese localization files from the generated app surface.
+## Goal
+Keep the widget as a passive mirror of the current-location cached snapshot. Generate fortune only after a successful weather refresh for the active 06:00 or 13:00 slot.
 
-## Remaining Priority
-1. Validate Android widget/native strings and add platform resource localization where required.
-2. When fortune DATA is ready, verify `fortune_en` and `fortune_ja` base/tone table coverage.
-3. Add locale-aware date/weekday formatting instead of the current neutral numeric fallback.
-4. Decide whether country/region names should be localized per selected language.
+## Implementation
+1. Keep current-location, selected-location, and favorite-location cache ownership separate.
+2. Require a successful weather API result whenever the 30-minute policy says refresh is due.
+3. Stop the refresh transaction before fortune generation and widget sync when weather refresh fails.
+4. Reject new fortune generation when the available weather snapshot is stale; return an existing slot cache first.
+5. Recalculate outdoor score from the successfully refreshed current-location weather and country policy.
+6. Sync the widget only after the weather, score, and fortune snapshot is ready.
+7. Keep all 21 weather icon states aligned between Flutter assets and Android widget drawables, including cloudy night.
+8. Keep release artifacts hardened: mandatory release signing, no cleartext traffic, debug-only detailed logs, and encrypted profile storage migration.
+
+## Readability Rules
+- Early return on unusable cache, failed weather refresh, and unavailable profile.
+- Use `weatherRefreshDue`, `currentLocationWeather`, and `widgetSnapshot` as contextual names.
+- Keep 30 minutes, 1 hour, timeout, and fortune boundary hours as named constants.
+- Keep widget data grouped in `WidgetSnapshotPayload`.
+- Target readability: 8/10; current refresh flow is linear with explicit failure boundaries.
 
 ## Completion Criteria
-- Korean, Japanese, and English render without broken text on all Flutter screens.
-- Main page and settings language changes immediately update app UI.
-- Korea weather remains KMA/AirKorea based; non-Korean countries remain NOAA/OpenWeather/global fallback based.
-- Fortune UI is localized without modifying fortune DATA content.
-- `flutter gen-l10n`, `flutter analyze --no-fatal-infos`, and `flutter test --reporter=expanded` pass.
-
-## Readability 5 Rules
-- Early Return: fallback branches use direct returns and avoid nested language/data checks.
-- Contextual Naming: language/table helpers use names such as `AppLanguage`, `tableKey`, `localizedLabelFor`, and `tableNameForLang`.
-- Magic Number Hunter: new language work did not add business magic numbers; existing UI sizes remain unchanged.
-- Parameter Object: no new high-arity call sites were introduced; future fortune data validation can use a request object if table inputs grow.
-- Complexity Check: current language structure readability is about 86/100; adding native widget localization and locale-aware date formatting should bring it to about 92/100.
+- A failed due weather refresh cannot create a new fortune or overwrite the widget.
+- A successful weather refresh recalculates score and updates the widget.
+- Fortune remains unchanged within its active time slot.
+- Widget code performs no API call and displays only cached values.
+- App and widget show the same icon for every supported weather condition and night variant.
+- APK `1.1.48+82` builds, installs, and starts on the test device.
+- APK and AAB pass the credential-pattern scan; release signing and client-side hardening are verified.
+- Treat Supabase RLS, premium entitlement authority, and proxy rate limiting as deployment-side acceptance checks.

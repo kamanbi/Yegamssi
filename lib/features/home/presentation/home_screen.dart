@@ -4,13 +4,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../../core/background/background_refresh_permission_service.dart';
 import '../../../core/config/admob_config.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/design/app_radius.dart';
 import '../../../core/design/app_shadows.dart';
 import '../../../core/design/app_spacing.dart';
 import '../../../core/router/app_routes.dart';
+import '../../../core/locale/country_code.dart';
+import '../../../core/locale/country_resolver.dart';
+import '../../../core/refresh/refresh_policy.dart';
+import '../../../core/storage/weather_cache_store.dart';
 import '../../../core/utils/location_provider.dart';
+import '../../../core/locale/locale_provider.dart';
+import '../../../core/purchase/premium_provider.dart';
+import '../../../core/review/app_review_prompt.dart';
 import '../../../core/widget_install/widget_install_prompt.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../fortune/domain/entities/fortune_result.dart';
@@ -19,7 +27,7 @@ import '../../score/domain/entities/activity_score.dart';
 import '../../score/presentation/score_provider.dart';
 import '../../fortune/presentation/fortune_screen.dart';
 import '../../home/presentation/home_tab_screen.dart';
-import '../../score/presentation/score_screen.dart';
+import '../../monthly/presentation/monthly_yegamssi_screen.dart';
 import '../../settings/presentation/app_info_screen.dart';
 import '../../settings/presentation/settings_screen.dart';
 import '../../weather/domain/entities/weather_entity.dart';
@@ -36,7 +44,8 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with WidgetsBindingObserver {
   static const MethodChannel _appControlChannel = MethodChannel(
     'yegamssi/app_control',
   );
@@ -83,7 +92,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _showInterstitialThenExit() async {
     final ad = _interstitialAd;
-    if (!_isSessionLongEnough || ad == null) {
+    if (ref.read(premiumNotifierProvider) ||
+        !_isSessionLongEnough ||
+        ad == null) {
       await _closeAppImmediately();
       return;
     }
@@ -118,16 +129,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       selectedIcon: Icons.wb_sunny_rounded,
     ),
     _ShellTabItem(
-      route: AppRoutes.score,
-      label: '점수',
-      icon: Icons.star_outline_rounded,
-      selectedIcon: Icons.star_rounded,
-    ),
-    _ShellTabItem(
       route: AppRoutes.fortune,
       label: '운세',
       icon: Icons.auto_awesome_outlined,
       selectedIcon: Icons.auto_awesome_rounded,
+    ),
+    _ShellTabItem(
+      route: AppRoutes.monthlyYegamssi,
+      label: '월간예감',
+      icon: Icons.calendar_month_outlined,
+      selectedIcon: Icons.calendar_month_rounded,
     ),
     _ShellTabItem(
       route: AppRoutes.settings,
@@ -144,11 +155,92 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     _appOpenTime = DateTime.now();
-    _loadInterstitialAd();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      WidgetInstallPromptController.showIfNeeded(context);
+    if (!ref.read(premiumNotifierProvider)) {
+      _loadInterstitialAd();
+    }
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await WidgetInstallPromptController.showIfNeeded(context);
+      if (!mounted) return;
+      await AppReviewPromptController.showIfNeeded(context);
+      if (!mounted) return;
+      await _showBatteryOptimizationReminderIfNeeded();
       _tryInitialWidgetSync();
     });
+  }
+
+  Future<void> _showBatteryOptimizationReminderIfNeeded() async {
+    if (!await BackgroundRefreshPermissionService.shouldShowBatteryOptimizationReminder()) {
+      return;
+    }
+    if (!mounted) return;
+
+    final l10n = AppLocalizations.of(context);
+    final action = await showDialog<_BatteryReminderAction>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        shape: const RoundedRectangleBorder(
+          borderRadius: AppRadius.card,
+          side: BorderSide(color: AppColors.glassBorder),
+        ),
+        title: Text(l10n.batteryOptimizationReminderTitle),
+        content: Text(l10n.batteryOptimizationReminderMessage),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.of(dialogContext).pop(_BatteryReminderAction.never),
+            child: Text(l10n.batteryOptimizationReminderNever),
+          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.of(dialogContext).pop(_BatteryReminderAction.later),
+            child: Text(l10n.batteryOptimizationReminderLater),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(
+              dialogContext,
+            ).pop(_BatteryReminderAction.settings),
+            child: Text(
+              l10n.batteryOptimizationReminderSettings,
+              style: const TextStyle(
+                color: AppColors.gold,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    switch (action) {
+      case _BatteryReminderAction.settings:
+        await BackgroundRefreshPermissionService.requestBatteryOptimizationException();
+      case _BatteryReminderAction.never:
+        await BackgroundRefreshPermissionService.suppressBatteryOptimizationReminder();
+      case _BatteryReminderAction.later:
+      case null:
+        return;
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      resetPassiveWeatherThrottle();
+      _realignCurrentWeatherAfterResume();
+      // 포그라운드 복귀: 15분 쓰로틀 리셋 → 다음 접근 시 백그라운드 갱신 트리거
+      resetPassiveWeatherThrottle();
+    }
+  }
+
+  Future<void> _realignCurrentWeatherAfterResume() async {
+    final cachedWeather = await WeatherCacheStore.load(allowStale: true);
+    if (!mounted || !RefreshPolicy.isWeatherRefreshDue(cachedWeather)) {
+      return;
+    }
+    ref.invalidate(currentWeatherProvider);
+    ref.invalidate(currentScoreProvider);
   }
 
   void _tryInitialWidgetSync() {
@@ -169,6 +261,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _interstitialAd?.dispose();
     super.dispose();
   }
@@ -232,8 +325,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   int _tabIndexForLocation(String location) {
     if (location.startsWith(AppRoutes.weather)) return 1;
-    if (location.startsWith(AppRoutes.score)) return 2;
-    if (location.startsWith(AppRoutes.fortune)) return 3;
+    if (location.startsWith(AppRoutes.fortune)) return 2;
+    if (location.startsWith(AppRoutes.monthlyYegamssi)) return 3;
     if (location.startsWith(AppRoutes.settings)) return 4;
     return 0;
   }
@@ -241,8 +334,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _tabIndexForChild() {
     final child = widget.child;
     if (child is WeatherScreen) return 1;
-    if (child is ScoreScreen) return 2;
-    if (child is FortuneScreen) return 3;
+    if (child is FortuneScreen) return 2;
+    if (child is MonthlyYegamssiScreen) return 3;
     if (child is SettingsScreen || child is AppInfoScreen) return 4;
     if (child is HomeTabScreen) return 0;
     return -1;
@@ -278,11 +371,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     required double longitude,
     FortuneResult? fortune,
   }) {
+    final language = ref.read(appLanguageNotifierProvider);
+    final country = ref.read(resolvedCountryProvider).valueOrNull;
     final signature = [
+      language.name,
+      country?.isoCode ?? 'UNKNOWN',
       weather.condition.name,
+      weather.isNight ? 'night' : 'day',
       weather.tempCelsius.round(),
       weather.feelsLikeCelsius.round(),
-      widgetFortuneSymbolFor(fortune),
+      fortune == null ? 'null' : widgetFortuneSymbolFor(fortune),
       score.score,
     ].join('|');
 
@@ -297,6 +395,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         score: score,
         latitude: latitude,
         longitude: longitude,
+        language: language,
+        country: country ?? CountryCode.kr,
         fortune: fortune,
       );
     });
@@ -311,34 +411,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ref.watch(currentWeatherProvider);
     ref.watch(currentScoreProvider);
     ref.watch(dailyFortuneProvider);
+    ref.watch(appLanguageNotifierProvider);
 
     ref.listen(currentWeatherProvider, (_, next) {
       final nextWeather = next.valueOrNull;
-      final nextScore = ref.read(currentScoreProvider).valueOrNull;
-      if (nextWeather == null || nextScore == null) {
+      if (nextWeather == null) {
         return;
       }
       ref.read(currentPositionProvider.future).then((position) {
-        _scheduleWidgetSync(
+        final country = ref.read(resolvedCountryProvider).valueOrNull;
+        final score = calculateActivityScore(
           weather: nextWeather,
-          score: nextScore,
-          latitude: position.lat,
-          longitude: position.lon,
-          fortune: ref.read(dailyFortuneProvider).valueOrNull,
+          country: country ?? CountryCode.kr,
         );
-      });
-    });
-
-    ref.listen(currentScoreProvider, (_, next) {
-      final nextWeather = ref.read(currentWeatherProvider).valueOrNull;
-      final nextScore = next.valueOrNull;
-      if (nextWeather == null || nextScore == null) {
-        return;
-      }
-      ref.read(currentPositionProvider.future).then((position) {
         _scheduleWidgetSync(
           weather: nextWeather,
-          score: nextScore,
+          score: score,
           latitude: position.lat,
           longitude: position.lon,
           fortune: ref.read(dailyFortuneProvider).valueOrNull,
@@ -348,17 +436,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     ref.listen(dailyFortuneProvider, (_, next) {
       final nextWeather = ref.read(currentWeatherProvider).valueOrNull;
-      final nextScore = ref.read(currentScoreProvider).valueOrNull;
-      if (nextWeather == null || nextScore == null) {
+      if (nextWeather == null) {
         return;
       }
       ref.read(currentPositionProvider.future).then((position) {
+        final country = ref.read(resolvedCountryProvider).valueOrNull;
+        final score = calculateActivityScore(
+          weather: nextWeather,
+          country: country ?? CountryCode.kr,
+        );
         _scheduleWidgetSync(
           weather: nextWeather,
-          score: nextScore,
+          score: score,
           latitude: position.lat,
           longitude: position.lon,
           fortune: next.valueOrNull,
+        );
+      });
+    });
+
+    ref.listen(appLanguageNotifierProvider, (_, __) {
+      final nextWeather = ref.read(currentWeatherProvider).valueOrNull;
+      if (nextWeather == null) {
+        return;
+      }
+      ref.read(currentPositionProvider.future).then((position) {
+        final country = ref.read(resolvedCountryProvider).valueOrNull;
+        final score = calculateActivityScore(
+          weather: nextWeather,
+          country: country ?? CountryCode.kr,
+        );
+        _scheduleWidgetSync(
+          weather: nextWeather,
+          score: score,
+          latitude: position.lat,
+          longitude: position.lon,
+          fortune: ref.read(dailyFortuneProvider).valueOrNull,
         );
       });
     });
@@ -379,7 +492,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           behavior: HitTestBehavior.translucent,
           onHorizontalDragEnd: (details) =>
               _handleSwipeNavigation(details, currentIndex),
-          child: Stack(children: [const _WaterDropBackdrop(), widget.child]),
+          child: Stack(children: [const _SkyWaterBackdrop(), widget.child]),
         ),
         bottomNavigationBar: SafeArea(
           top: false,
@@ -461,6 +574,7 @@ class _NavigationTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final label = _labelFor(context, item.route);
+    final brightness = Theme.of(context).brightness;
 
     return Material(
       color: Colors.transparent,
@@ -484,14 +598,18 @@ class _NavigationTab extends StatelessWidget {
               Icon(
                 isSelected ? item.selectedIcon : item.icon,
                 size: 20,
-                color: isSelected ? colorScheme.primary : AppColors.textMuted,
+                color: isSelected
+                    ? colorScheme.primary
+                    : AppColors.caption(brightness),
               ),
               const SizedBox(height: 4),
               Text(
                 label,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: isSelected ? colorScheme.primary : AppColors.textMuted,
+                  color: isSelected
+                      ? colorScheme.primary
+                      : AppColors.caption(brightness),
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 ),
               ),
@@ -506,29 +624,31 @@ class _NavigationTab extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return switch (route) {
       AppRoutes.weather => l10n.tabWeather,
-      AppRoutes.score => l10n.tabScore,
       AppRoutes.fortune => l10n.tabFortune,
+      AppRoutes.monthlyYegamssi => l10n.tabMonthlyYegamssi,
       AppRoutes.settings => l10n.tabSettings,
       _ => l10n.tabHome,
     };
   }
 }
 
-class _MannerAdBanner extends StatefulWidget {
+class _MannerAdBanner extends ConsumerStatefulWidget {
   const _MannerAdBanner();
 
   @override
-  State<_MannerAdBanner> createState() => _MannerAdBannerState();
+  ConsumerState<_MannerAdBanner> createState() => _MannerAdBannerState();
 }
 
-class _MannerAdBannerState extends State<_MannerAdBanner> {
+class _MannerAdBannerState extends ConsumerState<_MannerAdBanner> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadAd();
+    if (!ref.read(premiumNotifierProvider)) {
+      _loadAd();
+    }
   }
 
   void _loadAd() {
@@ -562,6 +682,10 @@ class _MannerAdBannerState extends State<_MannerAdBanner> {
 
   @override
   Widget build(BuildContext context) {
+    if (ref.watch(premiumNotifierProvider)) {
+      return const SizedBox.shrink();
+    }
+
     final l10n = AppLocalizations.of(context);
     if (!_isLoaded || _bannerAd == null) {
       return Container(
@@ -587,27 +711,37 @@ class _MannerAdBannerState extends State<_MannerAdBanner> {
   }
 }
 
-class _WaterDropBackdrop extends StatelessWidget {
-  const _WaterDropBackdrop();
+class _SkyWaterBackdrop extends StatelessWidget {
+  const _SkyWaterBackdrop();
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
+
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF08142A),
-            Color(0xFF102044),
-            Color(0xFF163160),
-            Color(0xFF23457A),
-          ],
-          stops: [0, 0.28, 0.64, 1],
+          colors: isDark
+              ? const [
+                  Color(0xFF08142A),
+                  Color(0xFF102044),
+                  Color(0xFF163160),
+                  Color(0xFF23457A),
+                ]
+              : const [
+                  Color(0xFFEAF7FF),
+                  Color(0xFFCFEFFF),
+                  Color(0xFFF8FCFF),
+                  Color(0xFFDDF3FF),
+                ],
+          stops: const [0, 0.28, 0.64, 1],
         ),
       ),
       child: CustomPaint(
-        painter: _BubblePainter(),
+        painter: _BubblePainter(brightness: brightness),
         child: const SizedBox.expand(),
       ),
     );
@@ -615,6 +749,10 @@ class _WaterDropBackdrop extends StatelessWidget {
 }
 
 class _BubblePainter extends CustomPainter {
+  const _BubblePainter({required this.brightness});
+
+  final Brightness brightness;
+
   static const List<(double, double, double, double)> _bubbles = [
     (0.16, 0.12, 0.18, 0.10),
     (0.86, 0.14, 0.15, 0.08),
@@ -625,11 +763,46 @@ class _BubblePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final isDark = brightness == Brightness.dark;
+    if (!isDark) {
+      _drawDaylight(canvas, size);
+    }
     for (final bubble in _bubbles) {
       final center = Offset(bubble.$1 * size.width, bubble.$2 * size.height);
       final radius = bubble.$3 * size.width;
       _drawBubble(canvas, center, radius, bubble.$4);
     }
+  }
+
+  void _drawDaylight(Canvas canvas, Size size) {
+    final sunlightPaint = Paint()
+      ..shader =
+          const RadialGradient(
+            colors: [Color(0x66FFE2A3), Color(0x00FFE2A3)],
+          ).createShader(
+            Rect.fromCircle(
+              center: Offset(size.width * 0.14, size.height * 0.08),
+              radius: size.width * 0.55,
+            ),
+          );
+    canvas.drawCircle(
+      Offset(size.width * 0.14, size.height * 0.08),
+      size.width * 0.55,
+      sunlightPaint,
+    );
+
+    final waterPaint = Paint()
+      ..color = const Color(0x265EBEE8)
+      ..style = PaintingStyle.fill;
+    canvas.drawOval(
+      Rect.fromLTWH(
+        -size.width * 0.2,
+        size.height * 0.82,
+        size.width * 1.4,
+        size.height * 0.28,
+      ),
+      waterPaint,
+    );
   }
 
   void _drawBubble(
@@ -638,18 +811,36 @@ class _BubblePainter extends CustomPainter {
     double radius,
     double opacity,
   ) {
+    final isDark = brightness == Brightness.dark;
     final bodyPaint = Paint()
       ..shader = RadialGradient(
         center: const Alignment(-0.4, -0.35),
         radius: 1,
-        colors: [
-          const Color(
-            0xFFDFEAFF,
-          ).withAlpha((opacity * 255 * 1.25).clamp(0, 255).round()),
-          const Color(0xFF8FA8FF).withAlpha((opacity * 255 * 0.45).round()),
-          const Color(0xFF4668D8).withAlpha((opacity * 255 * 0.18).round()),
-          Colors.transparent,
-        ],
+        colors: isDark
+            ? [
+                const Color(
+                  0xFFDFEAFF,
+                ).withAlpha((opacity * 255 * 1.25).clamp(0, 255).round()),
+                const Color(
+                  0xFF8FA8FF,
+                ).withAlpha((opacity * 255 * 0.45).round()),
+                const Color(
+                  0xFF4668D8,
+                ).withAlpha((opacity * 255 * 0.18).round()),
+                Colors.transparent,
+              ]
+            : [
+                const Color(
+                  0xFFFFFFFF,
+                ).withAlpha((opacity * 255 * 2.2).clamp(0, 255).round()),
+                const Color(
+                  0xFFBEEBFF,
+                ).withAlpha((opacity * 255 * 0.95).round()),
+                const Color(
+                  0xFF79CBEF,
+                ).withAlpha((opacity * 255 * 0.28).round()),
+                Colors.transparent,
+              ],
         stops: const [0, 0.38, 0.72, 1],
       ).createShader(Rect.fromCircle(center: center, radius: radius));
 
@@ -681,5 +872,9 @@ class _BubblePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _BubblePainter oldDelegate) {
+    return oldDelegate.brightness != brightness;
+  }
 }
+
+enum _BatteryReminderAction { later, never, settings }

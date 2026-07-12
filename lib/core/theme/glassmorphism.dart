@@ -20,36 +20,52 @@ class GlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
     final radius = BorderRadius.circular(28);
-    final baseColor = backgroundColor ?? AppColors.darkSurface.withAlpha(150);
-    final outlineColor = borderColor ?? AppColors.glassBorder;
+    final baseColor =
+        backgroundColor ??
+        (isDark
+            ? AppColors.darkSurface.withAlpha(150)
+            : AppColors.lightSurfaceMuted.withAlpha(210));
+    final outlineColor =
+        borderColor ?? (isDark ? AppColors.glassBorder : AppColors.lightBorder);
 
     return ClipRRect(
       borderRadius: radius,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+        filter: ImageFilter.blur(
+          sigmaX: isDark ? 18 : 10,
+          sigmaY: isDark ? 18 : 10,
+        ),
         child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: radius,
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withAlpha(32),
-                baseColor,
-                AppColors.waterSurface.withAlpha(80),
-              ],
+              colors: isDark
+                  ? [
+                      Colors.white.withAlpha(32),
+                      baseColor,
+                      AppColors.waterSurface.withAlpha(80),
+                    ]
+                  : [
+                      Colors.white.withAlpha(184),
+                      baseColor,
+                      AppColors.waterMist.withAlpha(116),
+                    ],
             ),
             border: Border.all(color: outlineColor, width: 1.2),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(56),
-                blurRadius: 30,
+                color: Colors.black.withAlpha(isDark ? 56 : 18),
+                blurRadius: isDark ? 30 : 24,
                 offset: const Offset(0, 14),
               ),
               BoxShadow(
-                color: AppColors.skyGlow.withAlpha(28),
-                blurRadius: 24,
+                color: AppColors.skyGlow.withAlpha(isDark ? 28 : 24),
+                blurRadius: isDark ? 24 : 20,
                 offset: const Offset(0, 8),
               ),
             ],
@@ -64,8 +80,8 @@ class GlassCard extends StatelessWidget {
                   height: 86,
                   borderRadius: BorderRadius.circular(80),
                   colors: [
-                    Colors.white.withAlpha(120),
-                    Colors.white.withAlpha(14),
+                    Colors.white.withAlpha(isDark ? 120 : 96),
+                    Colors.white.withAlpha(isDark ? 14 : 20),
                   ],
                 ),
               ),
@@ -77,7 +93,7 @@ class GlassCard extends StatelessWidget {
                   height: 14,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.waterMist.withAlpha(44),
+                    color: AppColors.waterMist.withAlpha(isDark ? 44 : 54),
                   ),
                 ),
               ),
@@ -90,8 +106,8 @@ class GlassCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.white.withAlpha(170),
-                        Colors.white.withAlpha(38),
+                        Colors.white.withAlpha(isDark ? 170 : 132),
+                        Colors.white.withAlpha(isDark ? 38 : 42),
                         Colors.transparent,
                       ],
                     ),

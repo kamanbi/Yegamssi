@@ -9,7 +9,7 @@ import android.os.Build
 object AlarmScheduler {
 
     private const val REQUEST_CODE = 7777
-    private const val INTERVAL_MS = 15 * 60 * 1000L // 15분
+    private const val INTERVAL_MS = 30 * 60 * 1000L
 
     fun schedule(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -22,13 +22,13 @@ object AlarmScheduler {
 
         // Android 6+ Doze 모드에서도 정확히 실행되는 알람
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(
+            alarmManager.setAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerAt,
                 intent,
             )
         } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerAt, intent)
+            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAt, intent)
         }
     }
 

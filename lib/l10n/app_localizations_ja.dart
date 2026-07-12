@@ -21,6 +21,89 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tabScore => 'スコア';
 
   @override
+  String get tabMonthlyYegamssi => '今月';
+
+  @override
+  String get monthlyYegamssiTitle => '今月のイェガムシ';
+
+  @override
+  String get monthlyYegamssiSubtitle => '今月のカテゴリー別の良い日と気をつけたい日を確認しましょう。';
+
+  @override
+  String get monthlyGoodDaysLabel => '良い日';
+
+  @override
+  String get monthlyCautionDaysLabel => '注意する日';
+
+  @override
+  String get monthlyGeneratingMessage => '今月のイェガムシを準備しています。';
+
+  @override
+  String get monthlyFailedMessage => '今月のイェガムシを準備できませんでした。アプリを再起動してください。';
+
+  @override
+  String get monthlyDisclaimer =>
+      '今月のイェガムシは命理の流れをもとにした参考用のコンテンツです。大切な決断は現実の状況とあわせて判断してください。';
+
+  @override
+  String get monthlySummaryEarly => '今月は序盤の流れが良好です。早めに動くと有利に運びます。';
+
+  @override
+  String get monthlySummaryMid => '今月は中旬以降に流れが良くなります。急ぐより頃合いを見るのがおすすめです。';
+
+  @override
+  String get monthlySummaryLate => '今月は後半に力を入れると良い結果につながります。';
+
+  @override
+  String get monthlyCategoryLove => '恋愛';
+
+  @override
+  String get monthlyCategoryLoveMessage =>
+      '良い日は自分から気持ちを伝えるのに向いています。注意する日は落ち着いて話す方が良いでしょう。';
+
+  @override
+  String get monthlyCategoryWork => '仕事';
+
+  @override
+  String get monthlyCategoryWorkMessage =>
+      '良い日は新しいことを始めるのに向いています。注意する日は無理をせず、仕上げに集中する方が良いでしょう。';
+
+  @override
+  String get monthlyCategoryMoney => 'お金';
+
+  @override
+  String get monthlyCategoryMoneyMessage =>
+      '良い日は家計を整えるのに向いています。注意する日は大きな出費の前にもう一度確認する方が良いでしょう。';
+
+  @override
+  String get monthlyCategoryRelationship => '人間関係';
+
+  @override
+  String get monthlyCategoryRelationshipMessage =>
+      '良い日は人と話すのに向いています。注意する日は誤解を招かないよう言葉を選ぶ方が良いでしょう。';
+
+  @override
+  String get monthlyCategoryHealth => '健康';
+
+  @override
+  String get monthlyCategoryHealthMessage =>
+      '良い日は体を動かすのに向いています。注意する日は無理をせず休息をとる方が良いでしょう。';
+
+  @override
+  String get monthlyCategoryDecision => '決断';
+
+  @override
+  String get monthlyCategoryDecisionMessage =>
+      '良い日は大事な判断を下すのに向いています。注意する日は決定を急がず、もう少し見極める方が良いでしょう。';
+
+  @override
+  String get monthlyCategoryTravel => '移動';
+
+  @override
+  String get monthlyCategoryTravelMessage =>
+      '良い日は外出や移動の計画に向いています。注意する日は予定に余裕をもたせる方が良いでしょう。';
+
+  @override
   String get tabFortune => '運勢';
 
   @override
@@ -109,7 +192,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String weatherFeelsLikeShort(String temp) {
-    return '体感 $temp°';
+    return '体感 $temp℃';
   }
 
   @override
@@ -402,6 +485,31 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fortuneBirthInputAction => '出生情報を入力';
 
   @override
+  String get fortuneHelpTooltip => '運勢ヘルプ';
+
+  @override
+  String get fortuneHelpTitle => '予感씨の運勢について';
+
+  @override
+  String get fortuneHelpIntro => '予感씨は、命理学をもとに今日の運勢の流れを読み取ります。';
+
+  @override
+  String get fortuneHelpMyeongri =>
+      '命理学は、生まれた日付と時刻をもとに四柱八字と五行のバランスを見る東洋の伝統的な運勢体系です。予感씨はユーザーの生年月日と出生時刻から基本的な気を計算し、今日の日付の流れと比べて、総合運、金運、恋愛運、仕事運、健康運、決断運を案内します。';
+
+  @override
+  String get fortuneHelpBirthTime =>
+      '出生時刻が分からない場合は、正午を基準にして利用できます。ただし、出生時刻を入力すると、より細かな解釈に役立ちます。';
+
+  @override
+  String get fortuneHelpWeather =>
+      '予感씨は運勢だけでなく、天気と活動スコアも一緒に反映します。そのため、今日の気が良くても天気が悪ければ外出のおすすめ度が下がることがあり、反対に運勢と天気がどちらも安定していれば、行動しやすい日と見ることができます。';
+
+  @override
+  String get fortuneHelpReference =>
+      '運勢は正解ではなく参考です。今日の流れを前もって確認し、連絡、外出、消費、契約、大切な決断などを少し慎重に選ぶために役立ててください。';
+
+  @override
   String get fortuneLoadFailedTitle => '運勢を読み込めません';
 
   @override
@@ -518,13 +626,72 @@ class AppLocalizationsJa extends AppLocalizations {
   String get luckyColorSky => '空色';
 
   @override
+  String get luckyColorRed => '赤';
+
+  @override
+  String get luckyColorOrange => 'オレンジ';
+
+  @override
+  String get luckyColorYellow => '黄色';
+
+  @override
+  String get luckyColorTeal => '青緑';
+
+  @override
+  String get luckyColorBlue => '青';
+
+  @override
+  String get luckyColorPurple => '紫';
+
+  @override
+  String get luckyColorPink => 'ピンク';
+
+  @override
   String get settingsLanguage => '言語';
 
   @override
   String get settingsCountry => '地域';
 
   @override
+  String get countryKorea => '韓国';
+
+  @override
+  String get countryUnitedStates => '米国';
+
+  @override
+  String get countryJapan => '日本';
+
+  @override
+  String get countryChina => '中国';
+
+  @override
+  String get countryGlobal => 'グローバル';
+
+  @override
   String get settingsTheme => 'テーマ';
+
+  @override
+  String get settingsThemeDescription =>
+      '基本テーマは、接続された場所の現地時間で午前6時から午後7時まで日中テーマを使用し、それ以外の時間は夜間テーマを使用します。日中テーマと夜間テーマは時間に関係なく固定されます。';
+
+  @override
+  String get settingsThemeAutomatic => '基本テーマ';
+
+  @override
+  String get settingsThemeAutomaticDescription =>
+      '接続された場所の現地時間で06:00-19:00は日中テーマ、19:00以降から翌日06:00前までは夜間テーマを自動で適用します。';
+
+  @override
+  String get settingsThemeDay => '日中テーマ';
+
+  @override
+  String get settingsThemeDayDescription => '時間に関係なく明るい日中テーマを常に使用します。';
+
+  @override
+  String get settingsThemeNight => '夜間テーマ';
+
+  @override
+  String get settingsThemeNightDescription => '時間に関係なく既存の暗い夜間テーマを常に使用します。';
 
   @override
   String get settingsThemeDark => 'ダーク';
@@ -542,7 +709,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsBirthEmpty => '未入力';
 
   @override
+  String get settingsBirthEdit => '修正';
+
+  @override
   String get settingsBirthUnknownHour => '不明';
+
+  @override
+  String get onboardingGenderLabel => '性別';
+
+  @override
+  String get genderMale => '男性';
+
+  @override
+  String get genderFemale => '女性';
+
+  @override
+  String get genderUnspecified => '未回答';
+
+  @override
+  String get settingsGenderTitle => '性別';
 
   @override
   String settingsHourUnit(int hour) {
@@ -567,6 +752,41 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get settingsAppInfoDescription =>
       'ホームページ、プライバシー案内、問い合わせメール、リンクを確認します。';
+
+  @override
+  String get settingsPremiumTitle => '広告を削除（永久）';
+
+  @override
+  String get settingsPremiumDescription => 'バナー広告とインタースティシャル広告を完全に削除します。';
+
+  @override
+  String get settingsPremiumButton => '広告を削除';
+
+  @override
+  String settingsPremiumButtonPriced(String price) {
+    return '広告を削除 — $price';
+  }
+
+  @override
+  String get settingsPremiumPurchasedTitle => '広告削除済み';
+
+  @override
+  String get settingsPremiumPurchasedDescription => 'ご購入ありがとうございます。';
+
+  @override
+  String get premiumMsgSuccess => '広告が削除されました。ありがとうございます！';
+
+  @override
+  String get premiumMsgCanceled => '購入をキャンセルしました。';
+
+  @override
+  String get premiumMsgError => '購入に失敗しました。しばらくしてから再試行してください。';
+
+  @override
+  String get premiumMsgStoreUnavailable => 'ストアに接続できません。しばらくしてから再試行してください。';
+
+  @override
+  String get premiumMsgProductUnavailable => '現在この商品はご利用いただけません。';
 
   @override
   String get onboardingTitle => 'イェガムシ';
@@ -656,19 +876,47 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appInfoDataSource => 'データ出典';
 
   @override
-  String get appInfoKma => '韓国気象庁';
+  String get appInfoKma => '韓国気象庁 (KMA)';
 
   @override
-  String get appInfoKmaDescription => '天気と予報データを提供します。';
+  String get appInfoKmaDescription => '韓国の天気と予報データを提供します。';
 
   @override
   String get appInfoAirKorea => 'AirKorea';
 
   @override
-  String get appInfoAirKoreaDescription => 'PM10、PM2.5、オゾン、総合大気質情報を提供します。';
+  String get appInfoAirKoreaDescription =>
+      'PM10、PM2.5、オゾン、総合大気質情報を提供します。(韓国専用)';
 
   @override
-  String get appInfoDataSourceNotice => '一部情報は公共データポータルと公共ヌリの出典表示基準に従います。';
+  String get appInfoOpenWeather => 'OpenWeather';
+
+  @override
+  String get appInfoOpenWeatherDescription =>
+      '海外の天気・予報・大気質(PM10·PM2.5·O3)データを提供します。';
+
+  @override
+  String get appInfoNominatim => 'OpenStreetMap Nominatim';
+
+  @override
+  String get appInfoNominatimDescription => '座標から選択言語の地名に変換します。(ODbLライセンス)';
+
+  @override
+  String get appInfoNoaa => 'NOAA / 米国国立気象局';
+
+  @override
+  String get appInfoNoaaDescription => '米国の公式天気予報と時間別データを提供します。(パブリックドメイン)';
+
+  @override
+  String get appInfoAirNow => '米国EPA AirNow';
+
+  @override
+  String get appInfoAirNowDescription =>
+      '米国全域のリアルタイム大気質データ（PM2.5、PM10、オゾン）を提供します。';
+
+  @override
+  String get appInfoDataSourceNotice =>
+      '一部情報は公共データポータルと公共ヌリの出典表示基準に従います。海外データはOpenWeather APIを使用します。';
 
   @override
   String get widgetScoreLabel => 'スコア';
@@ -690,6 +938,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get widgetInstallManual => 'ホーム画面を長押ししてイェガムシのウィジェットを追加してください。';
+
+  @override
+  String get appReviewTitle => '少しだけお時間よろしいですか? 🙏';
+
+  @override
+  String get appReviewMessage =>
+      '予感さんをご利用いただき、誠にありがとうございます。個人で開発している小さなアプリのため、★5の評価が本当に大きな励みになります。よろしければ★5の評価をいただけますでしょうか。';
+
+  @override
+  String get appReviewAction => '★5で評価する';
+
+  @override
+  String get appReviewLater => 'また今度';
 
   @override
   String get updateNoticeTitle => '更新のお知らせ';
@@ -739,4 +1000,65 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get errorUnknown => '不明なエラーが発生しました。';
+
+  @override
+  String get settingsBackgroundRefreshTitle => 'バックグラウンド更新';
+
+  @override
+  String get settingsBackgroundRefreshDescription =>
+      '天気とウィジェットを約30分ごとに更新します。電池最適化の例外で安定します。';
+
+  @override
+  String get settingsBackgroundRefreshStatusEnabled => 'バッテリー例外が有効';
+
+  @override
+  String get settingsBackgroundRefreshStatusLimited => 'バッテリー例外が必要';
+
+  @override
+  String get settingsBackgroundRefreshAction => '設定を開く';
+
+  @override
+  String get batteryOptimizationReminderTitle => 'バックグラウンド更新を安定化';
+
+  @override
+  String get batteryOptimizationReminderMessage =>
+      'バッテリー最適化の例外を許可すると、天気とウィジェットの更新が安定します。';
+
+  @override
+  String get batteryOptimizationReminderLater => 'あとで';
+
+  @override
+  String get batteryOptimizationReminderNever => '今後表示しない';
+
+  @override
+  String get batteryOptimizationReminderSettings => '設定を開く';
+
+  @override
+  String get settingsSupportTitle => '応援';
+
+  @override
+  String get settingsSupportDescription => 'レビューや広告の視聴でYegamssiを応援してください。';
+
+  @override
+  String get settingsSupportSheetDescription => 'ちょっとした応援がYegamssiの改善に役立ちます。';
+
+  @override
+  String get settingsSupportReviewAction => 'レビューを書く';
+
+  @override
+  String get settingsSupportAdAction => '開発者を応援するためにインタースティシャル広告を見る';
+
+  @override
+  String get settingsSupportReviewFailed =>
+      'レビュー画面を開けませんでした。しばらくしてからもう一度お試しください。';
+
+  @override
+  String get settingsSupportAdThanks => 'Yegamssiを応援していただきありがとうございます。';
+
+  @override
+  String get settingsSupportPremiumThanks =>
+      'すでに広告削除でYegamssiを応援していただいています。ありがとうございます。';
+
+  @override
+  String get settingsSupportAdFailed => '広告を読み込めませんでした。しばらくしてからもう一度お試しください。';
 }

@@ -4,6 +4,31 @@
   "tabHome": "오늘",
   "tabWeather": "날씨",
   "tabScore": "점수",
+  "tabMonthlyYegamssi": "월간예감",
+  "monthlyYegamssiTitle": "월간 예감씨",
+  "monthlyYegamssiSubtitle": "이번 달 카테고리별 좋은 날과 조심할 날을 확인하세요.",
+  "monthlyGoodDaysLabel": "좋은 날",
+  "monthlyCautionDaysLabel": "조심할 날",
+  "monthlyGeneratingMessage": "이번 달 월간 예감씨를 준비 중입니다.",
+  "monthlyFailedMessage": "이번 달 월간 예감씨를 준비하지 못했습니다. 앱을 다시 실행해주세요.",
+  "monthlyDisclaimer": "월간 예감씨는 명리학 흐름을 바탕으로 만든 참고용 콘텐츠입니다. 중요한 결정은 현실적인 조건과 함께 판단해주세요.",
+  "monthlySummaryEarly": "이번 달은 초반 흐름이 좋습니다. 미리 움직이는 편이 유리합니다.",
+  "monthlySummaryMid": "이번 달은 중순 이후 흐름이 좋아집니다. 서두르기보다 때를 살피는 편이 좋습니다.",
+  "monthlySummaryLate": "이번 달은 후반에 힘을 내면 좋은 결과가 있습니다.",
+  "monthlyCategoryLove": "연애",
+  "monthlyCategoryLoveMessage": "좋은 날에는 먼저 마음을 표현하기 좋습니다. 조심할 날에는 차분하게 대화하는 편이 좋습니다.",
+  "monthlyCategoryWork": "일",
+  "monthlyCategoryWorkMessage": "좋은 날에는 새로운 일을 시작하기 좋습니다. 조심할 날에는 무리하지 않고 마무리에 집중하는 편이 좋습니다.",
+  "monthlyCategoryMoney": "돈",
+  "monthlyCategoryMoneyMessage": "좋은 날에는 재정을 정리하기 좋습니다. 조심할 날에는 큰 지출 전 한 번 더 확인하는 편이 좋습니다.",
+  "monthlyCategoryRelationship": "관계",
+  "monthlyCategoryRelationshipMessage": "좋은 날에는 사람들과 대화하기 좋습니다. 조심할 날에는 오해가 생기지 않게 말을 아끼는 편이 좋습니다.",
+  "monthlyCategoryHealth": "건강",
+  "monthlyCategoryHealthMessage": "좋은 날에는 몸을 움직이기 좋습니다. 조심할 날에는 무리하지 않고 휴식을 챙기는 편이 좋습니다.",
+  "monthlyCategoryDecision": "결정",
+  "monthlyCategoryDecisionMessage": "좋은 날에는 중요한 판단을 내리기 좋습니다. 조심할 날에는 결정을 미루고 더 살펴보는 편이 좋습니다.",
+  "monthlyCategoryTravel": "이동",
+  "monthlyCategoryTravelMessage": "좋은 날에는 외출이나 이동을 계획하기 좋습니다. 조심할 날에는 일정을 여유 있게 잡는 편이 좋습니다.",
   "tabFortune": "운세",
   "tabSettings": "설정",
   "homeHeadline": "오늘의 날씨와 예감",
@@ -29,23 +54,65 @@
   "loadingAd": "광고 로딩 중...",
   "refresh": "새로고침",
   "refreshFailed": "새로고침에 실패했습니다: {error}",
-  "@refreshFailed": { "placeholders": { "error": { "type": "String" } } },
+  "@refreshFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "notFoundPage": "페이지를 찾을 수 없습니다: {error}",
-  "@notFoundPage": { "placeholders": { "error": { "type": "String" } } },
+  "@notFoundPage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "weatherFeelsLike": "체감 {temp}°C",
-  "@weatherFeelsLike": { "placeholders": { "temp": { "type": "String" } } },
-  "weatherFeelsLikeShort": "체감 {temp}°",
-  "@weatherFeelsLikeShort": { "placeholders": { "temp": { "type": "String" } } },
+  "@weatherFeelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherFeelsLikeShort": "체감 {temp}℃",
+  "@weatherFeelsLikeShort": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
   "weatherHumidity": "습도 {value}%",
-  "@weatherHumidity": { "placeholders": { "value": { "type": "int" } } },
+  "@weatherHumidity": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
   "weatherWind": "바람 {speed}m/s",
-  "@weatherWind": { "placeholders": { "speed": { "type": "String" } } },
+  "@weatherWind": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
   "weatherHumidityLabel": "습도",
   "weatherWindLabel": "바람",
   "weatherWindSpeedLabel": "풍속",
   "weatherPrecipitationLabel": "강수",
   "weatherPrecipitationAmount": "강수량 {amount}",
-  "@weatherPrecipitationAmount": { "placeholders": { "amount": { "type": "String" } } },
+  "@weatherPrecipitationAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "weatherDustPm10": "미세먼지",
   "weatherDustPm25": "초미세먼지",
   "weatherHourlyForecast": "시간별 예보",
@@ -53,22 +120,64 @@
   "weatherLoading": "날씨 정보를 불러오는 중...",
   "weatherErrorTitle": "날씨 정보를 가져올 수 없습니다",
   "weatherReturnCurrentLocation": "{seconds}초 후 현재 위치로 돌아갑니다",
-  "@weatherReturnCurrentLocation": { "placeholders": { "seconds": { "type": "int" } } },
+  "@weatherReturnCurrentLocation": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "weatherToday": "오늘",
   "weatherAm": "오전",
   "weatherPm": "오후",
   "weatherHour": "{hour}시",
-  "@weatherHour": { "placeholders": { "hour": { "type": "String" } } },
+  "@weatherHour": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
   "weatherUvVeryHigh": "{uv} 매우높음",
   "weatherUvHigh": "{uv} 높음",
   "weatherUvModerateHigh": "{uv} 약간높음",
   "weatherUvModerate": "{uv} 보통",
   "weatherUvLow": "{uv} 낮음",
-  "@weatherUvVeryHigh": { "placeholders": { "uv": { "type": "int" } } },
-  "@weatherUvHigh": { "placeholders": { "uv": { "type": "int" } } },
-  "@weatherUvModerateHigh": { "placeholders": { "uv": { "type": "int" } } },
-  "@weatherUvModerate": { "placeholders": { "uv": { "type": "int" } } },
-  "@weatherUvLow": { "placeholders": { "uv": { "type": "int" } } },
+  "@weatherUvVeryHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerateHigh": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvModerate": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
+  "@weatherUvLow": {
+    "placeholders": {
+      "uv": {
+        "type": "int"
+      }
+    }
+  },
   "weatherConditionSunny": "맑음",
   "weatherConditionClearNight": "맑은 밤",
   "weatherConditionPartlyCloudy": "구름 조금",
@@ -91,7 +200,13 @@
   "locationCurrent": "현재 위치",
   "locationSelectClose": "위치 선택 닫기",
   "locationAdded": "{name} 추가했습니다",
-  "@locationAdded": { "placeholders": { "name": { "type": "String" } } },
+  "@locationAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "locationFavoriteLimit": "최대 5개까지 추가할 수 있습니다.",
   "locationFavoriteFull": "즐겨찾기가 가득 찼습니다",
   "locationFavoriteAdd": "즐겨찾기 추가",
@@ -119,7 +234,13 @@
   "scoreTierFair": "보통",
   "scoreTierPoor": "주의",
   "scorePointUnit": "{score}점",
-  "@scorePointUnit": { "placeholders": { "score": { "type": "int" } } },
+  "@scorePointUnit": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
   "activityRecommendOutdoor": "야외활동 추천",
   "activityRecommendLight": "가벼운 활동 적합",
   "activityRecommendCaution": "주의가 필요한 날",
@@ -136,6 +257,13 @@
   "fortuneNeedProfileTitle": "운세를 보려면 출생 정보가 필요합니다",
   "fortuneNeedProfileMessage": "생년월일과 출생시를 입력하면 오늘의 운세를 조용한 톤으로 정리해 드립니다.",
   "fortuneBirthInputAction": "출생 정보 입력하기",
+  "fortuneHelpTooltip": "운세 도움말",
+  "fortuneHelpTitle": "예감씨 운세 안내",
+  "fortuneHelpIntro": "예감씨는 명리학을 기반으로 오늘의 운세 흐름을 읽어줍니다.",
+  "fortuneHelpMyeongri": "명리학은 태어난 날짜와 시간을 바탕으로 사주팔자와 오행의 균형을 살펴보는 동양의 전통 운세 체계입니다. 예감씨는 사용자의 생년월일과 출생시간을 이용해 개인의 기본 기운을 계산하고, 오늘 날짜의 흐름과 비교해 종합운, 재물운, 연애운, 직장운, 건강운, 결정운을 안내합니다.",
+  "fortuneHelpBirthTime": "출생시간을 모른다면 정오 기준으로도 이용할 수 있습니다. 다만 출생시간을 입력하면 더 세밀한 해석에 도움이 됩니다.",
+  "fortuneHelpWeather": "예감씨는 운세뿐 아니라 날씨와 활동 점수도 함께 반영합니다. 그래서 오늘의 기운이 좋아도 날씨가 좋지 않다면 외출 추천도가 낮아질 수 있고, 반대로 운세와 날씨가 함께 안정적이라면 행동하기 좋은 날로 볼 수 있습니다.",
+  "fortuneHelpReference": "운세는 정답이 아니라 참고입니다. 오늘의 흐름을 미리 살펴보고, 연락, 외출, 소비, 계약, 중요한 결정 등을 조금 더 신중하게 선택하는 데 도움을 드립니다.",
   "fortuneLoadFailedTitle": "운세를 불러오지 못했습니다",
   "fortuneLoadFailedMessage": "잠시 후 다시 시도해 주세요.",
   "fortuneCategoryAnalysis": "카테고리별 해석",
@@ -153,7 +281,13 @@
   "fortuneCaptureSaved": "운세 카드 캡처를 저장했습니다.",
   "fortuneCaptureSaveDone": "운세 카드 캡처 저장 완료",
   "fortuneCaptureFailed": "캡처에 실패했습니다: {error}",
-  "@fortuneCaptureFailed": { "placeholders": { "error": { "type": "String" } } },
+  "@fortuneCaptureFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "fortuneOpenFolder": "폴더 열기",
   "fortuneAnalyzing": "분석 중입니다.",
   "fortuneToneBase": "기본",
@@ -175,23 +309,78 @@
   "luckyColorGold": "골드",
   "luckyColorSilver": "실버",
   "luckyColorSky": "하늘색",
+  "luckyColorRed": "빨강",
+  "luckyColorOrange": "주황",
+  "luckyColorYellow": "노랑",
+  "luckyColorTeal": "청록",
+  "luckyColorBlue": "파랑",
+  "luckyColorPurple": "보라",
+  "luckyColorPink": "분홍",
   "settingsLanguage": "언어",
   "settingsCountry": "지역",
+  "countryKorea": "한국",
+  "countryUnitedStates": "미국",
+  "countryJapan": "일본",
+  "countryChina": "중국",
+  "countryGlobal": "글로벌",
   "settingsTheme": "테마",
+  "settingsThemeDescription": "기본테마는 접속 위치의 현지 시간 기준 오전 6시부터 오후 7시까지 주간 테마를 사용하고, 그 외 시간에는 야간 테마를 사용합니다. 주간테마와 야간테마는 시간과 관계없이 고정됩니다.",
+  "settingsThemeAutomatic": "기본테마",
+  "settingsThemeAutomaticDescription": "접속 위치의 현지 시간 기준 06:00-19:00은 주간 테마, 19:00 이후부터 다음날 06:00 전까지는 야간 테마를 자동으로 적용합니다.",
+  "settingsThemeDay": "주간테마",
+  "settingsThemeDayDescription": "시간과 관계없이 밝은 주간 테마를 항상 사용합니다.",
+  "settingsThemeNight": "야간테마",
+  "settingsThemeNightDescription": "시간과 관계없이 기존 어두운 야간 테마를 항상 사용합니다.",
   "settingsThemeDark": "다크",
   "settingsThemeLight": "라이트",
   "settingsBirthTitle": "생년월일",
   "settingsBirthDescription": "운세 계산에 사용하는 생년월일과 출생시를 관리합니다.",
   "settingsBirthEmpty": "입력하지 않음",
+  "settingsBirthEdit": "수정",
   "settingsBirthUnknownHour": "미상",
+  "onboardingGenderLabel": "성별",
+  "genderMale": "남성",
+  "genderFemale": "여성",
+  "genderUnspecified": "선택 안 함",
+  "settingsGenderTitle": "성별",
   "settingsHourUnit": "{hour}시",
-  "@settingsHourUnit": { "placeholders": { "hour": { "type": "int" } } },
+  "@settingsHourUnit": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
   "settingsFortuneToneTitle": "멘트 톤",
   "settingsFortuneToneDescription": "운세 문구를 {tone} 스타일로 표시합니다.",
-  "@settingsFortuneToneDescription": { "placeholders": { "tone": { "type": "String" } } },
+  "@settingsFortuneToneDescription": {
+    "placeholders": {
+      "tone": {
+        "type": "String"
+      }
+    }
+  },
   "settingsFortuneToneSheetDescription": "기본 문구는 유지하고 선택한 스타일 문구를 우선 사용합니다.",
   "settingsAppInfoTitle": "앱 정보",
   "settingsAppInfoDescription": "홈페이지, 개인정보 처리 안내, 문의 이메일, 링크를 확인합니다.",
+  "settingsPremiumTitle": "광고 제거 (평생 이용)",
+  "settingsPremiumDescription": "배너 광고 및 전면 광고를 영구적으로 제거합니다.",
+  "settingsPremiumButton": "광고 제거 구매",
+  "settingsPremiumButtonPriced": "광고 제거 구매 — {price}",
+  "@settingsPremiumButtonPriced": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPremiumPurchasedTitle": "광고 제거 구매 완료",
+  "settingsPremiumPurchasedDescription": "감사합니다.",
+  "premiumMsgSuccess": "광고가 제거되었습니다. 감사합니다!",
+  "premiumMsgCanceled": "구매를 취소했습니다.",
+  "premiumMsgError": "구매에 실패했습니다. 잠시 후 다시 시도해주세요.",
+  "premiumMsgStoreUnavailable": "스토어에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.",
+  "premiumMsgProductUnavailable": "현재 이용할 수 없는 상품입니다.",
   "onboardingTitle": "예감씨",
   "onboardingSubtitle": "생년월일과 출생시를 입력하면\n오늘의 운세를 알려드릴게요.",
   "onboardingStart": "시작하기",
@@ -202,9 +391,27 @@
   "birthUnknownNoon": "모름 (정오 기준 계산)",
   "birthUnknownNoonShort": "모름 (정오 기준)",
   "dateYmd": "{year}년 {month}월 {day}일",
-  "@dateYmd": { "placeholders": { "year": { "type": "int" }, "month": { "type": "int" }, "day": { "type": "int" } } },
+  "@dateYmd": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
   "hourLabel": "{hour}시",
-  "@hourLabel": { "placeholders": { "hour": { "type": "int" } } },
+  "@hourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
   "appInfoHomepage": "홈페이지",
   "appInfoHomepageDescription": "예감씨 소개 페이지를 엽니다.",
   "appInfoPrivacy": "개인정보 처리방침",
@@ -219,14 +426,31 @@
   "appInfoStoreLinkCopied": "스토어 링크를 복사했습니다.",
   "appInfoVersionTitle": "앱 버전",
   "appInfoCurrentVersion": "현재 버전 {version}+{buildNumber}",
-  "@appInfoCurrentVersion": { "placeholders": { "version": { "type": "String" }, "buildNumber": { "type": "String" } } },
+  "@appInfoCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
   "appInfoCheckingVersion": "버전 확인 중...",
   "appInfoDataSource": "데이터 출처",
-  "appInfoKma": "기상청",
-  "appInfoKmaDescription": "날씨와 예보 데이터를 제공합니다.",
-  "appInfoAirKorea": "에어코리아",
-  "appInfoAirKoreaDescription": "미세먼지, 초미세먼지, 오존, 통합 대기질 정보를 제공합니다.",
-  "appInfoDataSourceNotice": "일부 정보는 공공데이터포털과 공공누리 출처 표시 기준을 따릅니다.",
+  "appInfoKma": "기상청 (KMA)",
+  "appInfoKmaDescription": "한국 날씨·예보 데이터를 제공합니다. (국내 전용)",
+  "appInfoAirKorea": "에어코리아 (AirKorea)",
+  "appInfoAirKoreaDescription": "미세먼지, 초미세먼지, 오존, 통합 대기질 정보를 제공합니다. (국내 전용)",
+  "appInfoOpenWeather": "OpenWeather",
+  "appInfoOpenWeatherDescription": "해외 날씨·예보·대기질(PM10·PM2.5·O3) 데이터를 제공합니다.",
+  "appInfoNominatim": "OpenStreetMap Nominatim",
+  "appInfoNominatimDescription": "좌표 기반 지역명을 선택 언어로 변환합니다. (ODbL 라이선스)",
+  "appInfoNoaa": "NOAA / 미국 국립기상청",
+  "appInfoNoaaDescription": "미국 전역의 공식 날씨 예보 및 시간별 데이터를 제공합니다. (공개 데이터)",
+  "appInfoAirNow": "미국 EPA AirNow",
+  "appInfoAirNowDescription": "미국 전역의 실시간 대기질 데이터(PM2.5, PM10, 오존)를 제공합니다.",
+  "appInfoDataSourceNotice": "일부 정보는 공공데이터포털과 공공누리 출처 표시 기준을 따릅니다. 해외 데이터는 OpenWeather API를 이용합니다.",
   "widgetScoreLabel": "점수",
   "widgetFortuneLabel": "운세",
   "widget_description": "예감씨 오늘 요약 위젯",
@@ -234,12 +458,31 @@
   "widgetInstallMessage": "홈 화면에서 날씨, 기온, 야외 점수, 운세를 바로 확인할 수 있습니다.",
   "widgetInstallAction": "위젯 설치",
   "widgetInstallManual": "홈 화면을 길게 눌러 예감씨 위젯을 추가해 주세요.",
+  "appReviewTitle": "잠시 시간 괜찮으실까요? 🙏",
+  "appReviewMessage": "예감씨를 사용해 주셔서 진심으로 감사합니다. 작은 1인 개발 앱이라 사용자님의 별점 다섯 개가 정말 큰 힘이 됩니다. 괜찮으시다면 따뜻한 별 다섯 개를 남겨주실 수 있을까요?",
+  "appReviewAction": "별 5개 남기기",
+  "appReviewLater": "다음에 할게요",
   "updateNoticeTitle": "업데이트 안내",
   "updateRequiredTitle": "업데이트 필요",
   "updateRequiredMessage": "현재 버전 {currentVersion}은 더 이상 지원되지 않습니다.\n최신 버전 {latestVersion}으로 업데이트해 주세요.",
   "updateAvailableMessage": "새 버전 {latestVersion}이 준비되었습니다.\n지금 업데이트하시겠어요?",
-  "@updateRequiredMessage": { "placeholders": { "currentVersion": { "type": "String" }, "latestVersion": { "type": "String" } } },
-  "@updateAvailableMessage": { "placeholders": { "latestVersion": { "type": "String" } } },
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "currentVersion": {
+        "type": "String"
+      },
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "latestVersion": {
+        "type": "String"
+      }
+    }
+  },
   "updateAction": "업데이트",
   "updateNewVersionMessage": "새 버전이 출시되었습니다.\n지금 업데이트하시겠어요?",
   "activityRunning": "러닝",
@@ -250,5 +493,24 @@
   "errorNetwork": "인터넷 연결을 확인해 주세요.",
   "errorServer": "서버 오류가 발생했습니다.",
   "errorLocation": "위치 정보를 가져올 수 없습니다.",
-  "errorUnknown": "알 수 없는 오류가 발생했습니다."
+  "errorUnknown": "알 수 없는 오류가 발생했습니다.",
+  "settingsBackgroundRefreshTitle": "백그라운드 갱신",
+  "settingsBackgroundRefreshDescription": "날씨, 대기질, 야외점수, 위젯 데이터를 약 30분마다 갱신합니다. 배터리 최적화 예외를 허용하면 더 안정적으로 동작합니다.",
+  "settingsBackgroundRefreshStatusEnabled": "배터리 예외 적용됨",
+  "settingsBackgroundRefreshStatusLimited": "배터리 예외 필요",
+  "settingsBackgroundRefreshAction": "설정 열기",
+  "batteryOptimizationReminderTitle": "백그라운드 갱신을 안정화하세요",
+  "batteryOptimizationReminderMessage": "예감씨가 날씨, 대기질, 위젯을 30분마다 더 안정적으로 갱신하려면 이 앱의 배터리 최적화 예외를 허용해야 합니다.",
+  "batteryOptimizationReminderLater": "나중에",
+  "batteryOptimizationReminderNever": "다시 보지 않음",
+  "batteryOptimizationReminderSettings": "설정 열기",
+  "settingsSupportTitle": "응원하기",
+  "settingsSupportDescription": "리뷰와 광고 시청으로 예감씨 개발을 응원합니다.",
+  "settingsSupportSheetDescription": "작은 응원이 예감씨를 계속 다듬는 데 도움이 됩니다.",
+  "settingsSupportReviewAction": "리뷰하기",
+  "settingsSupportAdAction": "개발자 응원하기 위해 전면광고를 본다",
+  "settingsSupportReviewFailed": "리뷰 화면을 열지 못했습니다. 잠시 후 다시 시도해 주세요.",
+  "settingsSupportAdThanks": "응원해 주셔서 감사합니다.",
+  "settingsSupportPremiumThanks": "이미 광고 제거로 응원해 주셨어요. 감사합니다.",
+  "settingsSupportAdFailed": "광고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."
 }

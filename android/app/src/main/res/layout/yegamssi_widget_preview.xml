@@ -57,8 +57,8 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.9"
         android:layout_marginTop="-5dp"
+        android:layout_weight="0.9"
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical">
 
@@ -78,7 +78,7 @@
             android:layout_marginTop="2dp"
             android:gravity="center_horizontal"
             android:includeFontPadding="false"
-            android:text="야외"
+            android:text="@string/widget_outdoor_label"
             android:textColor="#99FFFFFF"
             android:textSize="9sp" />
 
@@ -87,8 +87,8 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.9"
         android:layout_marginTop="-3dp"
+        android:layout_weight="0.9"
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical">
 
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
             android:includeFontPadding="false"
-            android:text="➡"
+            android:text="→"
             android:textColor="#FFD76A"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:includeFontPadding="false"
-            android:text="운세"
+            android:text="@string/widget_fortune_label"
             android:textColor="#99FFFFFF"
             android:textSize="9sp" />
 
@@ -125,24 +125,25 @@
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:format12Hour="yyyy.MM.dd"
-            android:format24Hour="yyyy.MM.dd"
+            android:format12Hour="MM/dd"
+            android:format24Hour="MM/dd"
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="#FFFFFFFF"
-            android:textSize="14sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:format12Hour="EEEE · HH:mm"
-            android:format24Hour="EEEE · HH:mm"
+            android:layout_marginTop="5dp"
+            android:format12Hour="EEE · hh:mm"
+            android:format24Hour="EEE · HH:mm"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:textColor="#B3FFFFFF"
-            android:textSize="11sp" />
+            android:textColor="#E0FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
