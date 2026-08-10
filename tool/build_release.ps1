@@ -12,7 +12,7 @@ $envFile = Join-Path $projectRoot '.env'
 $flutter = if ($env:YEGRAMSSI_FLUTTER_BIN) {
     $env:YEGRAMSSI_FLUTTER_BIN
 } else {
-    'F:\flutter-3.32.8\bin\flutter.bat'
+    'C:\dev\flutter\bin\flutter.bat'
 }
 
 if (-not (Test-Path $envFile)) {

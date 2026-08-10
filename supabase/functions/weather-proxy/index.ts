@@ -281,7 +281,10 @@ interface L2Row {
   expires_at: string;
 }
 
-const L2_SELECT_TIMEOUT_MS = 250;
+// 250ms로 배포했다가 실제 프로덕션 실측(5회 중 2회 l2_timeout으로 BYPASS)에서
+// 콜드 isolate의 최초 Postgres 연결 수립이 250ms를 넘는 경우가 흔함을 확인해 상향.
+// (검증 리포트 R-1이 지적한 위험이 실측으로 재현됨 — 응답 실패는 없었으나 캐시 효과 저하)
+const L2_SELECT_TIMEOUT_MS = 700;
 
 async function l2Select(cacheKey: string): Promise<L2Row | null> {
   if (!supabase) throw new Error('l2_unavailable');
