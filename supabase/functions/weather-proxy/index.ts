@@ -175,7 +175,27 @@ function determineSkipReason(
     if (provider === 'kma' || provider === 'airKorea') {
       const parsed = JSON.parse(body);
       const resultCode = parsed?.response?.header?.resultCode;
-      return resultCode === '00' ? null : 'E7';
+      if (resultCode !== '00') return 'E7';
+
+      // E12: 예보 발표 경계 시점에 걸리면 KMA가 resultCode="00"(성공)이면서도
+      // 항목이 일부만 채워진 응답을 줄 때가 있다. 이걸 그대로 캐싱하면 반쪽 예보가
+      // TTL(getVilageFcst 기준 3.2시간) 동안 그 격자의 모든 사용자에게 반복 노출된다
+      // (2026-08-10 실제 발생: 주간·시간대별 예보 동시 절단). resultCode 판정만으로는
+      // 잡히지 않으므로 항목 수 하한을 별도로 둔다. 임계값은 전형적 완전 응답(수백~800+
+      // 항목) 대비 보수적으로 낮게 잡았다 — 오탐(정상 응답을 거부)보다 미탐(반쪽 응답
+      // 통과)이 아직 남을 수 있으니, 배포 후 실제 skip="E12" 빈도를 보고 조정할 것.
+      const minItemsByPath: Record<string, number> = {
+        '/api/typ02/openApi/VilageFcstInfoService_2.0/getVilageFcst': 100,
+        '/api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtFcst': 20,
+      };
+      const minItems = minItemsByPath[path];
+      if (minItems !== undefined) {
+        const item = parsed?.response?.body?.items?.item;
+        const itemCount = Array.isArray(item) ? item.length : item ? 1 : 0;
+        if (itemCount < minItems) return 'E12';
+      }
+
+      return null;
     }
 
     if (provider === 'openWeather') {
