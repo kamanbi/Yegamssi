@@ -9,7 +9,6 @@ import 'core/locale/locale_provider.dart';
 import 'core/purchase/premium_provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
-import 'core/version/update_checker_widget.dart';
 import 'l10n/app_localizations.dart';
 
 class YegamssiApp extends ConsumerWidget {
@@ -49,7 +48,7 @@ class YegamssiApp extends ConsumerWidget {
               );
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: overlayStyle,
-          child: UpdateCheckerWidget(child: child ?? const SizedBox.shrink()),
+          child: child ?? const SizedBox.shrink(),
         );
       },
     );

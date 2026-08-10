@@ -10,7 +10,6 @@ import '../../features/monthly/presentation/monthly_yegamssi_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/settings/presentation/app_info_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
-import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/weather/presentation/weather_screen.dart';
 import '../../l10n/app_localizations.dart';
 import 'app_routes.dart';
@@ -30,13 +29,8 @@ Page<T> _noTransition<T>({required LocalKey key, required Widget child}) {
 @riverpod
 GoRouter appRouter(Ref ref) {
   return GoRouter(
-    initialLocation: AppRoutes.splash,
+    initialLocation: AppRoutes.home,
     routes: [
-      GoRoute(
-        path: AppRoutes.splash,
-        pageBuilder: (_, state) =>
-            _noTransition(key: state.pageKey, child: const SplashScreen()),
-      ),
       GoRoute(
         path: AppRoutes.onboarding,
         pageBuilder: (_, state) =>

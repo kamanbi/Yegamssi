@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../storage/local_storage.dart';
 import 'purchase_config.dart';
+import 'purchase_update_policy.dart';
 
 part 'premium_provider.g.dart';
 
@@ -68,43 +69,34 @@ class PremiumNotifier extends _$PremiumNotifier {
 
   Future<void> _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
     for (final purchase in purchases) {
-      var handled = false;
+      final decision = evaluatePurchaseUpdate(
+        update: PurchaseUpdateContext(
+          productId: purchase.productID,
+          status: purchase.status,
+          isAlreadyOwned: _isAlreadyOwnedError(purchase.error),
+          requiresCompletion: purchase.pendingCompletePurchase,
+        ),
+        premiumProductId: PurchaseConfig.removeAdsProductId,
+      );
 
-      if (purchase.productID == PurchaseConfig.removeAdsProductId) {
-        switch (purchase.status) {
-          case PurchaseStatus.purchased:
-          case PurchaseStatus.restored:
-            // completePurchase()를 먼저 호출 → 캐시 저장 전에 프로세스가 죽어도
-            // 다음 실행 시 cached==false로 restorePurchases()가 재시도되어 자가 치유됨
-            if (purchase.pendingCompletePurchase) {
-              await InAppPurchase.instance.completePurchase(purchase);
-            }
-            await _activatePremium();
-            if (purchase.status == PurchaseStatus.purchased) {
-              ref.read(purchaseMessageNotifierProvider.notifier).set(
-                const PurchaseMessage(PurchaseMessageType.success),
-              );
-            }
-            handled = true;
-          case PurchaseStatus.error:
-            if (_isAlreadyOwnedError(purchase.error)) {
-              await _activatePremium();
-            } else {
-              ref.read(purchaseMessageNotifierProvider.notifier).set(
-                const PurchaseMessage(PurchaseMessageType.error),
-              );
-            }
-          case PurchaseStatus.canceled:
-            ref.read(purchaseMessageNotifierProvider.notifier).set(
-              const PurchaseMessage(PurchaseMessageType.canceled),
-            );
-          case PurchaseStatus.pending:
-            break;
-        }
+      if (decision.completePurchase) {
+        await InAppPurchase.instance.completePurchase(purchase);
       }
 
-      if (!handled && purchase.pendingCompletePurchase) {
-        await InAppPurchase.instance.completePurchase(purchase);
+      if (decision.activatePremium) {
+        await _activatePremium();
+      }
+
+      final messageType = switch (decision.feedback) {
+        PurchaseUpdateFeedback.success => PurchaseMessageType.success,
+        PurchaseUpdateFeedback.canceled => PurchaseMessageType.canceled,
+        PurchaseUpdateFeedback.error => PurchaseMessageType.error,
+        null => null,
+      };
+      if (messageType != null) {
+        ref
+            .read(purchaseMessageNotifierProvider.notifier)
+            .set(PurchaseMessage(messageType));
       }
     }
   }
@@ -128,9 +120,9 @@ class PremiumNotifier extends _$PremiumNotifier {
 
     final available = await InAppPurchase.instance.isAvailable();
     if (!available) {
-      ref.read(purchaseMessageNotifierProvider.notifier).set(
-        const PurchaseMessage(PurchaseMessageType.storeUnavailable),
-      );
+      ref
+          .read(purchaseMessageNotifierProvider.notifier)
+          .set(const PurchaseMessage(PurchaseMessageType.storeUnavailable));
       return;
     }
 
@@ -138,19 +130,21 @@ class PremiumNotifier extends _$PremiumNotifier {
       PurchaseConfig.removeAdsProductId,
     });
     if (response.error != null || response.productDetails.isEmpty) {
-      ref.read(purchaseMessageNotifierProvider.notifier).set(
-        const PurchaseMessage(PurchaseMessageType.productUnavailable),
-      );
+      ref
+          .read(purchaseMessageNotifierProvider.notifier)
+          .set(const PurchaseMessage(PurchaseMessageType.productUnavailable));
       return;
     }
 
     final started = await InAppPurchase.instance.buyNonConsumable(
-      purchaseParam: PurchaseParam(productDetails: response.productDetails.first),
+      purchaseParam: PurchaseParam(
+        productDetails: response.productDetails.first,
+      ),
     );
     if (!started) {
-      ref.read(purchaseMessageNotifierProvider.notifier).set(
-        const PurchaseMessage(PurchaseMessageType.error),
-      );
+      ref
+          .read(purchaseMessageNotifierProvider.notifier)
+          .set(const PurchaseMessage(PurchaseMessageType.error));
     }
   }
 }

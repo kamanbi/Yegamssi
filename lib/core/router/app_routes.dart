@@ -1,5 +1,4 @@
 abstract class AppRoutes {
-  static const splash = '/splash';
   static const home = '/';
   static const weather = '/weather';
   static const fortune = '/fortune';

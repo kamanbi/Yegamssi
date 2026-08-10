@@ -1,10 +1,10 @@
 name: yegamssi
 description: "예감씨 - 날씨·활동점수·운세 기반 행동 판단 앱"
 publish_to: "none"
-version: 1.1.48+82
+version: 1.1.50+84
 
 environment:
-  sdk: ">=3.8.0 <4.0.0"
+  sdk: ">=3.10.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -60,7 +60,7 @@ dependencies:
   flutter_svg: ^2.2.3
 
   # In-App Purchase
-  in_app_purchase: ^3.2.3
+  in_app_purchase: ^3.3.0
   workmanager: 0.9.0+3
 
 dev_dependencies:

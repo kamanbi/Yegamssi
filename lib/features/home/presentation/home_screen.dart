@@ -15,6 +15,7 @@ import '../../../core/locale/country_code.dart';
 import '../../../core/locale/country_resolver.dart';
 import '../../../core/refresh/refresh_policy.dart';
 import '../../../core/storage/weather_cache_store.dart';
+import '../../../core/startup/app_startup_coordinator.dart';
 import '../../../core/utils/location_provider.dart';
 import '../../../core/locale/locale_provider.dart';
 import '../../../core/purchase/premium_provider.dart';
@@ -160,6 +161,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     }
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final shouldContinue = await AppStartupCoordinator(
+        AppStartupContext(context: context, ref: ref, isMounted: () => mounted),
+      ).runAfterFirstFrame();
+      if (!mounted || !shouldContinue) return;
+
       await WidgetInstallPromptController.showIfNeeded(context);
       if (!mounted) return;
       await AppReviewPromptController.showIfNeeded(context);
