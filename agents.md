@@ -122,6 +122,17 @@ Claude Code와 Codex를 동시에 사용할 때
 
 ---
 
+## 릴리즈 빌드 규칙 (필수)
+
+**릴리즈 APK/AAB는 반드시 `tool/build_release.ps1`로 빌드한다. `flutter build apk/appbundle --release`를 직접 실행하지 않는다.**
+
+- 이유: Supabase URL/anon key는 `.env`에서 `--dart-define`으로 주입되는 컴파일타임 상수(`AppConfig.supabaseUrl/supabaseAnonKey`)다. 일반 `flutter build` 명령은 이 값을 주입하지 않아 빈 문자열로 컴파일되고, 그러면 `SupabaseConfig.initialize()`가 조용히 스킵되어 **운세 등 Supabase 의존 기능이 전부 실패**한다(날씨는 캐시가 있으면 겉보기엔 정상으로 보여 발견이 늦어짐 — 실제로 이 문제로 릴리즈 빌드가 한 번 배포된 적 있음).
+- 사용법: `.\tool\build_release.ps1 -Target apk -BuildName <버전> -BuildNumber <빌드번호>` (`-Target appbundle`은 AAB)
+- Flutter SDK 경로가 기본값(`C:\dev\flutter`)과 다르면 `$env:YEGRAMSSI_FLUTTER_BIN`으로 override
+- 빌드 후 실기기 설치 시 운세 탭이 실제 데이터로 뜨는지(에러 문구가 아니라) 확인하는 것이 이 문제의 가장 빠른 검증 방법이다
+
+---
+
 ## 디자인 원칙
 
 - 하늘 + 물방울 컨셉 유지
