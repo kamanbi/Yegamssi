@@ -56,22 +56,23 @@
 
 ## 세부 작업 목록 (실행 단위)
 
-### 0. 착수 전 검증
-0.1. `weather-proxy/index.ts`의 `allowedPaths`·`TTL_SECONDS`에 미등록 KHOA 경로 2건 추가: 조석예보(시계열), 조류예보 최강창낙조 및 전류. `PUBLIC_DATA_API_KEY` 그대로 사용, 신규 키 불필요
-0.2. 신규 경로 2건 + 기존 마린 경로 6건(바다낚시지수/조석고저조/조류/ROMS/부이관측/파고) 전부 `nocache=1`로 스모크 테스트 — 실제 응답 필드명·단위·null 처리 방식을 문서가 아닌 실호출로 확인
-0.3. 확인된 스키마를 근거로 아래 1번 모델 설계를 확정(스키마가 문서와 다르면 1번부터 재조정)
+### 0. 착수 전 검증 — ✅ 완료
+0.1. ~~미등록 경로 2건 추가~~ → 실제로는 **weather-proxy 전체가 커밋·배포 자체가 안 되어 있던 것**이 진짜 문제였음(발견 후 커밋+배포로 해소). 조류예보(시계열, `crntFcstTime`)는 사용자가 data.go.kr 마이페이지에서 정확한 엔드포인트를 확인해줘서 등록·배포 완료
+0.2. 바다낚시지수·조석예보(고저조)·조류예보(시계열) 3개 경로를 실호출로 검증 완료(가거도 조석 4건, 여수해협 조류 24건 정상 응답)
+0.3. 정확한 요청/응답 스키마는 문서 검색이 아니라 **사용자가 제공한 data.go.kr 활용가이드 HWP 원문**(pyhwp로 변환)에서 확보 — 문서와 실제 응답이 정확히 일치함을 확인
 
-### 1. 데이터 모델 (`activity_models.dart`)
-1.1. `TideEvidence` 신설 — 관측소명, `[{type: 만조|간조, time, levelCm}]`(4건), 관측/발표 시각
-1.2. `CurrentEvidence` 신설 — 유속(cm/s), 유향, 최강창조/최강낙조/전류 시각
-1.3. `MarineTimeSeriesEvidence` 신설 — 파고·수온을 3시간 간격 `[{time, value}]`로 통일 표현(파고/수온 공용 구조, 단위만 다름)
-1.4. `FishRegulationEvidence` 신설 — 어종명, 금어기 기간, 금지체장(있는 경우)
+### 1. 데이터 모델 (`activity_models.dart`) — ✅ 완료
+1.1. `TideEvidence`/`TideEventEntry` — 관측소명, `[{type: 만조|간조, time, levelCm}]`(4건), 관측/발표 시각
+1.2. `CurrentEvidence` — 유속(cm/s), 유향, 최강창조/최강낙조/전류 시각(현재는 null — 별도 API 미연동)
+1.3. `MarineTimeSeriesEvidence`/`MarineTimeSeriesPoint` — 파고·수온 시계열 공용 구조(단위만 다름)
+1.4. `FishRegulationEvidence` — 어종명, 금어기 기간, 금지체장(있는 경우)
 
-### 2. 데이터소스
-2.1. `TideDataSource` — `SeaFishingDataSource`와 동일한 캐시 패턴(단일 flight, TTL) 재사용해 신설
-2.2. `CurrentDataSource` — 조류예보 연동
-2.3. `MarineTimeSeriesDataSource` — `noonWave`/`twRecent`/`roms`를 조합해 3시간 간격으로 리샘플링
-2.4. 각 데이터소스 유닛테스트(mock Dio 응답 기반) 작성
+### 2. 데이터소스 — 조석·조류 완료, 파고/수온 남음
+2.1. ✅ `TideDataSource` — `GetTideFcstHghLwApiService` 연동, `SeaFishingDataSource`와 동일한 캐시 패턴
+2.2. ✅ `CurrentDataSource` — `GetCrntFcstTimeApiService` 연동, 요청 구간 내 최대 유속 반환
+2.2b ✅ `MarineStationCatalog` 신설(계획에 없었으나 필요) — obsCode는 좌표가 아니라 지점명 기반이라, 조석 166개·조류 204개 관측소 코드표를 자산화하고 명칭 매칭(정확 매칭 실패 시 포함 매칭)으로 obsCode를 찾음
+2.3. ⬜ `MarineTimeSeriesDataSource`(`noonWave`/`twRecent`/`roms`) — 아직 미착수
+2.4. ✅ 유닛테스트 12건(TideDataSource 4, CurrentDataSource 4, MarineStationCatalog 4)
 
 ### 3. 채점 로직 (`activity_judgment_calculator.dart`)
 3.1. `_calculateSeaFishing`에 `tideEvidence`/`currentEvidence`/`marineTimeSeriesEvidence` 파라미터 추가(모두 nullable, 기존 호출부 하위호환)
