@@ -77,11 +77,20 @@ class _UnavailableActivityView extends StatelessWidget {
   }
 }
 
-class _ActivityForecastContent extends ConsumerWidget {
+class _ActivityForecastContent extends ConsumerStatefulWidget {
   const _ActivityForecastContent();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ActivityForecastContent> createState() =>
+      _ActivityForecastContentState();
+}
+
+class _ActivityForecastContentState
+    extends ConsumerState<_ActivityForecastContent> {
+  ActivityType? _historyFilter;
+
+  @override
+  Widget build(BuildContext context) {
     final history = ref.watch(activityForecastControllerProvider);
     return SafeArea(
       bottom: false,
@@ -147,6 +156,22 @@ class _ActivityForecastContent extends ConsumerWidget {
               ),
             ),
           ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.x2,
+              0,
+              AppSpacing.x2,
+              AppSpacing.x1,
+            ),
+            sliver: SliverToBoxAdapter(
+              child: _HistoryFilterRow(
+                selected: _historyFilter,
+                onChanged: (type) => setState(() {
+                  _historyFilter = _historyFilter == type ? null : type;
+                }),
+              ),
+            ),
+          ),
           history.when(
             loading: () => const SliverToBoxAdapter(
               child: Center(child: CircularProgressIndicator()),
@@ -157,41 +182,56 @@ class _ActivityForecastContent extends ConsumerWidget {
                 child: Text('저장된 판단을 불러오지 못했습니다.'),
               ),
             ),
-            data: (items) => items.isEmpty
-                ? const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: AppSpacing.card,
-                      child: Text('저장된 판단이 없습니다.'),
-                    ),
-                  )
-                : SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.x2,
-                      0,
-                      AppSpacing.x2,
-                      140,
-                    ),
-                    sliver: SliverList.separated(
-                      itemBuilder: (context, index) => _HistoryTile(
-                        judgment: items[index],
-                        onOpen: () => _openJudgmentSheet(
-                          context,
-                          ref,
-                          type: items[index].request.activityType,
-                          existing: items[index],
-                        ),
-                        onPin: () => ref
-                            .read(activityForecastControllerProvider.notifier)
-                            .setPinned(items[index].id, !items[index].isPinned),
-                        onDelete: () => ref
-                            .read(activityForecastControllerProvider.notifier)
-                            .remove(items[index].id),
-                      ),
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(height: AppSpacing.x1),
-                      itemCount: items.length,
+            data: (allItems) {
+              final items = _historyFilter == null
+                  ? allItems
+                  : allItems
+                        .where(
+                          (item) =>
+                              item.request.activityType == _historyFilter,
+                        )
+                        .toList(growable: false);
+              if (items.isEmpty) {
+                return SliverToBoxAdapter(
+                  child: Padding(
+                    padding: AppSpacing.card,
+                    child: Text(
+                      allItems.isEmpty
+                          ? '저장된 판단이 없습니다.'
+                          : '${_filterLabelFor(_historyFilter!)} 판단이 없습니다.',
                     ),
                   ),
+                );
+              }
+              return SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.x2,
+                  0,
+                  AppSpacing.x2,
+                  140,
+                ),
+                sliver: SliverList.separated(
+                  itemBuilder: (context, index) => _HistoryTile(
+                    judgment: items[index],
+                    onOpen: () => _openJudgmentSheet(
+                      context,
+                      ref,
+                      type: items[index].request.activityType,
+                      existing: items[index],
+                    ),
+                    onPin: () => ref
+                        .read(activityForecastControllerProvider.notifier)
+                        .setPinned(items[index].id, !items[index].isPinned),
+                    onDelete: () => ref
+                        .read(activityForecastControllerProvider.notifier)
+                        .remove(items[index].id),
+                  ),
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(height: AppSpacing.x1),
+                  itemCount: items.length,
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -270,6 +310,77 @@ class _ActivityForecastContent extends ConsumerWidget {
     }
   }
 }
+
+class _HistoryFilterRow extends StatelessWidget {
+  const _HistoryFilterRow({required this.selected, required this.onChanged});
+
+  final ActivityType? selected;
+  final ValueChanged<ActivityType> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final type in ActivityType.values) ...[
+            _HistoryFilterChip(
+              label: _filterLabelFor(type),
+              isSelected: selected == type,
+              onTap: () => onChanged(type),
+            ),
+            const SizedBox(width: AppSpacing.x1),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _HistoryFilterChip extends StatelessWidget {
+  const _HistoryFilterChip({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Material(
+      color: isSelected
+          ? colorScheme.primary
+          : colorScheme.surface.withAlpha(210),
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: isSelected ? colorScheme.onPrimary : null,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+String _filterLabelFor(ActivityType type) => switch (type) {
+  ActivityType.seaFishing => '낚시',
+  ActivityType.walkingRunning => '운동',
+  ActivityType.hiking => '등산',
+  ActivityType.laundry => '빨래',
+  ActivityType.carWash => '세차',
+};
 
 class _ActivityButton extends StatelessWidget {
   const _ActivityButton({required this.type, required this.onTap});
