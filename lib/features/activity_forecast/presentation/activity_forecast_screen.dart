@@ -645,10 +645,11 @@ class _ActivityJudgmentSheetState
                                 ?.copyWith(fontWeight: FontWeight.w800),
                           ),
                         ),
-                        Text(
-                          _formatDateTime(_startsAt),
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
+                        if (_result != null)
+                          Text(
+                            '조회 일시 : ${_formatDateTime(_result!.calculatedAt)}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                         IconButton(
                           tooltip: '닫기',
                           visualDensity: VisualDensity.compact,
