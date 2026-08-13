@@ -5,7 +5,7 @@ import 'activity_models.dart';
 import 'marine_warning_matcher.dart';
 
 class ActivityJudgmentCalculator {
-  static const calculationVersion = 'activity-v5';
+  static const calculationVersion = 'activity-v6';
   static const _freshnessLimit = Duration(hours: 2);
   static const _resultLifetime = Duration(minutes: 30);
   static const _planningResultLifetime = Duration(hours: 6);
@@ -50,6 +50,8 @@ class ActivityJudgmentCalculator {
     MidSeaForecastEvidence? midSeaForecastEvidence,
     ForestFireEvidence? forestFireEvidence,
     WeatherWarningEvidence? weatherWarningEvidence,
+    TideEvidence? tideEvidence,
+    CurrentEvidence? currentEvidence,
   }) {
     final now = DateTime.now();
     final validationMessage = _validate(request, weather, now);
@@ -94,6 +96,8 @@ class ActivityJudgmentCalculator {
         weather: weather,
         evidence: seaFishingEvidence,
         weatherWarningEvidence: weatherWarningEvidence,
+        tideEvidence: tideEvidence,
+        currentEvidence: currentEvidence,
         now: now,
         existingId: existingId,
       );
@@ -177,6 +181,8 @@ class ActivityJudgmentCalculator {
     required WeatherWarningEvidence? weatherWarningEvidence,
     required DateTime now,
     required String? existingId,
+    TideEvidence? tideEvidence,
+    CurrentEvidence? currentEvidence,
   }) {
     final relevantWarnings = weatherWarningEvidence == null
         ? const <ActiveWeatherWarning>[]
@@ -277,10 +283,13 @@ class ActivityJudgmentCalculator {
       ActivityType.seaFishing,
       weatherMetrics,
     );
+    final tideFactor = _tideFactor(tideEvidence, request.startsAt);
+    final currentFactor = _currentFactor(currentEvidence);
     final waveStopThreshold = request.options.variant == '선상' ? 2.5 : 1.5;
     final marineStop =
         (evidence.maxWaveHeightM ?? 0) >= waveStopThreshold ||
-        (evidence.maxWindSpeedMs ?? 0) >= 14;
+        (evidence.maxWindSpeedMs ?? 0) >= 14 ||
+        (currentEvidence?.maxSpeedCms ?? 0) >= _dangerousCurrentSpeedCms;
     final safetyLevel = marineStop || weatherSafety == ActivitySafetyLevel.stop
         ? ActivitySafetyLevel.stop
         : ActivitySafetyLevel.allowed;
@@ -292,7 +301,12 @@ class ActivityJudgmentCalculator {
                   (sum, item) => sum + item.contribution,
                 ))
             .clamp(0, 100);
-    final score = (officialScore * 0.6 + weatherScore * 0.4).round();
+    final tideCurrentContribution =
+        (tideFactor?.contribution ?? 0) + (currentFactor?.contribution ?? 0);
+    final score =
+        ((officialScore * 0.6 + weatherScore * 0.4).round() +
+                tideCurrentContribution)
+            .clamp(0, 100);
     final factors = <JudgmentFactor>[
       JudgmentFactor(
         label: '공식 바다낚시지수 ${evidence.officialIndex}',
@@ -308,6 +322,8 @@ class ActivityJudgmentCalculator {
           label: '최대 풍속 ${evidence.maxWindSpeedMs!.toStringAsFixed(1)}m/s',
           contribution: evidence.maxWindSpeedMs! >= 8 ? -12 : 4,
         ),
+      if (tideFactor != null) tideFactor,
+      if (currentFactor != null) currentFactor,
       ...weatherFactors,
     ];
     return ActivityJudgment(
@@ -330,8 +346,88 @@ class ActivityJudgmentCalculator {
           : now.add(_resultLifetime),
       evidenceValidFrom: evidence.forecastStartsAt,
       evidenceValidUntil: evidence.forecastEndsAt,
-      sources: ['국립해양조사원 바다낚시지수', '예감씨 위치별 날씨', calculationVersion],
+      sources: [
+        '국립해양조사원 바다낚시지수',
+        '예감씨 위치별 날씨',
+        if (tideFactor != null) '국립해양조사원 조석예보',
+        if (currentFactor != null) '국립해양조사원 조류예보',
+        calculationVersion,
+      ],
     );
+  }
+
+  /// 조석 기반 조황 유·불리 요인. 만조·간조 시각(정조) 부근은 조류가 멈춰
+  /// 입질이 뜸해지고, 정조 직후 유속이 다시 붙는 "초들물·초날물" 구간은
+  /// 먹이가 다시 움직이며 입질이 활발해진다는 물때 낚시 통설을 근거로 한다.
+  /// 공식 규정이 아니라 예감씨가 정한 판단 기준이며, 근거는 판단 요인
+  /// 라벨에 그대로 노출한다.
+  static const _slackTideWindow = Duration(minutes: 30);
+  static const _favorableTideWindowStart = Duration(minutes: 30);
+  static const _favorableTideWindowEnd = Duration(minutes: 150);
+  static const _dangerousCurrentSpeedCms = 150.0;
+  static const _cautionCurrentSpeedCms = 80.0;
+
+  JudgmentFactor? _tideFactor(TideEvidence? evidence, DateTime requestedAt) {
+    if (evidence == null || evidence.events.isEmpty) return null;
+
+    TideEventEntry? precedingEvent;
+    TideEventEntry? followingEvent;
+    for (final event in evidence.events) {
+      if (!event.time.isAfter(requestedAt)) {
+        if (precedingEvent == null ||
+            event.time.isAfter(precedingEvent.time)) {
+          precedingEvent = event;
+        }
+      } else if (followingEvent == null ||
+          event.time.isBefore(followingEvent.time)) {
+        followingEvent = event;
+      }
+    }
+
+    final nearSlack =
+        (precedingEvent != null &&
+            requestedAt.difference(precedingEvent.time) <= _slackTideWindow) ||
+        (followingEvent != null &&
+            followingEvent.time.difference(requestedAt) <= _slackTideWindow);
+    if (nearSlack) {
+      return const JudgmentFactor(
+        label: '정조(물때 전환) 인근, 조류 정지로 입질 저조 우려',
+        contribution: -6,
+      );
+    }
+
+    if (precedingEvent != null) {
+      final sincePreceding = requestedAt.difference(precedingEvent.time);
+      if (sincePreceding >= _favorableTideWindowStart &&
+          sincePreceding <= _favorableTideWindowEnd) {
+        final label = precedingEvent.type == TideEventType.highTide
+            ? '초날물(만조 직후 유속 재개) 구간, 조황에 유리'
+            : '초들물(간조 직후 유속 재개) 구간, 조황에 유리';
+        return JudgmentFactor(label: label, contribution: 8);
+      }
+    }
+    return null;
+  }
+
+  /// 조류 유속이 강하면 갯바위·선상 모두 안전이 우선이라는 판단으로,
+  /// 임계값은 예감씨가 정한 기준이다(공식 규정 아님).
+  JudgmentFactor? _currentFactor(CurrentEvidence? evidence) {
+    if (evidence == null) return null;
+    if (evidence.maxSpeedCms >= _dangerousCurrentSpeedCms) {
+      return JudgmentFactor(
+        label:
+            '조류 최대 유속 ${evidence.maxSpeedCms.toStringAsFixed(0)}cm/s(${evidence.direction}), 위험 수준',
+        contribution: -20,
+      );
+    }
+    if (evidence.maxSpeedCms >= _cautionCurrentSpeedCms) {
+      return JudgmentFactor(
+        label:
+            '조류 최대 유속 ${evidence.maxSpeedCms.toStringAsFixed(0)}cm/s(${evidence.direction})',
+        contribution: -6,
+      );
+    }
+    return null;
   }
 
   double _distanceKm(double lat1, double lon1, double lat2, double lon2) {

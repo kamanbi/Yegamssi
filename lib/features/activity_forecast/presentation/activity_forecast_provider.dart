@@ -9,6 +9,8 @@ import '../data/forest_fire_data_source.dart';
 import '../data/mountain_destination_data_source.dart';
 import '../data/mid_sea_forecast_data_source.dart';
 import '../data/weather_warning_data_source.dart';
+import '../data/tide_data_source.dart';
+import '../data/current_data_source.dart';
 import '../domain/activity_judgment_calculator.dart';
 import '../domain/activity_models.dart';
 
@@ -30,6 +32,14 @@ final seaFishingDataSourceProvider = Provider<SeaFishingDataSource>(
 
 final midSeaForecastDataSourceProvider = Provider<MidSeaForecastDataSource>(
   (_) => MidSeaForecastDataSource(),
+);
+
+final tideDataSourceProvider = Provider<TideDataSource>(
+  (_) => TideDataSource(),
+);
+
+final currentDataSourceProvider = Provider<CurrentDataSource>(
+  (_) => CurrentDataSource(),
 );
 
 final fishingDestinationCatalogProvider = Provider<FishingDestinationCatalog>(
@@ -83,6 +93,8 @@ class ActivityForecastController
     MidSeaForecastEvidence? midSeaForecastEvidence,
     ForestFireEvidence? forestFireEvidence,
     WeatherWarningEvidence? weatherWarningEvidence,
+    TideEvidence? tideEvidence,
+    CurrentEvidence? currentEvidence,
     String? existingId,
   }) async {
     final judgment = _calculator.calculate(
@@ -93,6 +105,8 @@ class ActivityForecastController
       midSeaForecastEvidence: midSeaForecastEvidence,
       forestFireEvidence: forestFireEvidence,
       weatherWarningEvidence: weatherWarningEvidence,
+      tideEvidence: tideEvidence,
+      currentEvidence: currentEvidence,
     );
     final history = await _repository.upsert(judgment);
     state = AsyncValue.data(history);

@@ -137,6 +137,146 @@ void main() {
       expect(result.sources, contains('국립해양조사원 바다낚시지수'));
     });
 
+    test('rewards a request that starts shortly after a tide turn', () {
+      final now = DateTime.now();
+      final request = _request(ActivityType.seaFishing, now);
+      final result = calculator.calculate(
+        request: request,
+        weather: _weather(now),
+        seaFishingEvidence: _seaFishingEvidence(now),
+        tideEvidence: TideEvidence(
+          stationName: '가거도',
+          events: [
+            TideEventEntry(
+              type: TideEventType.lowTide,
+              time: request.startsAt.subtract(const Duration(minutes: 60)),
+              levelCm: 50,
+            ),
+          ],
+          forecastAt: now,
+        ),
+      );
+
+      expect(
+        result.factors.any((f) => f.label.contains('초들물')),
+        isTrue,
+        reason: result.factors.map((f) => f.label).join(', '),
+      );
+      expect(
+        result.factors.firstWhere((f) => f.label.contains('초들물')).contribution,
+        8,
+      );
+      expect(result.sources, contains('국립해양조사원 조석예보'));
+    });
+
+    test('warns when a request starts near slack tide', () {
+      final now = DateTime.now();
+      final request = _request(ActivityType.seaFishing, now);
+      final result = calculator.calculate(
+        request: request,
+        weather: _weather(now),
+        seaFishingEvidence: _seaFishingEvidence(now),
+        tideEvidence: TideEvidence(
+          stationName: '가거도',
+          events: [
+            TideEventEntry(
+              type: TideEventType.highTide,
+              time: request.startsAt.subtract(const Duration(minutes: 10)),
+              levelCm: 300,
+            ),
+          ],
+          forecastAt: now,
+        ),
+      );
+
+      expect(
+        result.factors.any((f) => f.label.contains('정조')),
+        isTrue,
+        reason: result.factors.map((f) => f.label).join(', '),
+      );
+      expect(
+        result.factors.firstWhere((f) => f.label.contains('정조')).contribution,
+        -6,
+      );
+    });
+
+    test('does not add a tide factor mid-tide, away from any turn', () {
+      final now = DateTime.now();
+      final request = _request(ActivityType.seaFishing, now);
+      final result = calculator.calculate(
+        request: request,
+        weather: _weather(now),
+        seaFishingEvidence: _seaFishingEvidence(now),
+        tideEvidence: TideEvidence(
+          stationName: '가거도',
+          events: [
+            TideEventEntry(
+              type: TideEventType.lowTide,
+              time: request.startsAt.subtract(const Duration(hours: 3)),
+              levelCm: 50,
+            ),
+            TideEventEntry(
+              type: TideEventType.highTide,
+              time: request.startsAt.add(const Duration(hours: 3)),
+              levelCm: 300,
+            ),
+          ],
+          forecastAt: now,
+        ),
+      );
+
+      expect(
+        result.factors.any(
+          (f) => f.label.contains('정조') || f.label.contains('들물') || f.label.contains('날물'),
+        ),
+        isFalse,
+        reason: result.factors.map((f) => f.label).join(', '),
+      );
+    });
+
+    test('stops a trip for a dangerous current speed', () {
+      final now = DateTime.now();
+      final result = calculator.calculate(
+        request: _request(ActivityType.seaFishing, now),
+        weather: _weather(now),
+        seaFishingEvidence: _seaFishingEvidence(now),
+        currentEvidence: const CurrentEvidence(
+          stationName: '가거도',
+          maxSpeedCms: 200,
+          direction: '낙조',
+        ),
+      );
+
+      expect(result.safetyLevel, ActivitySafetyLevel.stop);
+      expect(
+        result.factors.any((f) => f.label.contains('위험 수준')),
+        isTrue,
+        reason: result.factors.map((f) => f.label).join(', '),
+      );
+      expect(result.sources, contains('국립해양조사원 조류예보'));
+    });
+
+    test('cautions but does not stop for a moderate current speed', () {
+      final now = DateTime.now();
+      final result = calculator.calculate(
+        request: _request(ActivityType.seaFishing, now),
+        weather: _weather(now),
+        seaFishingEvidence: _seaFishingEvidence(now),
+        currentEvidence: const CurrentEvidence(
+          stationName: '가거도',
+          maxSpeedCms: 100,
+          direction: '창조',
+        ),
+      );
+
+      expect(result.safetyLevel, ActivitySafetyLevel.allowed);
+      expect(
+        result.factors.any((f) => f.label.contains('100cm/s')),
+        isTrue,
+        reason: result.factors.map((f) => f.label).join(', '),
+      );
+    });
+
     test('marks future walking weather as partial without hourly UV', () {
       final now = DateTime.now();
       final result = calculator.calculate(
@@ -715,6 +855,23 @@ ActivityJudgmentRequest _request(
     options: ActivityOptions(variant: variant),
     destinationId: requiresDestination ? 'official:test' : '',
     destinationSource: requiresDestination ? '공식 테스트 자료' : '',
+  );
+}
+
+SeaFishingEvidence _seaFishingEvidence(DateTime now) {
+  return SeaFishingEvidence(
+    stationName: '서울 인근 시험지점',
+    targetFish: '감성돔',
+    forecastPeriod: '오전',
+    officialIndex: '좋음',
+    latitude: 37.57,
+    longitude: 126.98,
+    maxWindSpeedMs: 4,
+    maxWaveHeightM: 0.5,
+    maxWaterTemperatureC: 23,
+    tideDescription: '중조기',
+    forecastStartsAt: now,
+    forecastEndsAt: now.add(const Duration(hours: 12)),
   );
 }
 

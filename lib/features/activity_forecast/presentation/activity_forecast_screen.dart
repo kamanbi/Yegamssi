@@ -1215,6 +1215,35 @@ class _ActivityJudgmentSheetState
               loader: () => ref.read(weatherWarningDataSourceProvider).fetch(),
             )
           : null;
+      final tideEvidence =
+          hasForecastEvidence &&
+              widget.type == ActivityType.seaFishing &&
+              seaFishingEvidence != null
+          ? await evidenceCache.getTideEvidence(
+              requestedAt: _startsAt,
+              stationName: destination!.name,
+              loader: () => ref
+                  .read(tideDataSourceProvider)
+                  .fetch(requestedAt: _startsAt, stationName: destination.name),
+            )
+          : null;
+      final currentEvidence =
+          hasForecastEvidence &&
+              widget.type == ActivityType.seaFishing &&
+              seaFishingEvidence != null
+          ? await evidenceCache.getCurrentEvidence(
+              requestedAt: _startsAt,
+              requestedUntil: request.evidenceEndsAt,
+              stationName: destination!.name,
+              loader: () => ref
+                  .read(currentDataSourceProvider)
+                  .fetch(
+                    requestedAt: _startsAt,
+                    requestedUntil: request.evidenceEndsAt,
+                    stationName: destination.name,
+                  ),
+            )
+          : null;
       final result = await ref
           .read(activityForecastControllerProvider.notifier)
           .calculateAndSave(
@@ -1224,6 +1253,8 @@ class _ActivityJudgmentSheetState
             midSeaForecastEvidence: midSeaForecastEvidence,
             forestFireEvidence: forestFireEvidence,
             weatherWarningEvidence: weatherWarningEvidence,
+            tideEvidence: tideEvidence,
+            currentEvidence: currentEvidence,
             existingId: _activeId,
           );
       if (!mounted) return;

@@ -22,6 +22,8 @@ class ActivityEvidenceCache {
   static const forestFireTtl = Duration(hours: 3);
   static const midSeaForecastTtl = Duration(hours: 12);
   static const weatherWarningTtl = Duration(minutes: 10);
+  static const tideTtl = Duration(hours: 12);
+  static const currentTtl = Duration(minutes: 30);
   static const unavailableEvidenceTtl = Duration(minutes: 10);
 
   final Future<SharedPreferences> Function() _preferences;
@@ -164,6 +166,67 @@ class ActivityEvidenceCache {
       }
 
       _log('weather_warning', 'MISS');
+      final evidence = await loader();
+      await _writeNullable(key, evidence?.toJson());
+      return evidence;
+    });
+  }
+
+  Future<TideEvidence?> getTideEvidence({
+    required DateTime requestedAt,
+    required String stationName,
+    required EvidenceLoader<TideEvidence?> loader,
+  }) {
+    final key = 'tide_${_dateKey(requestedAt)}_${stationName.trim()}';
+    return _singleFlight(key, () async {
+      final cached = await _readNullable<TideEvidence>(
+        key,
+        TideEvidence.fromJson,
+      );
+      if (cached != null &&
+          !_isExpired(
+            cached.storedAt,
+            cached.hasValue ? tideTtl : unavailableEvidenceTtl,
+          )) {
+        _log('tide', cached.hasValue ? 'HIT' : 'NEGATIVE_HIT');
+        return cached.value;
+      }
+
+      _log('tide', 'MISS');
+      final evidence = await loader();
+      await _writeNullable(key, evidence?.toJson());
+      return evidence;
+    });
+  }
+
+  Future<CurrentEvidence?> getCurrentEvidence({
+    required DateTime requestedAt,
+    required DateTime requestedUntil,
+    required String stationName,
+    required EvidenceLoader<CurrentEvidence?> loader,
+  }) {
+    final key = [
+      'current',
+      _dateKey(requestedAt),
+      requestedAt.hour,
+      requestedUntil.toIso8601String(),
+      stationName.trim(),
+    ].join('_');
+    return _singleFlight(key, () async {
+      final cached = await _readNullable<CurrentEvidence>(
+        key,
+        CurrentEvidence.fromJson,
+      );
+      if (cached != null &&
+          !_isExpired(
+            cached.storedAt,
+            cached.hasValue ? currentTtl : unavailableEvidenceTtl,
+          )) {
+        _log('current', cached.hasValue ? 'HIT' : 'NEGATIVE_HIT');
+        return cached.value;
+      }
+
+      _log('current', 'MISS');
       final evidence = await loader();
       await _writeNullable(key, evidence?.toJson());
       return evidence;
