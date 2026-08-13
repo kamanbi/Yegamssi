@@ -82,11 +82,11 @@
 3.4. 보류 — 기존 파고·풍속 요인이 이미 개별 라인으로 굳어져 있어, 조석·조류도 같은 스타일(개별 라인)로 유지. "1줄 통합"은 리스크 대비 이득이 작다고 판단해 보류
 3.5. ✅ `calculationVersion`을 `activity-v5` → `activity-v6`으로 올림
 
-### 4. UI (`activity_forecast_screen.dart`, 바다낚시 분기 국소 수정)
-4.1. "상세 해양 자료" `ExpansionTile` 섹션 위젯 신설(기본 닫힘)
-4.2. 조석 4행 표(시각+cm) 위젯
-4.3. 파고/수온 시계열 가로 스크롤 칩 — 날씨 탭의 기존 "시간별 예보" 컴포넌트를 공용 위젯으로 추출해 재사용(신규 차트 라이브러리 없음)
-4.4. 기존 `_ActivityFactorSection`에 3.4의 통합 요인이 자연스럽게 표시되는지 확인(신규 위젯 불필요)
+### 4. UI (`activity_forecast_screen.dart`, 바다낚시 분기 국소 수정) — ✅ 완료
+4.1. ✅ "상세 해양 자료" `ExpansionTile` 섹션(`_SeaDetailSection`) 신설, 기본 닫힘. 바다낚시 결과이고 조석/파고/수온 근거 중 하나라도 있을 때만 노출
+4.2. ✅ 조석 4행 표(`_TideEventTable`) — 만조/간조 · 시:분 · cm
+4.3. ⚠️ 계획 변경: 날씨 탭 `_HourlyForecastCard`는 `HourlyForecast`(날씨 전용: condition/tempCelsius 등) 모델에 강결합되어 있어 그대로 재사용하면 weather 기능 파일까지 손대야 함 — 사용자가 이번 고도화를 "낚시 부분만 수정"으로 명시 한정했으므로, 공용 추출 대신 `activity_forecast_screen.dart` 안에 독립 위젯(`_MarineTimeSeriesRow`, 파고/수온 겸용)을 신규 작성해 시각 스타일만 맞춤. weather 파일은 무변경
+4.4. ✅ 기존 `_ActivityFactorSection`에 조석·조류 통합 요인이 그대로 표시됨 확인(신규 위젯 불필요, 3.2/3.2b에서 이미 반영됨)
 
 ### 5. 정적 자산 — 어종 규제 (Phase 3)
 5.1. 해양수산부 수산자원관리법 시행령 별표 원문 확보
