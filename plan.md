@@ -74,12 +74,13 @@
 2.3. ⬜ `MarineTimeSeriesDataSource`(`noonWave`/`twRecent`/`roms`) — 아직 미착수
 2.4. ✅ 유닛테스트 12건(TideDataSource 4, CurrentDataSource 4, MarineStationCatalog 4)
 
-### 3. 채점 로직 (`activity_judgment_calculator.dart`)
-3.1. `_calculateSeaFishing`에 `tideEvidence`/`currentEvidence`/`marineTimeSeriesEvidence` 파라미터 추가(모두 nullable, 기존 호출부 하위호환)
-3.2. **[확인 필요]** 조석 기반 가점/감점 규칙(예: 간조 전후 몇 시간을 유리로 볼지, 사리/조금에 따른 가중치)은 낚시 전문 기준이 필요합니다 — 임의로 수치를 정하지 않고 이 단계에서 별도로 여쭙겠습니다
-3.3. 파고/조류 시계열을 "요청 구간 내 최댓값"으로 축약해 기존 단일값 임계값 로직(파고≥1.0m, 풍속≥8m/s 등) 교체
-3.4. 요인 문자열은 개별 나열하지 않고 "해양 안전 요인" 1줄로 통합해 `factors`에 반영
-3.5. `calculationVersion`을 `activity-v5` → `activity-v6`으로 올림
+### 3. 채점 로직 (`activity_judgment_calculator.dart`) — 조석·조류 완료, 파고/수온 남음
+3.1. ✅ `_calculateSeaFishing`에 `tideEvidence`/`currentEvidence` 파라미터 추가(nullable, 하위호환)
+3.2. ✅ 조석 가점/감점 규칙 확정(사용자 지시로 예감씨가 직접 정함) — 정조(만조·간조) 전후 30분: "조류 정지, 입질 저조" -6점. 정조 직후 30~150분(초들물·초날물): "조황 유리" +8점. 물때 낚시 통설 근거, 공식 규정 아님을 코드 주석에 명시
+3.2b ✅ 조류 안전 규칙도 함께 확정 — 최대유속 80cm/s↑ 주의(-6), 150cm/s↑ 위험(중단 권고 marineStop에 반영)
+3.3. ⬜ 파고/조류 시계열을 "요청 구간 내 최댓값"으로 축약해 기존 단일값 임계값 로직 교체 — `MarineTimeSeriesDataSource`(2.3) 완료 후 진행
+3.4. 보류 — 기존 파고·풍속 요인이 이미 개별 라인으로 굳어져 있어, 조석·조류도 같은 스타일(개별 라인)로 유지. "1줄 통합"은 리스크 대비 이득이 작다고 판단해 보류
+3.5. ✅ `calculationVersion`을 `activity-v5` → `activity-v6`으로 올림
 
 ### 4. UI (`activity_forecast_screen.dart`, 바다낚시 분기 국소 수정)
 4.1. "상세 해양 자료" `ExpansionTile` 섹션 위젯 신설(기본 닫힘)
