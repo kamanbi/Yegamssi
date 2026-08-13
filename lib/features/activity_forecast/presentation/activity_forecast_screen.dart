@@ -846,6 +846,9 @@ class _ActivityJudgmentSheetState
             '유지 판단 ${_formatDateTime(result.request.startsAt)}~${_formatDateTime(result.request.evidenceEndsAt)}',
             style: Theme.of(context).textTheme.bodySmall,
           ),
+        if (result.request.activityType == ActivityType.seaFishing &&
+            result.request.options.secondary.isNotEmpty)
+          _FishRegulationChip(fishName: result.request.options.secondary),
         const SizedBox(height: AppSpacing.x1),
         _ActivityDetailSection(title: '행동 권고', lines: [result.action]),
         if (positiveFactors.isNotEmpty)
@@ -2145,6 +2148,101 @@ class _MarineTimeSeriesRow extends StatelessWidget {
                 );
               },
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FishRegulationChip extends ConsumerStatefulWidget {
+  const _FishRegulationChip({required this.fishName});
+
+  final String fishName;
+
+  @override
+  ConsumerState<_FishRegulationChip> createState() =>
+      _FishRegulationChipState();
+}
+
+class _FishRegulationChipState extends ConsumerState<_FishRegulationChip> {
+  late Future<FishRegulationEvidence?> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = ref
+        .read(fishRegulationCatalogProvider)
+        .findByName(widget.fishName);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<FishRegulationEvidence?>(
+      future: _future,
+      builder: (context, snapshot) {
+        final regulation = snapshot.data;
+        if (regulation == null) return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => _showDetail(context, regulation),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    size: 14,
+                    color: Theme.of(context).colorScheme.onErrorContainer,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${regulation.fishName} 포획 규제 대상',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDetail(BuildContext context, FishRegulationEvidence regulation) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('${regulation.fishName} 포획 규제'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('금어기: ${regulation.inhibitionPeriodLabel}'),
+            if (regulation.prohibitedSizeCm != null) ...[
+              const SizedBox(height: 4),
+              Text('금지 체장: ${regulation.prohibitedSizeCm}'),
+            ],
+            const SizedBox(height: 8),
+            Text(
+              regulation.source,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('닫기'),
           ),
         ],
       ),

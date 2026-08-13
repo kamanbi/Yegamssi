@@ -88,13 +88,14 @@
 4.3. ⚠️ 계획 변경: 날씨 탭 `_HourlyForecastCard`는 `HourlyForecast`(날씨 전용: condition/tempCelsius 등) 모델에 강결합되어 있어 그대로 재사용하면 weather 기능 파일까지 손대야 함 — 사용자가 이번 고도화를 "낚시 부분만 수정"으로 명시 한정했으므로, 공용 추출 대신 `activity_forecast_screen.dart` 안에 독립 위젯(`_MarineTimeSeriesRow`, 파고/수온 겸용)을 신규 작성해 시각 스타일만 맞춤. weather 파일은 무변경
 4.4. ✅ 기존 `_ActivityFactorSection`에 조석·조류 통합 요인이 그대로 표시됨 확인(신규 위젯 불필요, 3.2/3.2b에서 이미 반영됨)
 
-### 5. 정적 자산 — 어종 규제 (Phase 3)
-5.1. 해양수산부 수산자원관리법 시행령 별표 원문 확보
-5.2. `assets/data/activity/fish_regulations_YYYYMMDD.json` 스키마 설계(기존 `fishing_ports_*.json`의 `schemaVersion`/`catalogVersion` 패턴 준수) 및 작성
-5.3. `pubspec.yaml` assets 등록
-5.4. `FishRegulationCatalog` 로더 클래스 신설(`FishingDestinationCatalog` 패턴 재사용)
-5.5. 결과 화면에 규제 칩 추가(대상 어종 선택 + 현재 금어기 해당 시에만 노출)
-5.6. 갱신 스크립트 필요 여부 결정(`tool/update_fishing_ports.ps1`처럼 재생성형으로 만들지, 수동 갱신으로 둘지)
+### 5. 정적 자산 — 어종 규제 (Phase 3) — ✅ 완료
+5.1. ✅ 해양수산부 수산자원관리법 시행령 별표 원문 확보(law.go.kr 원문 대조)
+5.2. ✅ `fish_regulations_20260813.json` 스키마 작성(52항목, 개정 이력 포함)
+5.3. ✅ `pubspec.yaml` assets 등록
+5.4. ✅ `FishRegulationCatalog` 로더 클래스
+5.5. ✅ 결과 화면에 규제 칩 추가 — 단, "현재 금어기 해당 시에만"은 **구현하지 않음**(아래 사유). 대신 **대상 어종이 규제 대상이면 항상 칩 노출**, 탭하면 금어기 기간·금지체장·출처를 다이얼로그로 표시
+   - 사유: `inhibitionPeriod` 원문이 "12.1~익년 1.31", "5.1~7.15(강원·경북 제외)"처럼 지역 예외·해넘김·괄호 단서가 섞인 자연어라, "오늘이 금어기 안인지"를 코드로 자동 판정하면 예외 케이스에서 오판 위험이 있음(법규 안내이므로 오탐/누락 둘 다 리스크). 자동 판정 대신 사용자가 직접 기간 텍스트를 보고 판단하게 하는 쪽이 더 안전하다고 판단
+5.6. ✅ 갱신 스크립트 결정 — **수동 갱신으로 유지**. 근거: 법령 개정 감지 자체가 자동화 불가(law.go.kr에 변경 알림 API 없음), 원문이 표/이미지라 스크래핑 신뢰도가 낮음, 개정 빈도가 낮음(연 1~2회). `tool/update_fishing_ports.ps1`처럼 재생성 스크립트를 만들 실익이 없음 — 대신 `amendmentHistoryNote` 필드로 마지막 대조 시점과 근거를 기록해두고, 이후 재작업 시 법령 재대조가 필요함을 남겨둠
 
 ### 6. 테스트
 6.1. 2.4의 데이터소스별 유닛테스트

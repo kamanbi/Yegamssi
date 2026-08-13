@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../weather/domain/entities/weather_entity.dart';
 import '../data/activity_evidence_cache.dart';
+import '../data/fish_regulation_catalog.dart';
 import '../data/fishing_destination_catalog.dart';
 import '../data/activity_history_repository.dart';
 import '../data/sea_fishing_data_source.dart';
@@ -50,6 +51,10 @@ final marineTimeSeriesDataSourceProvider =
 
 final fishingDestinationCatalogProvider = Provider<FishingDestinationCatalog>(
   (_) => FishingDestinationCatalog(),
+);
+
+final fishRegulationCatalogProvider = Provider<FishRegulationCatalog>(
+  (_) => FishRegulationCatalog(),
 );
 
 final forestFireDataSourceProvider = Provider<ForestFireDataSource>(
