@@ -277,6 +277,55 @@ void main() {
       );
     });
 
+    test('prefers a windowed wave measurement over the daily official max', () {
+      final now = DateTime.now();
+      final request = _request(ActivityType.seaFishing, now);
+      final result = calculator.calculate(
+        request: request,
+        weather: _weather(now),
+        seaFishingEvidence: _seaFishingEvidence(now),
+        waveEvidence: MarineTimeSeriesEvidence(
+          kind: MarineTimeSeriesKind.waveHeight,
+          stationName: '가거도',
+          points: [
+            MarineTimeSeriesPoint(time: request.startsAt, value: 1.6),
+          ],
+        ),
+      );
+
+      expect(result.safetyLevel, ActivitySafetyLevel.stop);
+      expect(
+        result.factors.any(
+          (f) => f.label.contains('요청 구간 실측 파고 1.6m'),
+        ),
+        isTrue,
+        reason: result.factors.map((f) => f.label).join(', '),
+      );
+    });
+
+    test('adds an informational water temperature factor without a score change', () {
+      final now = DateTime.now();
+      final request = _request(ActivityType.seaFishing, now);
+      final result = calculator.calculate(
+        request: request,
+        weather: _weather(now),
+        seaFishingEvidence: _seaFishingEvidence(now),
+        waterTemperatureEvidence: MarineTimeSeriesEvidence(
+          kind: MarineTimeSeriesKind.waterTemperature,
+          stationName: '가거도',
+          points: [
+            MarineTimeSeriesPoint(time: request.startsAt, value: 24.5),
+          ],
+        ),
+      );
+
+      final tempFactor = result.factors.firstWhere(
+        (f) => f.label.contains('요청 구간 실측 수온 24.5'),
+      );
+      expect(tempFactor.contribution, 0);
+      expect(result.sources, contains('국립해양조사원 해양관측부이'));
+    });
+
     test('marks future walking weather as partial without hourly UV', () {
       final now = DateTime.now();
       final result = calculator.calculate(

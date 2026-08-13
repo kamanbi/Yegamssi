@@ -11,6 +11,7 @@ import '../data/mid_sea_forecast_data_source.dart';
 import '../data/weather_warning_data_source.dart';
 import '../data/tide_data_source.dart';
 import '../data/current_data_source.dart';
+import '../data/marine_time_series_data_source.dart';
 import '../domain/activity_judgment_calculator.dart';
 import '../domain/activity_models.dart';
 
@@ -41,6 +42,11 @@ final tideDataSourceProvider = Provider<TideDataSource>(
 final currentDataSourceProvider = Provider<CurrentDataSource>(
   (_) => CurrentDataSource(),
 );
+
+final marineTimeSeriesDataSourceProvider =
+    Provider<MarineTimeSeriesDataSource>(
+      (_) => MarineTimeSeriesDataSource(),
+    );
 
 final fishingDestinationCatalogProvider = Provider<FishingDestinationCatalog>(
   (_) => FishingDestinationCatalog(),
@@ -95,6 +101,8 @@ class ActivityForecastController
     WeatherWarningEvidence? weatherWarningEvidence,
     TideEvidence? tideEvidence,
     CurrentEvidence? currentEvidence,
+    MarineTimeSeriesEvidence? waveEvidence,
+    MarineTimeSeriesEvidence? waterTemperatureEvidence,
     String? existingId,
   }) async {
     final judgment = _calculator.calculate(
@@ -107,6 +115,8 @@ class ActivityForecastController
       weatherWarningEvidence: weatherWarningEvidence,
       tideEvidence: tideEvidence,
       currentEvidence: currentEvidence,
+      waveEvidence: waveEvidence,
+      waterTemperatureEvidence: waterTemperatureEvidence,
     );
     final history = await _repository.upsert(judgment);
     state = AsyncValue.data(history);

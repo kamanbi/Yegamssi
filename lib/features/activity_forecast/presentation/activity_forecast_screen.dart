@@ -1244,6 +1244,40 @@ class _ActivityJudgmentSheetState
                   ),
             )
           : null;
+      final waveEvidence =
+          hasForecastEvidence &&
+              widget.type == ActivityType.seaFishing &&
+              seaFishingEvidence != null
+          ? await evidenceCache.getWaveEvidence(
+              requestedAt: _startsAt,
+              requestedUntil: request.evidenceEndsAt,
+              stationName: destination!.name,
+              loader: () => ref
+                  .read(marineTimeSeriesDataSourceProvider)
+                  .fetchWaveHeight(
+                    requestedAt: _startsAt,
+                    requestedUntil: request.evidenceEndsAt,
+                    stationName: destination.name,
+                  ),
+            )
+          : null;
+      final waterTemperatureEvidence =
+          hasForecastEvidence &&
+              widget.type == ActivityType.seaFishing &&
+              seaFishingEvidence != null
+          ? await evidenceCache.getWaterTemperatureEvidence(
+              requestedAt: _startsAt,
+              requestedUntil: request.evidenceEndsAt,
+              stationName: destination!.name,
+              loader: () => ref
+                  .read(marineTimeSeriesDataSourceProvider)
+                  .fetchWaterTemperature(
+                    requestedAt: _startsAt,
+                    requestedUntil: request.evidenceEndsAt,
+                    stationName: destination.name,
+                  ),
+            )
+          : null;
       final result = await ref
           .read(activityForecastControllerProvider.notifier)
           .calculateAndSave(
@@ -1255,6 +1289,8 @@ class _ActivityJudgmentSheetState
             weatherWarningEvidence: weatherWarningEvidence,
             tideEvidence: tideEvidence,
             currentEvidence: currentEvidence,
+            waveEvidence: waveEvidence,
+            waterTemperatureEvidence: waterTemperatureEvidence,
             existingId: _activeId,
           );
       if (!mounted) return;

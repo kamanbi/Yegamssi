@@ -52,6 +52,8 @@ class ActivityJudgmentCalculator {
     WeatherWarningEvidence? weatherWarningEvidence,
     TideEvidence? tideEvidence,
     CurrentEvidence? currentEvidence,
+    MarineTimeSeriesEvidence? waveEvidence,
+    MarineTimeSeriesEvidence? waterTemperatureEvidence,
   }) {
     final now = DateTime.now();
     final validationMessage = _validate(request, weather, now);
@@ -98,6 +100,8 @@ class ActivityJudgmentCalculator {
         weatherWarningEvidence: weatherWarningEvidence,
         tideEvidence: tideEvidence,
         currentEvidence: currentEvidence,
+        waveEvidence: waveEvidence,
+        waterTemperatureEvidence: waterTemperatureEvidence,
         now: now,
         existingId: existingId,
       );
@@ -183,6 +187,8 @@ class ActivityJudgmentCalculator {
     required String? existingId,
     TideEvidence? tideEvidence,
     CurrentEvidence? currentEvidence,
+    MarineTimeSeriesEvidence? waveEvidence,
+    MarineTimeSeriesEvidence? waterTemperatureEvidence,
   }) {
     final relevantWarnings = weatherWarningEvidence == null
         ? const <ActiveWeatherWarning>[]
@@ -285,9 +291,13 @@ class ActivityJudgmentCalculator {
     );
     final tideFactor = _tideFactor(tideEvidence, request.startsAt);
     final currentFactor = _currentFactor(currentEvidence);
+    // 요청 구간 실측 파고(있으면)가 공식 지수의 일 최대 파고보다 더
+    // 정밀하므로 우선한다.
+    final effectiveMaxWaveHeightM =
+        waveEvidence?.maxValue ?? evidence.maxWaveHeightM;
     final waveStopThreshold = request.options.variant == '선상' ? 2.5 : 1.5;
     final marineStop =
-        (evidence.maxWaveHeightM ?? 0) >= waveStopThreshold ||
+        (effectiveMaxWaveHeightM ?? 0) >= waveStopThreshold ||
         (evidence.maxWindSpeedMs ?? 0) >= 14 ||
         (currentEvidence?.maxSpeedCms ?? 0) >= _dangerousCurrentSpeedCms;
     final safetyLevel = marineStop || weatherSafety == ActivitySafetyLevel.stop
@@ -312,10 +322,12 @@ class ActivityJudgmentCalculator {
         label: '공식 바다낚시지수 ${evidence.officialIndex}',
         contribution: officialScore - 60,
       ),
-      if (evidence.maxWaveHeightM != null)
+      if (effectiveMaxWaveHeightM != null)
         JudgmentFactor(
-          label: '최대 파고 ${evidence.maxWaveHeightM!.toStringAsFixed(1)}m',
-          contribution: evidence.maxWaveHeightM! >= 1.0 ? -15 : 5,
+          label: waveEvidence != null
+              ? '요청 구간 실측 파고 ${effectiveMaxWaveHeightM.toStringAsFixed(1)}m'
+              : '최대 파고 ${effectiveMaxWaveHeightM.toStringAsFixed(1)}m',
+          contribution: effectiveMaxWaveHeightM >= 1.0 ? -15 : 5,
         ),
       if (evidence.maxWindSpeedMs != null)
         JudgmentFactor(
@@ -324,6 +336,12 @@ class ActivityJudgmentCalculator {
         ),
       if (tideFactor != null) tideFactor,
       if (currentFactor != null) currentFactor,
+      if (waterTemperatureEvidence?.maxValue != null)
+        JudgmentFactor(
+          label:
+              '요청 구간 실측 수온 ${waterTemperatureEvidence!.maxValue!.toStringAsFixed(1)}°C',
+          contribution: 0,
+        ),
       ...weatherFactors,
     ];
     return ActivityJudgment(
@@ -351,6 +369,8 @@ class ActivityJudgmentCalculator {
         '예감씨 위치별 날씨',
         if (tideFactor != null) '국립해양조사원 조석예보',
         if (currentFactor != null) '국립해양조사원 조류예보',
+        if (waveEvidence != null) '국립해양조사원 실측 파랑',
+        if (waterTemperatureEvidence != null) '국립해양조사원 해양관측부이',
         calculationVersion,
       ],
     );

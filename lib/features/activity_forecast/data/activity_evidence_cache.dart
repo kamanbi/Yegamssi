@@ -24,6 +24,8 @@ class ActivityEvidenceCache {
   static const weatherWarningTtl = Duration(minutes: 10);
   static const tideTtl = Duration(hours: 12);
   static const currentTtl = Duration(minutes: 30);
+  static const waveTtl = Duration(minutes: 30);
+  static const waterTemperatureTtl = Duration(minutes: 30);
   static const unavailableEvidenceTtl = Duration(minutes: 10);
 
   final Future<SharedPreferences> Function() _preferences;
@@ -227,6 +229,74 @@ class ActivityEvidenceCache {
       }
 
       _log('current', 'MISS');
+      final evidence = await loader();
+      await _writeNullable(key, evidence?.toJson());
+      return evidence;
+    });
+  }
+
+  Future<MarineTimeSeriesEvidence?> getWaveEvidence({
+    required DateTime requestedAt,
+    required DateTime requestedUntil,
+    required String stationName,
+    required EvidenceLoader<MarineTimeSeriesEvidence?> loader,
+  }) {
+    final key = [
+      'wave',
+      _dateKey(requestedAt),
+      requestedAt.hour,
+      requestedUntil.toIso8601String(),
+      stationName.trim(),
+    ].join('_');
+    return _singleFlight(key, () async {
+      final cached = await _readNullable<MarineTimeSeriesEvidence>(
+        key,
+        MarineTimeSeriesEvidence.fromJson,
+      );
+      if (cached != null &&
+          !_isExpired(
+            cached.storedAt,
+            cached.hasValue ? waveTtl : unavailableEvidenceTtl,
+          )) {
+        _log('wave', cached.hasValue ? 'HIT' : 'NEGATIVE_HIT');
+        return cached.value;
+      }
+
+      _log('wave', 'MISS');
+      final evidence = await loader();
+      await _writeNullable(key, evidence?.toJson());
+      return evidence;
+    });
+  }
+
+  Future<MarineTimeSeriesEvidence?> getWaterTemperatureEvidence({
+    required DateTime requestedAt,
+    required DateTime requestedUntil,
+    required String stationName,
+    required EvidenceLoader<MarineTimeSeriesEvidence?> loader,
+  }) {
+    final key = [
+      'water_temp',
+      _dateKey(requestedAt),
+      requestedAt.hour,
+      requestedUntil.toIso8601String(),
+      stationName.trim(),
+    ].join('_');
+    return _singleFlight(key, () async {
+      final cached = await _readNullable<MarineTimeSeriesEvidence>(
+        key,
+        MarineTimeSeriesEvidence.fromJson,
+      );
+      if (cached != null &&
+          !_isExpired(
+            cached.storedAt,
+            cached.hasValue ? waterTemperatureTtl : unavailableEvidenceTtl,
+          )) {
+        _log('water_temp', cached.hasValue ? 'HIT' : 'NEGATIVE_HIT');
+        return cached.value;
+      }
+
+      _log('water_temp', 'MISS');
       final evidence = await loader();
       await _writeNullable(key, evidence?.toJson());
       return evidence;
