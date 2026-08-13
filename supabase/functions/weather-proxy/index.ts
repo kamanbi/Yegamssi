@@ -5,10 +5,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.4';
 // deno-lint-ignore no-explicit-any
 declare const EdgeRuntime: { waitUntil: (promise: Promise<unknown>) => void } | undefined;
 
-type Provider = 'kma' | 'airKorea' | 'openWeather' | 'airNow';
+type Provider = 'kma' | 'airKorea' | 'openWeather' | 'airNow' | 'publicData';
 
 const corsHeaders = {
-  'access-control-allow-headers': 'authorization, apikey, content-type',
+  'access-control-allow-headers':
+    'authorization, apikey, content-type, x-internal-refresh-token',
   'access-control-allow-methods': 'GET, OPTIONS',
   'access-control-allow-origin': '*',
   'access-control-expose-headers':
@@ -30,6 +31,7 @@ const providerConfig: Record<Provider, {
       '/api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtFcst',
       '/api/typ02/openApi/VilageFcstInfoService_2.0/getVilageFcst',
       '/api/typ02/openApi/MidFcstInfoService/getMidLandFcst',
+      '/api/typ02/openApi/MidFcstInfoService/getMidSeaFcst',
       '/api/typ01/url/fct_afs_wc.php',
     ]),
   },
@@ -55,6 +57,28 @@ const providerConfig: Record<Provider, {
     secretName: 'AIRNOW_API_KEY',
     allowedPaths: new Set(['/aq/observation/latLong/current/']),
   },
+  publicData: {
+    baseUrl: 'https://apis.data.go.kr',
+    keyName: 'serviceKey',
+    secretName: 'PUBLIC_DATA_API_KEY',
+    allowedPaths: new Set([
+      '/1192136/fcstFishingv2/GetFcstFishingApiServicev2',
+      '/1192136/tideFcstHghLw/GetTideFcstHghLwApiService',
+      '/1192136/crntFcstFldEbb/GetCrntFcstFldEbbApiService',
+      '/1192136/roms/GetRomsApiService',
+      '/1192136/twRecent/GetTWRecentApiService',
+      '/1192136/noonWave/GetNoonWaveApiService',
+      '/1360000/BeachInfoservice/getUltraSrtFcstBeach',
+      '/1360000/WthrWrnInfoService/getWthrWrnList',
+      '/1360000/WthrWrnInfoService/getPwnStatus',
+      '/1360000/LivingWthrIdxServiceV5/getUVIdxV5',
+      '/1360000/LivingWthrIdxServiceV5/getAirDiffusionIdxV5',
+      '/1400377/forestPointV2/forestPointListGeongugSearchV2',
+      '/1400377/forestPointV2/forestPointListSidoSearchV2',
+      '/1400377/forestPointV2/forestPointListSigunguSearchV2',
+      '/1400000/trailInfoService/getforeststoryservice',
+    ]),
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -65,6 +89,7 @@ const TTL_SECONDS: Record<string, number> = {
   'kma:/api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtFcst': 3900,
   'kma:/api/typ02/openApi/VilageFcstInfoService_2.0/getVilageFcst': 11400,
   'kma:/api/typ02/openApi/MidFcstInfoService/getMidLandFcst': 90000,
+  'kma:/api/typ02/openApi/MidFcstInfoService/getMidSeaFcst': 43200,
   'kma:/api/typ01/url/fct_afs_wc.php': 90000,
   'airKorea:/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty': 600,
   'airKorea:/B552584/MsrstnInfoInqireSvc/getMsrstnList': 86400,
@@ -73,6 +98,21 @@ const TTL_SECONDS: Record<string, number> = {
   'openWeather:/forecast': 3600,
   'openWeather:/air_pollution': 3600,
   'airNow:/aq/observation/latLong/current/': 1800,
+  'publicData:/1192136/fcstFishingv2/GetFcstFishingApiServicev2': 21600,
+  'publicData:/1192136/tideFcstHghLw/GetTideFcstHghLwApiService': 43200,
+  'publicData:/1192136/crntFcstFldEbb/GetCrntFcstFldEbbApiService': 43200,
+  'publicData:/1192136/roms/GetRomsApiService': 10800,
+  'publicData:/1192136/twRecent/GetTWRecentApiService': 1800,
+  'publicData:/1192136/noonWave/GetNoonWaveApiService': 1800,
+  'publicData:/1360000/BeachInfoservice/getUltraSrtFcstBeach': 3900,
+  'publicData:/1360000/WthrWrnInfoService/getWthrWrnList': 600,
+  'publicData:/1360000/WthrWrnInfoService/getPwnStatus': 600,
+  'publicData:/1360000/LivingWthrIdxServiceV5/getUVIdxV5': 3600,
+  'publicData:/1360000/LivingWthrIdxServiceV5/getAirDiffusionIdxV5': 3600,
+  'publicData:/1400377/forestPointV2/forestPointListGeongugSearchV2': 10800,
+  'publicData:/1400377/forestPointV2/forestPointListSidoSearchV2': 3600,
+  'publicData:/1400377/forestPointV2/forestPointListSigunguSearchV2': 3600,
+  'publicData:/1400000/trailInfoService/getforeststoryservice': 604800,
 };
 
 // ---------------------------------------------------------------------------
@@ -157,7 +197,10 @@ function determineSkipReason(
     // kma/airKorea 공통: XML/HTML 오류 엔벨로프 차단 (E6). fct_afs_wc.php 분기보다
     // 먼저 실행해야 한다 — 그 분기는 plain text 전용 판정이라 HTML 오류 본문도
     // "데이터 라인 있음"으로 오판해 통과시킨 적이 있었다(검증 리포트 F-1).
-    if ((provider === 'kma' || provider === 'airKorea') && body.trimStart().startsWith('<')) {
+    if (
+      (provider === 'kma' || provider === 'airKorea' || provider === 'publicData') &&
+      body.trimStart().startsWith('<')
+    ) {
       return 'E6';
     }
 
@@ -195,6 +238,23 @@ function determineSkipReason(
         if (itemCount < minItems) return 'E12';
       }
 
+      return null;
+    }
+
+    if (provider === 'publicData') {
+      const parsed = JSON.parse(body);
+      const resultCode =
+        parsed?.response?.header?.resultCode ??
+        parsed?.header?.resultCode ??
+        parsed?.result?.resultCode;
+      if (resultCode !== undefined && !['00', '0', 0].includes(resultCode)) {
+        return 'E13';
+      }
+      const payload = parsed?.response?.body ?? parsed?.body ?? parsed?.result ?? parsed;
+      const serializedPayload = JSON.stringify(payload);
+      if (serializedPayload === '{}' || serializedPayload === '[]' || serializedPayload === 'null') {
+        return 'E14';
+      }
       return null;
     }
 
@@ -271,6 +331,7 @@ interface UpstreamResult {
   contentType: string;
   body: string;
   ms: number;
+  retryAfterSeconds?: number;
 }
 
 const inflight = new Map<string, Promise<UpstreamResult>>();
@@ -291,6 +352,64 @@ const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 const supabase = supabaseUrl && supabaseServiceKey
   ? createClient(supabaseUrl, supabaseServiceKey, { auth: { persistSession: false } })
   : null;
+
+const CALLER_LIMIT_PER_MINUTE = 120;
+const PROVIDER_UPSTREAM_LIMIT_PER_MINUTE: Record<Provider, number> = {
+  kma: 120,
+  airKorea: 120,
+  openWeather: 120,
+  airNow: 60,
+  publicData: 30,
+};
+
+interface RateLimitDecision {
+  allowed: boolean;
+  retryAfterSeconds: number;
+}
+
+async function consumeRateLimit(
+  bucketKey: string,
+  limit: number,
+): Promise<RateLimitDecision | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase.rpc('consume_weather_proxy_rate_limit', {
+    p_bucket_key: bucketKey,
+    p_window_seconds: 60,
+    p_request_limit: limit,
+  });
+  if (error) return null;
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row) return null;
+  return {
+    allowed: row.allowed === true,
+    retryAfterSeconds: Number(row.retry_after_seconds) || 60,
+  };
+}
+
+function jwtSubject(authorization: string | null): string {
+  if (!authorization?.startsWith('Bearer ')) return 'anonymous';
+  try {
+    const payload = authorization.split('.')[1];
+    const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = JSON.parse(atob(normalized));
+    return typeof decoded.sub === 'string' ? decoded.sub : 'anonymous';
+  } catch {
+    return 'anonymous';
+  }
+}
+
+async function callerBucketKey(request: Request): Promise<string> {
+  const subject = jwtSubject(request.headers.get('authorization'));
+  const forwardedFor = request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
+  return `caller:${await sha256Hex(`${subject}\n${forwardedFor}`)}`;
+}
+
+async function hasInternalRefreshAccess(request: Request): Promise<boolean> {
+  const expected = Deno.env.get('WEATHER_PROXY_REFRESH_TOKEN');
+  const provided = request.headers.get('x-internal-refresh-token');
+  if (!expected || !provided) return false;
+  return (await sha256Hex(expected)) === (await sha256Hex(provided));
+}
 
 interface L2Row {
   status: number;
@@ -379,7 +498,13 @@ function json(status: number, body: Record<string, string>) {
 }
 
 function resolveProvider(value: string | null): Provider | null {
-  if (value === 'kma' || value === 'airKorea' || value === 'openWeather' || value === 'airNow') {
+  if (
+    value === 'kma' ||
+    value === 'airKorea' ||
+    value === 'openWeather' ||
+    value === 'airNow' ||
+    value === 'publicData'
+  ) {
     return value;
   }
   return null;
@@ -417,9 +542,27 @@ serve(async (request) => {
     return json(503, { error: 'provider_not_configured' });
   }
 
+  const callerLimit = await consumeRateLimit(
+    await callerBucketKey(request),
+    CALLER_LIMIT_PER_MINUTE,
+  );
+  if (callerLimit && !callerLimit.allowed) {
+    return new Response(JSON.stringify({ error: 'rate_limit_exceeded' }), {
+      status: 429,
+      headers: {
+        ...corsHeaders,
+        'content-type': 'application/json',
+        'retry-after': String(callerLimit.retryAfterSeconds),
+      },
+    });
+  }
+
   // ---- 여기부터 캐시 계층. 보안 검증은 위에서 이미 끝났다. ----
 
   const nocache = requestUrl.searchParams.get('nocache') === '1';
+  if (nocache && !(await hasInternalRefreshAccess(request))) {
+    return json(403, { error: 'cache_bypass_forbidden' });
+  }
   const canonical = canonicalize(provider, path, requestUrl.searchParams);
   const cacheKey = await sha256Hex(`${provider}\n${path}\n${canonical.query}`);
   const cacheKeyShort = cacheKey.slice(0, 16);
@@ -434,6 +577,27 @@ serve(async (request) => {
 
   const callUpstream = async (): Promise<UpstreamResult> => {
     const t0 = Date.now();
+    const providerLimit = await consumeRateLimit(
+      `provider:${provider}`,
+      PROVIDER_UPSTREAM_LIMIT_PER_MINUTE[provider],
+    );
+    if (providerLimit && !providerLimit.allowed) {
+      return {
+        status: 429,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'provider_rate_limit_exceeded' }),
+        ms: Date.now() - t0,
+        retryAfterSeconds: providerLimit.retryAfterSeconds,
+      };
+    }
+    if (!providerLimit && provider === 'publicData') {
+      return {
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'provider_rate_limit_unavailable' }),
+        ms: Date.now() - t0,
+      };
+    }
     const upstreamResponse = await fetch(upstreamUrl, {
       headers: provider === 'openWeather' ? { accept: 'application/json' } : undefined,
     });
@@ -445,7 +609,14 @@ serve(async (request) => {
   const respond = (result: UpstreamResult, extraHeaders: Record<string, string>) =>
     new Response(result.body, {
       status: result.status,
-      headers: { ...corsHeaders, 'content-type': result.contentType, ...extraHeaders },
+      headers: {
+        ...corsHeaders,
+        'content-type': result.contentType,
+        ...(result.retryAfterSeconds
+          ? { 'retry-after': String(result.retryAfterSeconds) }
+          : {}),
+        ...extraHeaders,
+      },
     });
 
   // E2: nocache=1 — 캐시를 완전히 우회한다. 키에서도, upstream 요청에서도 이미 제외되어 있다.
