@@ -16,6 +16,10 @@ class MarineStationCatalog {
       'assets/data/activity/tide_stations_20260813.json';
   static const currentStationsAssetPath =
       'assets/data/activity/current_stations_20260813.json';
+  static const waveStationsAssetPath =
+      'assets/data/activity/wave_stations_20260813.json';
+  static const buoyStationsAssetPath =
+      'assets/data/activity/buoy_stations_20260813.json';
   static const catalogVersion = '2026-08-13';
 
   final String _assetPath;
