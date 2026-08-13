@@ -635,17 +635,19 @@ class _ActivityJudgmentSheetState
               child: Column(
                 children: [
                   SizedBox(
-                    height: 96,
+                    height: 56,
                     child: Row(
                       children: [
-                        _ActivityImage(type: widget.type, size: 56),
-                        const SizedBox(width: AppSpacing.x2),
                         Expanded(
                           child: Text(
                             _labelFor(widget.type),
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w800),
                           ),
+                        ),
+                        Text(
+                          _formatDateTime(_startsAt),
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                         IconButton(
                           tooltip: '닫기',
