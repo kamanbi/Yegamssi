@@ -71,7 +71,7 @@
 2.1. ✅ `TideDataSource` — `GetTideFcstHghLwApiService` 연동, `SeaFishingDataSource`와 동일한 캐시 패턴
 2.2. ✅ `CurrentDataSource` — `GetCrntFcstTimeApiService` 연동, 요청 구간 내 최대 유속 반환
 2.2b ✅ `MarineStationCatalog` 신설(계획에 없었으나 필요) — obsCode는 좌표가 아니라 지점명 기반이라, 조석 166개·조류 204개 관측소 코드표를 자산화하고 명칭 매칭(정확 매칭 실패 시 포함 매칭)으로 obsCode를 찾음
-2.3. ⬜ `MarineTimeSeriesDataSource`(`noonWave`/`twRecent`/`roms`) — 아직 미착수
+2.3. ✅ `MarineTimeSeriesDataSource` — 파고(`noonWave`)·수온(`twRecent`) 완료(관측소 코드표 25/38개 자산화, 실호출 검증). ROMS(좌표 박스 조회)·최강창낙조(`crntFcstFldEbb`)는 스펙만 확보, 미구현(후순위)
 2.4. ✅ 유닛테스트 12건(TideDataSource 4, CurrentDataSource 4, MarineStationCatalog 4)
 
 ### 3. 채점 로직 (`activity_judgment_calculator.dart`) — 조석·조류 완료, 파고/수온 남음
