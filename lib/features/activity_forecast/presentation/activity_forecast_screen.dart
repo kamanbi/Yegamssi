@@ -550,6 +550,9 @@ class _ActivityJudgmentSheetState
   bool _isCalculating = false;
   String? _errorMessage;
   String? _activeId;
+  TideEvidence? _tideEvidence;
+  MarineTimeSeriesEvidence? _waveEvidence;
+  MarineTimeSeriesEvidence? _waterTemperatureEvidence;
 
   @override
   void initState() {
@@ -849,6 +852,15 @@ class _ActivityJudgmentSheetState
           _ActivityFactorSection(title: '긍정 요인', factors: positiveFactors),
         if (riskFactors.isNotEmpty)
           _ActivityFactorSection(title: '위험 요인', factors: riskFactors),
+        if (result.request.activityType == ActivityType.seaFishing &&
+            (_tideEvidence != null ||
+                _waveEvidence != null ||
+                _waterTemperatureEvidence != null))
+          _SeaDetailSection(
+            tideEvidence: _tideEvidence,
+            waveEvidence: _waveEvidence,
+            waterTemperatureEvidence: _waterTemperatureEvidence,
+          ),
         if (result.unverifiedFactors.isNotEmpty)
           _ActivityDetailSection(
             title: '미확인 자료',
@@ -1412,6 +1424,9 @@ class _ActivityJudgmentSheetState
         _result = result;
         _activeId = result.id;
         _isEditing = false;
+        _tideEvidence = tideEvidence;
+        _waveEvidence = waveEvidence;
+        _waterTemperatureEvidence = waterTemperatureEvidence;
       });
     } catch (error) {
       if (!mounted) return;
@@ -1986,6 +2001,151 @@ class _ActivityDetailSection extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 3),
               child: Text(line, style: Theme.of(context).textTheme.bodySmall),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SeaDetailSection extends StatelessWidget {
+  const _SeaDetailSection({
+    this.tideEvidence,
+    this.waveEvidence,
+    this.waterTemperatureEvidence,
+  });
+
+  final TideEvidence? tideEvidence;
+  final MarineTimeSeriesEvidence? waveEvidence;
+  final MarineTimeSeriesEvidence? waterTemperatureEvidence;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.x2),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: EdgeInsets.zero,
+          childrenPadding: const EdgeInsets.only(bottom: AppSpacing.x1),
+          title: Text('상세 해양 자료', style: Theme.of(context).textTheme.titleSmall),
+          children: [
+            if (tideEvidence != null && tideEvidence!.events.isNotEmpty)
+              _TideEventTable(evidence: tideEvidence!),
+            if (waveEvidence != null && waveEvidence!.points.isNotEmpty)
+              _MarineTimeSeriesRow(
+                title: '파고 (m)',
+                evidence: waveEvidence!,
+                valueLabel: (value) => value.toStringAsFixed(1),
+              ),
+            if (waterTemperatureEvidence != null &&
+                waterTemperatureEvidence!.points.isNotEmpty)
+              _MarineTimeSeriesRow(
+                title: '수온 (°C)',
+                evidence: waterTemperatureEvidence!,
+                valueLabel: (value) => value.toStringAsFixed(1),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TideEventTable extends StatelessWidget {
+  const _TideEventTable({required this.evidence});
+
+  final TideEvidence evidence;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.x1),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('물때 (${evidence.stationName})', style: Theme.of(context).textTheme.labelMedium),
+          const SizedBox(height: 4),
+          for (final event in evidence.events)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 48,
+                    child: Text(
+                      event.type == TideEventType.highTide ? '만조' : '간조',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      _formatTime(event.time),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                  Text(
+                    '${event.levelCm}cm',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MarineTimeSeriesRow extends StatelessWidget {
+  const _MarineTimeSeriesRow({
+    required this.title,
+    required this.evidence,
+    required this.valueLabel,
+  });
+
+  final String title;
+  final MarineTimeSeriesEvidence evidence;
+  final String Function(double value) valueLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.x1),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$title · ${evidence.stationName}',
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+          const SizedBox(height: 4),
+          SizedBox(
+            height: 56,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: evidence.points.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (context, index) {
+                final point = evidence.points[index];
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _formatTime(point.time),
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      valueLabel(point.value),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
