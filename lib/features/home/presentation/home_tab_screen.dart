@@ -422,7 +422,6 @@ class _MetricChip extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (icon != null) ...[
               Icon(

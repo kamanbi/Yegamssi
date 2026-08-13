@@ -4,12 +4,16 @@ class HourlyForecast {
     required this.tempCelsius,
     required this.condition,
     this.precipitationAmountMm,
+    this.precipProbability,
+    this.windSpeedMs,
   });
 
   final DateTime time;
   final double tempCelsius;
   final WeatherCondition condition;
   final double? precipitationAmountMm;
+  final double? precipProbability;
+  final double? windSpeedMs;
 }
 
 class DailyForecast {
@@ -19,11 +23,14 @@ class DailyForecast {
     required this.tempMax,
     required this.condition,
     required this.precipProbability,
+    this.amPrecipProbability,
+    this.pmPrecipProbability,
     this.expectedPrecipitationMm,
     this.amCondition,
     this.pmCondition,
     this.amTempCelsius,
     this.pmTempCelsius,
+    this.temperatureAvailable = true,
   });
 
   final DateTime date;
@@ -31,11 +38,14 @@ class DailyForecast {
   final double tempMax;
   final WeatherCondition condition;
   final double precipProbability;
+  final double? amPrecipProbability;
+  final double? pmPrecipProbability;
   final double? expectedPrecipitationMm;
   final WeatherCondition? amCondition;
   final WeatherCondition? pmCondition;
   final double? amTempCelsius;
   final double? pmTempCelsius;
+  final bool temperatureAvailable;
 
   DailyForecast copyWith({
     DateTime? date,
@@ -43,11 +53,14 @@ class DailyForecast {
     double? tempMax,
     WeatherCondition? condition,
     double? precipProbability,
+    double? amPrecipProbability,
+    double? pmPrecipProbability,
     double? expectedPrecipitationMm,
     WeatherCondition? amCondition,
     WeatherCondition? pmCondition,
     double? amTempCelsius,
     double? pmTempCelsius,
+    bool? temperatureAvailable,
     bool clearAmCondition = false,
     bool clearPmCondition = false,
     bool clearAmTempCelsius = false,
@@ -60,6 +73,8 @@ class DailyForecast {
       tempMax: tempMax ?? this.tempMax,
       condition: condition ?? this.condition,
       precipProbability: precipProbability ?? this.precipProbability,
+      amPrecipProbability: amPrecipProbability ?? this.amPrecipProbability,
+      pmPrecipProbability: pmPrecipProbability ?? this.pmPrecipProbability,
       expectedPrecipitationMm: clearExpectedPrecipitationMm
           ? null
           : (expectedPrecipitationMm ?? this.expectedPrecipitationMm),
@@ -71,6 +86,7 @@ class DailyForecast {
       pmTempCelsius: clearPmTempCelsius
           ? null
           : (pmTempCelsius ?? this.pmTempCelsius),
+      temperatureAvailable: temperatureAvailable ?? this.temperatureAvailable,
     );
   }
 }

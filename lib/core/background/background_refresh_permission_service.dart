@@ -7,7 +7,9 @@ class BackgroundRefreshPermissionService {
   static const MethodChannel _channel = MethodChannel('yegamssi/app_control');
   static const _openCountKey = 'battery_exception_prompt_open_count';
   static const _suppressedKey = 'battery_exception_prompt_suppressed';
-  static const _promptInterval = 20;
+  static const _policyVersionKey = 'battery_exception_prompt_policy_version';
+  static const _policyVersion = 2;
+  static const _promptInterval = 5;
 
   static Future<bool> isBatteryOptimizationIgnored() async {
     try {
@@ -35,15 +37,14 @@ class BackgroundRefreshPermissionService {
     if (await isBatteryOptimizationIgnored()) return false;
 
     final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(_suppressedKey) ?? false) return false;
+    if (prefs.getInt(_policyVersionKey) != _policyVersion) {
+      await prefs.remove(_suppressedKey);
+      await prefs.remove(_openCountKey);
+      await prefs.setInt(_policyVersionKey, _policyVersion);
+    }
 
     final nextCount = (prefs.getInt(_openCountKey) ?? 0) + 1;
     await prefs.setInt(_openCountKey, nextCount);
     return nextCount == 1 || nextCount % _promptInterval == 0;
-  }
-
-  static Future<void> suppressBatteryOptimizationReminder() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_suppressedKey, true);
   }
 }

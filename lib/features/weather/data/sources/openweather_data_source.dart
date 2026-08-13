@@ -87,12 +87,15 @@ class OpenWeatherDataSource implements WeatherDataSource {
       final itemWeather = itemWeatherList.isNotEmpty
           ? itemWeatherList.first as Map<String, dynamic>
           : const <String, dynamic>{};
+      final itemWind = item['wind'] as Map<String, dynamic>? ?? const {};
       hourlyForecasts.add(
         HourlyForecast(
           time: DateTime.fromMillisecondsSinceEpoch(dt * 1000),
           tempCelsius: (itemMain['temp'] as num?)?.toDouble() ?? 0,
           condition: _mapOwmCode((itemWeather['id'] as int?) ?? -1),
           precipitationAmountMm: _forecastPrecipitationAmount(item),
+          precipProbability: ((item['pop'] as num?)?.toDouble() ?? 0) * 100,
+          windSpeedMs: (itemWind['speed'] as num?)?.toDouble(),
         ),
       );
     }

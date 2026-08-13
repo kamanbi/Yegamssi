@@ -12,8 +12,8 @@ import 'weather_data_source.dart';
 /// 대기질은 EPA AirNow API 병렬 조회
 class NoaaDataSource implements WeatherDataSource {
   NoaaDataSource()
-      : _dio = DioClient.create(baseUrl: AppConfig.noaaBaseUrl),
-        _airNow = AirNowDataSource();
+    : _dio = DioClient.create(baseUrl: AppConfig.noaaBaseUrl),
+      _airNow = AirNowDataSource();
 
   final Dio _dio;
   final AirNowDataSource _airNow;
@@ -52,10 +52,9 @@ class NoaaDataSource implements WeatherDataSource {
           if (forecastUrl != null && forecastUrl.isNotEmpty)
             _dio.get(forecastUrl, options: opts),
         ]),
-        _airNow.fetchAirQuality(lat: lat, lon: lon).then(
-          (v) => v,
-          onError: (_) => (null, null, null, null, null),
-        ),
+        _airNow
+            .fetchAirQuality(lat: lat, lon: lon)
+            .then((v) => v, onError: (_) => (null, null, null, null, null)),
       ]);
 
       final responses = results[0] as List<Response>;
@@ -103,6 +102,12 @@ class NoaaDataSource implements WeatherDataSource {
             tempCelsius: _toCelsius(t, unit),
             condition: _mapForecast((p['shortForecast'] as String?) ?? ''),
             precipitationAmountMm: _precipitationAmount(p),
+            precipProbability:
+                ((p['probabilityOfPrecipitation']
+                            as Map<String, dynamic>?)?['value']
+                        as num?)
+                    ?.toDouble(),
+            windSpeedMs: _parseMphToMs((p['windSpeed'] as String?) ?? '0 mph'),
           ),
         );
       }
@@ -127,11 +132,10 @@ class NoaaDataSource implements WeatherDataSource {
             continue;
           }
 
-          final dayTemp =
-              _toCelsius(
-                (p['temperature'] as num?)?.toDouble() ?? 0,
-                (p['temperatureUnit'] as String?) ?? 'F',
-              );
+          final dayTemp = _toCelsius(
+            (p['temperature'] as num?)?.toDouble() ?? 0,
+            (p['temperatureUnit'] as String?) ?? 'F',
+          );
           final dayForecast = (p['shortForecast'] as String?) ?? '';
           final dayPrecipMap =
               p['probabilityOfPrecipitation'] as Map<String, dynamic>? ??
@@ -155,8 +159,9 @@ class NoaaDataSource implements WeatherDataSource {
                 (n['temperature'] as num?)?.toDouble() ?? 0,
                 (n['temperatureUnit'] as String?) ?? 'F',
               );
-              nightCondition =
-                  _mapForecast((n['shortForecast'] as String?) ?? '');
+              nightCondition = _mapForecast(
+                (n['shortForecast'] as String?) ?? '',
+              );
             }
           }
 
@@ -175,8 +180,8 @@ class NoaaDataSource implements WeatherDataSource {
         }
       }
 
-      final airQuality = results[1]
-          as (double?, double?, double?, double?, int?);
+      final airQuality =
+          results[1] as (double?, double?, double?, double?, int?);
       final (pm10, pm25, o3, aqiValue, aqiGrade) = airQuality;
 
       return WeatherResponse(
@@ -265,7 +270,9 @@ class NoaaDataSource implements WeatherDataSource {
       return WeatherCondition.cloudy;
     }
     if (n.contains('hot')) return WeatherCondition.hot;
-    if (n.contains('cold') || n.contains('freez')) return WeatherCondition.coldWave;
+    if (n.contains('cold') || n.contains('freez')) {
+      return WeatherCondition.coldWave;
+    }
     if (n.contains('sunny') || n.contains('clear') || n.contains('fair')) {
       return WeatherCondition.sunny;
     }

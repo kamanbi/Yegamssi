@@ -22,10 +22,18 @@ class AppRefreshController {
 
   final Ref _ref;
 
-  Future<void> refreshSignals({bool force = false}) async {
+  Future<void> refreshSignals({
+    bool force = false,
+    ({double lat, double lon})? positionOverride,
+  }) async {
     final refreshId = DateTime.now().microsecondsSinceEpoch.toRadixString(36);
     _logRefresh('start id=$refreshId force=$force');
-    final position = await _ref.read(currentPositionProvider.future);
+    final ({double lat, double lon}) position;
+    if (positionOverride != null) {
+      position = positionOverride;
+    } else {
+      position = await _ref.read(currentPositionProvider.future);
+    }
     final cachedWeather = await WeatherCacheStore.load(allowStale: true);
     final weatherRefreshDue = RefreshPolicy.isWeatherRefreshDue(
       cachedWeather,
@@ -95,8 +103,12 @@ class AppRefreshController {
     final repo = await _ref.read(weatherRepositoryProvider.future);
     final result = await repo.getCurrentWeather(lat: lat, lon: lon);
     if (result.error != null) {
-      _logRefresh('id=$refreshId weather refresh failed: ${result.error}');
-      throw result.error!;
+      final failure = result.error!;
+      _logRefresh(
+        'id=$refreshId weather refresh failed: '
+        '${failure.runtimeType} message=${failure.message}',
+      );
+      throw failure;
     }
     final data = result.data;
     if (data == null) {

@@ -1,92 +1,121 @@
-# Activity Forecast Plan
+# 바다낚시 고도화 제안 (승인 대기)
 
-## Goal
-Add a Korea-only Activity Forecast page where eligible users can calculate, close, restore, modify, and browse explainable location-and-time-based judgments.
+## 원칙
+1. **무료 공공 API 우선.** weather-proxy에 이미 등록된 KHOA 5종(조석/조류/ROMS/부이/파고)은 추가 계약 없이 즉시 활용 가능 — 이것부터 소진한다.
+2. **정적 자산으로 해결되는 것은 API를 쓰지 않는다.** 금어기·금지체장·어종 조황 활성도는 어신처럼 JSON 번들로 충분하다.
+3. **유료 API는 대체 불가능한 항목에 한해, ROI가 분명할 때만** 검토한다(아래 "유료 API 검토" 참조).
+4. 기존 프록시 보존 조건(E12, L2 700ms, single-flight, TTL 표)은 이번 작업에서도 그대로 유지한다.
 
-## Availability Policy
-1. Add `ActivityForecastAvailability` with `checking`, `eligible`, and `ineligible` states.
-2. Resolve eligibility from current-device GPS country and a timestamped verified-country cache; grant access only to `KR`.
-3. Treat foreign, missing permission, timeout, lookup failure, and stale cache as ineligible.
-4. Keep the feature independent from language, timezone, selected weather city, and the general default-Korea fallback.
-5. Guard navigation, page rendering, home entry points, and stored-result access with the same policy.
-6. Retain history when the feature becomes unavailable and restore it after Korea eligibility returns.
+## 어신 대비 유료 API 검토 결과
 
-## Product Structure
-1. For eligible Korea access, replace the bottom `Monthly forecast` destination with `Activity forecast` and expose monthly forecast inside fortune.
-2. For foreign or unresolved access, retain the existing `Monthly forecast` destination and do not expose Activity Forecast.
-3. Add activity buttons for the first release: fishing, walking/running, hiking, laundry, and car wash.
-4. Show pinned and recent saved judgments below the activity buttons.
+| 어신이 쓰는 유료/상용 서비스 | 용도 | 예감씨 도입 필요성 |
+|---|---|---|
+| MapTiler | 지도 배경 타일(위성/음영) | **불필요** — 예감씨는 지도 UI가 없고, 이번 고도화 범위도 지도가 아닌 판단 정확도 개선. 지도 UI를 나중에 만들게 되면 KHOA/VWorld 무료 타일로 충분(어신도 이 둘을 병행 사용) |
+| Datadog APM | 앱 모니터링 | **불필요** — 예감씨 스코프 밖(백엔드 모니터링은 별도 주제) |
+| NICE 본인인증 / 토스페이먼츠 | 로그인 실명인증, 커머스 결제 | **불필요** — 예감씨엔 결제/실명인증 기능 자체가 없음(청약몰·파트너스 예약 같은 커머스 기능 없음) |
+| TensorFlow Lite(온디바이스 ML) | 추정: 조과 사진 인식 | **불필요** — 이번 고도화 범위 밖. 향후 "피싱그램"류 SNS 기능을 만들 경우에만 재검토 |
 
-## Modal Flow
-1. Open a dismissible, draggable full-height modal sheet.
-2. Input common fields: location, date, start time, and duration.
-3. Render typed fields for the selected activity.
-4. Keep the modal open while switching from input to loading and result states.
-5. Save the plan and result only after a successful calculation.
-6. Provide `Change conditions`, `Recalculate`, `Save as new`, and `Delete` commands.
+**결론: 이번 고도화에서 유료 API 도입이 필요한 항목은 없다.** 격차의 대부분(조석 정밀화, 파고/수온/조류 시계열)은 예감씨가 이미 접근 신청해 프록시에 등록해 둔 KHOA 무료 API로 메울 수 있다.
 
-## Domain And Storage
-1. Add `ActivityType`, `SavedActivityPlan`, typed activity options, `ActivityJudgment`, `JudgmentFactor`, and `SafetyLevel`.
-2. Add a pure scoring contract so each activity calculator is independently testable.
-3. Add `ActivityJudgmentStore` with schema versioning, a 20-item limit, newest-first order, pinning, deletion, and corruption recovery.
-4. Add Riverpod controllers for saved history and active calculation.
-5. Keep activity storage and refresh rules fully separate from current weather, selected-location weather, fortune, and widget caches.
-6. Add a timestamped, versioned eligibility cache separate from the general country cache.
+## 단계별 제안
 
-## External API Activation
-1. Activate the new KHOA national-core `Sea Fishing Index` as the primary official sea-fishing source.
-2. Activate KHOA `Tide Forecast (high/low and time series)` and `Current Forecast (time series and maximum flood/ebb/slack)` for time-window scoring.
-3. Activate KHOA `ROMS Numerical Forecast Model` for coordinate-based surface current and water-temperature forecasts.
-4. Activate KHOA `Latest Ocean Buoy Observations` and `Observed Waves of the National Ocean Observing Network` for current-condition and forecast-quality checks.
-5. Activate `KMA Nationwide Beach Weather Query Service` as a supported-beach fallback and cross-check source.
-6. Activate `National Institute of Forest Science Forest Fire Risk Forecast Information` for hiking safety overrides.
-7. Activate `KMA Lifestyle Weather Index Query Service` for UV and apparent-temperature factors.
-8. Activate `Korea Forest Service Mountain Information Query` and `Forest Spatial Information Trail Information_GW` for mountain search and route context.
-9. Do not integrate any discontinued legacy BadaNuri endpoint. Keep every key in Supabase secrets and expose only normalized activity data through allowlisted proxy routes.
+### Phase 1 — 조석(물때) 정밀화 [무료, 우선순위 최고]
+- `tideFcstHghLw`(조석예보) 프록시 API를 `SeaFishingDataSource`와 별도의 `TideDataSource`로 신설해 연동
+- 만조/간조 시:분 + 조위(cm) 4회 데이터를 `SeaFishingEvidence`(또는 신규 `TideEvidence`)에 추가
+- 결과 화면에 "물때" 텍스트 요약을 시:분+조위 리스트로 교체(그래프는 Phase 4 검토)
+- 판단 근거에 "간조 전후 1시간" 같은 조황 유리 구간 가점 로직 추가 검토(현재는 조석 정보가 채점에 전혀 반영되지 않음)
 
-## Sea Fishing Data Policy
-1. Map a request to rock fishing or boat fishing and to a supported target species before calculating suitability.
-2. At an official KHOA fishing point, use the official five-level Sea Fishing Index as a baseline factor, not as the entire Yegamssi score.
-3. Combine hourly KMA weather with KHOA tide, current, wave, water-temperature, and wind inputs for the requested time window.
-4. For arbitrary coordinates, use coordinate-capable or nearest-station raw feeds only within named distance and freshness limits; otherwise return `coverage unavailable` instead of extrapolating.
-5. Apply marine warnings, excessive waves/wind/current, and stale observations as safety overrides before numeric scoring.
-6. Display source time, forecast window, nearest observation distance, coverage level, and whether the result is official-point or interpolated.
-7. Keep freshwater fishing out of the first sea-fishing release.
+### Phase 2 — 파고/수온/조류 시계열 반영 [무료]
+- `noonWave`(파고), `twRecent`(실시간 수온), `crntFcstFldEbb`(조류)를 조합해 요청 구간 내 3시간 간격 값으로 세분화
+- 현재 "일 최댓값 1개"만 쓰는 채점 로직을 구간별 최악값 반영으로 개선(안전 판단 정밀도 상승)
+- 조류(유속/유향)는 갯바위/선상 낚시 특성상 중요 안전 지표이므로 별도 팩터로 신설 검토
 
-## Proxy Abuse Protection
-1. Remove public control of `nocache=1`; reject or ignore it for app/anon requests.
-2. Reserve forced upstream refresh for trusted scheduled jobs or explicitly authorized server-side operations.
-3. Make manual refresh request server-side revalidation; the server serves a still-valid cache or refreshes an expired/eligible entry.
-4. Add atomic rate limits by caller and IP, plus provider-wide quotas and concurrency limits. Return `429` with `Retry-After` when exceeded.
-5. Apply stricter limits to manual refresh than ordinary cached reads and deduplicate identical in-flight requests.
-6. Log provider, route, cache outcome, limit outcome, and latency without logging API keys, authorization headers, raw coordinates, or personal identifiers.
-7. Add alert thresholds for repeated bypass attempts, elevated upstream error rates, and provider quota consumption.
+### Phase 3 — 정적 참고자산 신설 [무료, 난이도 낮음]
+- `assets/data/activity/fish_inhibition_periods.json`, `fish_release_sizes.json` 등 해양수산부 수산자원관리법 시행령 별표 기반 정적 자산 추가
+- 판단 결과 화면에 "이 시기 포획금지 어종" 안내 배지 추가(법규 준수 지원 — 사용자 가치 높고 구현 비용 낮음)
+- 어종별 계절 조황 활성도 매트릭스는 공식 통계/전문가 자문 없이는 신뢰도 낮은 자체 추정이 되므로, 이번 phase에서는 **제외**하고 별도 검토(근거 부족한 정보 제공 리스크)
 
-## Delivery Order
-1. Activate and smoke-test the required public-data products without changing Claude Code's in-progress weather contract.
-2. Harden the proxy cache-bypass and rate-limit paths before exposing new provider routes.
-3. Build and test the fail-closed Korea eligibility policy and guarded navigation.
-4. Build the shared page, modal state machine, models, storage, and existing-weather adapter.
-5. Implement walking/running, laundry, and car-wash calculators using current weather data.
-6. Add hiking with forest-fire safety overrides and available environmental data.
-7. Add sea fishing in two levels: official KHOA fishing points first, then coordinate-based coverage using approved raw KHOA feeds.
-8. Add localization, analytics events, unit/widget tests, and release verification.
+### Phase 4 — 지도 기반 포인트 탐색 (스코프 논의 필요, 보류 권장)
+- 어신처럼 지도 위 마커 탐색 UI는 KHOA/VWorld 무료 타일로 구현 가능하나, 예감씨 목록/검색 UX와 설계 철학이 다르고 작업량이 큼(별도 화면, 지도 SDK 통합, 성능/배터리 영향)
+- **이번 고도화 범위에 포함하지 않는 것을 권장** — 필요 시 별도 스펙 문서로 분리해 사용자 승인받아 진행
 
-## Readability Rules
-- Early Return: reject invalid time ranges, unsupported forecast horizons, unavailable locations, and safety-stop conditions before scoring.
-- Contextual Naming: use `requestedWindow`, `forecastObservedAt`, `safetyOverride`, and `scoreContributions`.
-- Magic Number Hunter: every threshold and history limit belongs to named policy constants.
-- Parameter Object: pass `ActivityJudgmentRequest` instead of separate location/time/options arguments.
-- Complexity Check: target page/controller readability 8/10 and each calculator cyclomatic complexity below 10.
+## UI/UX 변경 범위 (바다낚시 전용, 보수적 설계)
 
-## Completion Criteria
-- Verified Korea access exposes Activity Forecast; verified foreign and unresolved access expose no page, tab, promotion, deep link, or cached result.
-- Korean language abroad does not enable the feature, and a foreign language in Korea does not disable it.
-- Eligibility changes do not corrupt tab selection or delete activity history.
-- Activity selection, input, inline result, dismissal, restoration, editing, recalculation, history opening, and deletion work.
-- Cached results appear immediately and clearly indicate stale or changed forecasts.
-- Activity caches cannot overwrite app weather or widget data.
-- Every displayed score has factor contributions and an independent safety status.
-- Calculator, serialization, cache migration, provider, and modal interaction tests pass.
-- App callers cannot force an upstream cache bypass, and sustained excess traffic receives deterministic `429` responses without consuming uncontrolled provider quota.
-- Every enabled external API passes a server-side smoke test, and unavailable marine coverage is labeled rather than inferred from land weather.
+**변경 대상은 `_ActivityJudgmentSheet`(activity_forecast_screen.dart) 안의 바다낚시 결과 렌더링 분기뿐이다. 새 화면·새 라우트·새 의존성(차트 라이브러리 등)은 만들지 않는다.**
+
+기존 바텀시트 구조(점수 카드 → 위치/시간 → 행동권고 → 긍정/위험 요인 → 자료기준)는 그대로 두고, 신규 데이터를 성격별로 3단에 나눠 얹는다.
+
+| 단계 | 무엇을 | 어디에 |
+|---|---|---|
+| 1단(기존 유지) | 점수·등급·요약 | 변경 없음 |
+| 2단(기존 요인 리스트 재사용) | 조석·파고·조류 중 **점수에 영향 주는 부분만** "해양 안전 요인" 한 줄로 요약해 편입 | 기존 `_ActivityFactorSection` 그대로 사용 |
+| 3단(신규, 기본 접힘) | 조석 4회 시:분/조위, 3시간 간격 파고·수온 원자료 | 신규 `ExpansionTile` 1개 추가(닫힌 상태 기본값), 시계열은 날씨 탭의 기존 "시간별 예보" 가로 칩 컴포넌트 재사용 |
+| 별도 칩(신규) | 금어기/금지체장 안내 | 위치·시간 줄 아래 작은 칩, 탭 시 기존 `showDialog` 패턴으로 상세 표시. 해당 없을 땐 노출 안 함 |
+
+**영향받지 않는 것**: 걷기/등산/빨래/세차 결과 화면, `_ActivityFactorSection`/`_ActivityDetailSection` 컴포넌트 자체(공유 컴포넌트는 수정하지 않고 바다낚시 분기에서만 신규 위젯 추가), 기존 라우팅, 기존 액션 버튼(조건변경/다시계산/새판단저장/삭제).
+
+## 세부 작업 목록 (실행 단위)
+
+### 0. 착수 전 검증
+0.1. `weather-proxy/index.ts`의 `allowedPaths`·`TTL_SECONDS`에 미등록 KHOA 경로 2건 추가: 조석예보(시계열), 조류예보 최강창낙조 및 전류. `PUBLIC_DATA_API_KEY` 그대로 사용, 신규 키 불필요
+0.2. 신규 경로 2건 + 기존 마린 경로 6건(바다낚시지수/조석고저조/조류/ROMS/부이관측/파고) 전부 `nocache=1`로 스모크 테스트 — 실제 응답 필드명·단위·null 처리 방식을 문서가 아닌 실호출로 확인
+0.3. 확인된 스키마를 근거로 아래 1번 모델 설계를 확정(스키마가 문서와 다르면 1번부터 재조정)
+
+### 1. 데이터 모델 (`activity_models.dart`)
+1.1. `TideEvidence` 신설 — 관측소명, `[{type: 만조|간조, time, levelCm}]`(4건), 관측/발표 시각
+1.2. `CurrentEvidence` 신설 — 유속(cm/s), 유향, 최강창조/최강낙조/전류 시각
+1.3. `MarineTimeSeriesEvidence` 신설 — 파고·수온을 3시간 간격 `[{time, value}]`로 통일 표현(파고/수온 공용 구조, 단위만 다름)
+1.4. `FishRegulationEvidence` 신설 — 어종명, 금어기 기간, 금지체장(있는 경우)
+
+### 2. 데이터소스
+2.1. `TideDataSource` — `SeaFishingDataSource`와 동일한 캐시 패턴(단일 flight, TTL) 재사용해 신설
+2.2. `CurrentDataSource` — 조류예보 연동
+2.3. `MarineTimeSeriesDataSource` — `noonWave`/`twRecent`/`roms`를 조합해 3시간 간격으로 리샘플링
+2.4. 각 데이터소스 유닛테스트(mock Dio 응답 기반) 작성
+
+### 3. 채점 로직 (`activity_judgment_calculator.dart`)
+3.1. `_calculateSeaFishing`에 `tideEvidence`/`currentEvidence`/`marineTimeSeriesEvidence` 파라미터 추가(모두 nullable, 기존 호출부 하위호환)
+3.2. **[확인 필요]** 조석 기반 가점/감점 규칙(예: 간조 전후 몇 시간을 유리로 볼지, 사리/조금에 따른 가중치)은 낚시 전문 기준이 필요합니다 — 임의로 수치를 정하지 않고 이 단계에서 별도로 여쭙겠습니다
+3.3. 파고/조류 시계열을 "요청 구간 내 최댓값"으로 축약해 기존 단일값 임계값 로직(파고≥1.0m, 풍속≥8m/s 등) 교체
+3.4. 요인 문자열은 개별 나열하지 않고 "해양 안전 요인" 1줄로 통합해 `factors`에 반영
+3.5. `calculationVersion`을 `activity-v5` → `activity-v6`으로 올림
+
+### 4. UI (`activity_forecast_screen.dart`, 바다낚시 분기 국소 수정)
+4.1. "상세 해양 자료" `ExpansionTile` 섹션 위젯 신설(기본 닫힘)
+4.2. 조석 4행 표(시각+cm) 위젯
+4.3. 파고/수온 시계열 가로 스크롤 칩 — 날씨 탭의 기존 "시간별 예보" 컴포넌트를 공용 위젯으로 추출해 재사용(신규 차트 라이브러리 없음)
+4.4. 기존 `_ActivityFactorSection`에 3.4의 통합 요인이 자연스럽게 표시되는지 확인(신규 위젯 불필요)
+
+### 5. 정적 자산 — 어종 규제 (Phase 3)
+5.1. 해양수산부 수산자원관리법 시행령 별표 원문 확보
+5.2. `assets/data/activity/fish_regulations_YYYYMMDD.json` 스키마 설계(기존 `fishing_ports_*.json`의 `schemaVersion`/`catalogVersion` 패턴 준수) 및 작성
+5.3. `pubspec.yaml` assets 등록
+5.4. `FishRegulationCatalog` 로더 클래스 신설(`FishingDestinationCatalog` 패턴 재사용)
+5.5. 결과 화면에 규제 칩 추가(대상 어종 선택 + 현재 금어기 해당 시에만 노출)
+5.6. 갱신 스크립트 필요 여부 결정(`tool/update_fishing_ports.ps1`처럼 재생성형으로 만들지, 수동 갱신으로 둘지)
+
+### 6. 테스트
+6.1. 2.4의 데이터소스별 유닛테스트
+6.2. `activity_judgment_calculator_test.dart`에 조석/조류/시계열 팩터 케이스 추가
+6.3. `flutter analyze` 0건, `flutter test` 전체(기존 133건 + 신규 케이스) 통과 확인
+6.4. `weather-proxy/index.ts` diff에서 E12/700ms/single-flight/TTL 기존 값 무변경 재확인(0.1의 추가 2줄 외 변경 없어야 함)
+
+### 7. 실기기 검증
+7.1. `tool/build_release.ps1`로 릴리즈 빌드
+7.2. 바다낚시 판단 실행 → 3단 섹션 펼침/접힘, 조석·시계열 값이 앱에 정상 표시되는지 확인
+7.3. 대상 어종이 금어기일 때만 규제 칩이 뜨는지 확인
+7.4. 걷기/등산/빨래/세차 결과 화면에 변화가 없는지(회귀 없음) 확인
+
+## 리스크
+- KHOA API 5종은 등록만 됐지 실제 호출 검증이 안 된 상태 — Phase 1 착수 전 실제 응답 스키마를 소량 호출로 먼저 확인 필요(문서상 필드명과 실제 응답 필드명이 다를 가능성)
+- 조석 데이터가 늘어나면 판단 근거(factors) UI가 길어짐 — 가독성 설계 5칙(Complexity Check) 재점검 필요
+- 정적 자산(금어기 등)은 법령 개정 시 데이터가 낡을 수 있음 — 갱신 주기와 출처 표기 필요(`tool/update_fishing_ports.ps1`처럼 재생성 스크립트화 권장)
+
+## 완료 기준(제안)
+- Phase 1: 물때 상세 정보가 판단 결과 화면에 시:분+조위로 표시되고, `flutter test` 신규 케이스 통과
+- Phase 2: 안전 중단 판단(`stop`)이 조류/파고/수온 시계열 반영 후에도 기존 로직과 회귀 없이 동작(기존 `activity-v5` 테스트 스위트 유지)
+- Phase 3: 포획금지 어종 안내가 판단 결과에 노출되고 출처(수산자원관리법)가 표기됨
+- 전 구간: `flutter analyze` 0건, 기존 프록시 보존 조건(E12/700ms/single-flight/TTL) 무변경 확인
+
+## 승인 요청
+Phase 1~3을 이 순서로 진행하는 것에 동의하시면 Phase 1(조석 정밀화)부터 착수하겠습니다. Phase 4(지도)는 별도 논의를 권장합니다.

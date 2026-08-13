@@ -19,6 +19,7 @@ import '../../../core/utils/date_format_helper.dart';
 import '../../../core/widgets/app_buttons.dart';
 import '../../../core/widgets/premium_card.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../activity_forecast/presentation/activity_availability_provider.dart';
 import '../domain/entities/lucky_color.dart';
 import '../domain/entities/fortune_result.dart';
 import '../domain/entities/oheng.dart';
@@ -157,6 +158,9 @@ class _FortuneDataViewState extends ConsumerState<_FortuneDataView> {
     final brightness = Theme.of(context).brightness;
     final l10n = AppLocalizations.of(context);
     final language = ref.watch(appLanguageNotifierProvider);
+    final showsActivityForecast =
+        ref.watch(activityForecastAvailabilityProvider).valueOrNull ==
+        ActivityForecastAvailability.eligible;
     final fortune = widget.fortune;
 
     return ListView(
@@ -204,6 +208,30 @@ class _FortuneDataViewState extends ConsumerState<_FortuneDataView> {
             ),
           ],
         ),
+        if (showsActivityForecast) ...[
+          const SizedBox(height: AppSpacing.x2),
+          SegmentedButton<_FortuneView>(
+            showSelectedIcon: false,
+            segments: [
+              ButtonSegment<_FortuneView>(
+                value: _FortuneView.daily,
+                icon: const Icon(Icons.auto_awesome_outlined),
+                label: Text(l10n.fortuneTitle),
+              ),
+              ButtonSegment<_FortuneView>(
+                value: _FortuneView.monthly,
+                icon: const Icon(Icons.calendar_month_outlined),
+                label: Text(l10n.tabMonthlyYegamssi),
+              ),
+            ],
+            selected: const {_FortuneView.daily},
+            onSelectionChanged: (selection) {
+              if (selection.contains(_FortuneView.monthly)) {
+                context.go(AppRoutes.monthlyYegamssi);
+              }
+            },
+          ),
+        ],
         const SizedBox(height: AppSpacing.x2),
         _FortuneContentSections(
           fortune: fortune,
@@ -323,11 +351,10 @@ class _FortuneDataViewState extends ConsumerState<_FortuneDataView> {
   }
 }
 
+enum _FortuneView { daily, monthly }
+
 class _FortuneBrandLogo extends StatelessWidget {
-  const _FortuneBrandLogo({
-    required this.width,
-    required this.height,
-  });
+  const _FortuneBrandLogo({required this.width, required this.height});
 
   final double width;
   final double height;

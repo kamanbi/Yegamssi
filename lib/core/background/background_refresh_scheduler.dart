@@ -7,8 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../config/supabase_config.dart';
+import '../error/failure.dart';
 import '../refresh/app_refresh_controller.dart';
 import '../refresh/refresh_policy.dart';
+import '../storage/location_cache_store.dart';
 import '../storage/weather_cache_migration.dart';
 
 const _backgroundRefreshUniqueName = 'yegamssi_background_signal_refresh';
@@ -24,7 +26,7 @@ class BackgroundRefreshScheduler {
       _backgroundRefreshTaskName,
       frequency: RefreshPolicy.weatherRefreshInterval,
       constraints: Constraints(networkType: NetworkType.connected),
-      existingWorkPolicy: ExistingPeriodicWorkPolicy.update,
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
       backoffPolicy: BackoffPolicy.exponential,
       backoffPolicyDelay: const Duration(minutes: 10),
       tag: _backgroundRefreshUniqueName,
@@ -39,7 +41,7 @@ void backgroundRefreshDispatcher() {
       return true;
     }
 
-    try {
+    return runBackgroundRefreshTask(() async {
       WidgetsFlutterBinding.ensureInitialized();
       DartPluginRegistrant.ensureInitialized();
       await SupabaseConfig.initialize();
@@ -47,16 +49,35 @@ void backgroundRefreshDispatcher() {
 
       final container = ProviderContainer();
       try {
-        await container.read(appRefreshControllerProvider).refreshSignals();
+        await container
+            .read(appRefreshControllerProvider)
+            .refreshSignals(positionOverride: await LocationCacheStore.load());
       } finally {
         container.dispose();
       }
-      return true;
-    } catch (error, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('[BackgroundRefresh] failed: $error\n$stackTrace');
-      }
-      return false;
-    }
+    });
   });
+}
+
+@visibleForTesting
+Future<bool> runBackgroundRefreshTask(
+  Future<void> Function() refreshTask,
+) async {
+  try {
+    await refreshTask();
+    debugPrint('[BackgroundRefresh] completed');
+    return true;
+  } on Failure catch (error) {
+    debugPrint(
+      '[BackgroundRefresh] deferred until next interval: '
+      '${error.runtimeType} message=${error.message}',
+    );
+    return true;
+  } catch (error, stackTrace) {
+    debugPrint('[BackgroundRefresh] unexpected failure: $error');
+    if (kDebugMode) {
+      debugPrintStack(stackTrace: stackTrace);
+    }
+    return false;
+  }
 }

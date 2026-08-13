@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../../../core/background/background_refresh_permission_service.dart';
+import '../../../core/ads/banner_ad_owner_provider.dart';
 import '../../../core/config/admob_config.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/design/app_radius.dart';
@@ -21,20 +22,17 @@ import '../../../core/locale/locale_provider.dart';
 import '../../../core/purchase/premium_provider.dart';
 import '../../../core/review/app_review_prompt.dart';
 import '../../../core/widget_install/widget_install_prompt.dart';
+import '../../../core/widgets/app_banner_ad.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../fortune/domain/entities/fortune_result.dart';
+import '../../activity_forecast/presentation/activity_availability_provider.dart';
 import '../../fortune/presentation/fortune_provider.dart';
 import '../../score/domain/entities/activity_score.dart';
 import '../../score/presentation/score_provider.dart';
-import '../../fortune/presentation/fortune_screen.dart';
-import '../../home/presentation/home_tab_screen.dart';
-import '../../monthly/presentation/monthly_yegamssi_screen.dart';
-import '../../settings/presentation/app_info_screen.dart';
-import '../../settings/presentation/settings_screen.dart';
 import '../../weather/domain/entities/weather_entity.dart';
 import '../../weather/presentation/weather_provider.dart';
-import '../../weather/presentation/weather_screen.dart';
 import '../../widget_bridge/widget_snapshot_sync.dart';
+import 'shell_tab_route_resolver.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.child});
@@ -116,7 +114,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
   // ────────────────────────────────────────────────────────────────
 
-  static const List<_ShellTabItem> _tabs = [
+  static const List<_ShellTabItem> _defaultTabs = [
     _ShellTabItem(
       route: AppRoutes.home,
       label: '홈',
@@ -148,6 +146,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       selectedIcon: Icons.settings_rounded,
     ),
   ];
+
+  static const _activityTab = _ShellTabItem(
+    route: AppRoutes.activityForecast,
+    label: '활동예감',
+    icon: Icons.explore_outlined,
+    selectedIcon: Icons.explore,
+  );
+
+  List<_ShellTabItem> _tabsFor(ActivityForecastAvailability? availability) {
+    if (availability != ActivityForecastAvailability.eligible) {
+      return _defaultTabs;
+    }
+    return [..._defaultTabs.take(3), _activityTab, _defaultTabs.last];
+  }
 
   String? _lastWidgetSignature;
   bool _isHandlingBackPress = false;
@@ -195,11 +207,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         actions: [
           TextButton(
             onPressed: () =>
-                Navigator.of(dialogContext).pop(_BatteryReminderAction.never),
-            child: Text(l10n.batteryOptimizationReminderNever),
-          ),
-          TextButton(
-            onPressed: () =>
                 Navigator.of(dialogContext).pop(_BatteryReminderAction.later),
             child: Text(l10n.batteryOptimizationReminderLater),
           ),
@@ -222,8 +229,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     switch (action) {
       case _BatteryReminderAction.settings:
         await BackgroundRefreshPermissionService.requestBatteryOptimizationException();
-      case _BatteryReminderAction.never:
-        await BackgroundRefreshPermissionService.suppressBatteryOptimizationReminder();
       case _BatteryReminderAction.later:
       case null:
         return;
@@ -233,6 +238,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      ref.invalidate(activityForecastAvailabilityProvider);
+      ref.invalidate(verifiedKoreanLocationProvider);
       resetPassiveWeatherThrottle();
       _realignCurrentWeatherAfterResume();
       // 포그라운드 복귀: 15분 쓰로틀 리셋 → 다음 접근 시 백그라운드 갱신 트리거
@@ -281,7 +288,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       final location = GoRouter.of(
         context,
       ).routeInformationProvider.value.uri.path;
-      final currentIndex = _resolvedCurrentTabIndex(location);
+      final tabs = _tabsFor(
+        ref.read(activityForecastAvailabilityProvider).valueOrNull,
+      );
+      final currentIndex = _tabIndexForLocation(location, tabs);
       if (currentIndex != 0) {
         context.go(AppRoutes.home);
         return;
@@ -329,44 +339,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     }
   }
 
-  int _tabIndexForLocation(String location) {
-    if (location.startsWith(AppRoutes.weather)) return 1;
-    if (location.startsWith(AppRoutes.fortune)) return 2;
-    if (location.startsWith(AppRoutes.monthlyYegamssi)) return 3;
-    if (location.startsWith(AppRoutes.settings)) return 4;
-    return 0;
+  int _tabIndexForLocation(String location, List<_ShellTabItem> tabs) {
+    return resolveShellTabIndex(
+      location: location,
+      tabRoutes: tabs.map((tab) => tab.route).toList(growable: false),
+    );
   }
 
-  int _tabIndexForChild() {
-    final child = widget.child;
-    if (child is WeatherScreen) return 1;
-    if (child is FortuneScreen) return 2;
-    if (child is MonthlyYegamssiScreen) return 3;
-    if (child is SettingsScreen || child is AppInfoScreen) return 4;
-    if (child is HomeTabScreen) return 0;
-    return -1;
-  }
-
-  int _resolvedCurrentTabIndex(String location) {
-    final childIndex = _tabIndexForChild();
-    if (childIndex >= 0) {
-      return childIndex;
-    }
-    return _tabIndexForLocation(location);
-  }
-
-  void _handleSwipeNavigation(DragEndDetails details, int currentIndex) {
+  void _handleSwipeNavigation(
+    DragEndDetails details,
+    int currentIndex,
+    List<_ShellTabItem> tabs,
+  ) {
     final velocity = details.primaryVelocity ?? 0;
     if (velocity.abs() < 500) {
       return;
     }
-    if (velocity < 0 && currentIndex < _tabs.length - 1) {
-      context.go(_tabs[currentIndex + 1].route);
+    if (velocity < 0 && currentIndex < tabs.length - 1) {
+      context.go(tabs[currentIndex + 1].route);
       return;
     }
 
     if (velocity > 0 && currentIndex > 0) {
-      context.go(_tabs[currentIndex - 1].route);
+      context.go(tabs[currentIndex - 1].route);
     }
   }
 
@@ -413,7 +408,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final location = GoRouter.of(
       context,
     ).routeInformationProvider.value.uri.path;
-    final currentIndex = _resolvedCurrentTabIndex(location);
+    final activityAvailability = ref
+        .watch(activityForecastAvailabilityProvider)
+        .valueOrNull;
+    final tabs = _tabsFor(activityAvailability);
+    final currentIndex = _tabIndexForLocation(location, tabs);
     ref.watch(currentWeatherProvider);
     ref.watch(currentScoreProvider);
     ref.watch(dailyFortuneProvider);
@@ -497,7 +496,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         body: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onHorizontalDragEnd: (details) =>
-              _handleSwipeNavigation(details, currentIndex),
+              _handleSwipeNavigation(details, currentIndex, tabs),
           child: Stack(children: [const _SkyWaterBackdrop(), widget.child]),
         ),
         bottomNavigationBar: SafeArea(
@@ -528,12 +527,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     ),
                     child: Row(
                       children: [
-                        for (var index = 0; index < _tabs.length; index++)
+                        for (var index = 0; index < tabs.length; index++)
                           Expanded(
                             child: _NavigationTab(
-                              item: _tabs[index],
+                              item: tabs[index],
                               isSelected: currentIndex == index,
-                              onTap: () => context.go(_tabs[index].route),
+                              onTap: () => context.go(tabs[index].route),
                             ),
                           ),
                       ],
@@ -541,7 +540,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ),
                 ),
                 const SizedBox(height: AppSpacing.x1),
-                const _MannerAdBanner(),
+                AppBannerAd(
+                  enabled:
+                      ref.watch(bannerAdOwnerProvider) == BannerAdOwner.home,
+                ),
               ],
             ),
           ),
@@ -632,88 +634,10 @@ class _NavigationTab extends StatelessWidget {
       AppRoutes.weather => l10n.tabWeather,
       AppRoutes.fortune => l10n.tabFortune,
       AppRoutes.monthlyYegamssi => l10n.tabMonthlyYegamssi,
+      AppRoutes.activityForecast => '활동예감',
       AppRoutes.settings => l10n.tabSettings,
       _ => l10n.tabHome,
     };
-  }
-}
-
-class _MannerAdBanner extends ConsumerStatefulWidget {
-  const _MannerAdBanner();
-
-  @override
-  ConsumerState<_MannerAdBanner> createState() => _MannerAdBannerState();
-}
-
-class _MannerAdBannerState extends ConsumerState<_MannerAdBanner> {
-  BannerAd? _bannerAd;
-  bool _isLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (!ref.read(premiumNotifierProvider)) {
-      _loadAd();
-    }
-  }
-
-  void _loadAd() {
-    final bannerAd = BannerAd(
-      adUnitId: AdMobConfig.bannerAdUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          if (!mounted) return;
-          setState(() {
-            _bannerAd = ad as BannerAd;
-            _isLoaded = true;
-          });
-        },
-        onAdFailedToLoad: (ad, error) {
-          debugPrint('Banner ad failed to load: ${error.message}');
-          ad.dispose();
-        },
-      ),
-    );
-
-    bannerAd.load();
-  }
-
-  @override
-  void dispose() {
-    _bannerAd?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (ref.watch(premiumNotifierProvider)) {
-      return const SizedBox.shrink();
-    }
-
-    final l10n = AppLocalizations.of(context);
-    if (!_isLoaded || _bannerAd == null) {
-      return Container(
-        width: double.infinity,
-        height: 50,
-        alignment: Alignment.center,
-        child: Text(
-          l10n.loadingAd,
-          style: Theme.of(
-            context,
-          ).textTheme.labelSmall?.copyWith(color: Colors.white38),
-        ),
-      );
-    }
-
-    return Center(
-      child: SizedBox(
-        width: _bannerAd!.size.width.toDouble(),
-        height: _bannerAd!.size.height.toDouble(),
-        child: AdWidget(ad: _bannerAd!),
-      ),
-    );
   }
 }
 
@@ -883,4 +807,4 @@ class _BubblePainter extends CustomPainter {
   }
 }
 
-enum _BatteryReminderAction { later, never, settings }
+enum _BatteryReminderAction { later, settings }

@@ -34,8 +34,7 @@ class KmaDataSource implements WeatherDataSource {
   static const _midTaWcPath = '/api/typ01/url/fct_afs_wc.php';
 
   static const _hourlyCutoffHours = 1;
-  static const _maxHourlyForecasts = 24;
-  static const _maxDailyForecasts = 7;
+  static const _maxDailyForecasts = 11;
 
   @override
   Future<WeatherResponse> fetchCurrent({
@@ -272,6 +271,8 @@ class KmaDataSource implements WeatherDataSource {
           precipitationAmountMm: precipitationAmount > 0
               ? precipitationAmount
               : null,
+          precipProbability: _double(entry.value['POP']),
+          windSpeedMs: _double(entry.value['WSD']),
           condition: _mapCondition(
             entry.value['PTY'] ?? '0',
             entry.value['SKY'] ?? '1',
@@ -279,10 +280,6 @@ class KmaDataSource implements WeatherDataSource {
           ),
         ),
       );
-
-      if (forecasts.length >= _maxHourlyForecasts) {
-        break;
-      }
     }
 
     return forecasts;
@@ -632,13 +629,16 @@ class KmaDataSource implements WeatherDataSource {
           _double(land['rnSt$d']?.toString()) ??
           0.0;
       final rnStPm = _double(land['rnSt${d}Pm']?.toString()) ?? 0.0;
+      final hasTemperatureData = temps != null;
       result.add(
         DailyForecast(
           date: date,
           tempMin: temps?.$1.toDouble() ?? 0.0,
           tempMax: temps?.$2.toDouble() ?? 0.0,
           condition: _mapMidTermCondition(wfAm, wfPm),
-          precipProbability: ((rnStAm + rnStPm) / 2 / 100).clamp(0.0, 1.0),
+          precipProbability: (max(rnStAm, rnStPm) / 100).clamp(0.0, 1.0),
+          amPrecipProbability: (rnStAm / 100).clamp(0.0, 1.0),
+          pmPrecipProbability: (rnStPm / 100).clamp(0.0, 1.0),
           amCondition: _mapMidTermSingleCondition(wfAm),
           pmCondition: _mapMidTermSingleCondition(wfPm.isEmpty ? wfAm : wfPm),
           amTempCelsius: _estimateDayPartTemperature(
@@ -651,6 +651,7 @@ class KmaDataSource implements WeatherDataSource {
             temps?.$2.toDouble(),
             isMorning: false,
           ),
+          temperatureAvailable: hasTemperatureData,
         ),
       );
     }
@@ -817,6 +818,8 @@ class _DailyAccumulator {
   double? _minTemp;
   double? _maxTemp;
   double _maxPrecipProbability = 0;
+  double _morningMaxPrecipProbability = 0;
+  double _afternoonMaxPrecipProbability = 0;
   double? _maxPrecipitationAmountMm;
   DateTime? _conditionTime;
   WeatherCondition _condition = WeatherCondition.unknown;
@@ -841,6 +844,12 @@ class _DailyAccumulator {
     final pop = (_parseDouble(values['POP']) ?? 0) / 100;
     if (pop > _maxPrecipProbability) {
       _maxPrecipProbability = pop;
+    }
+    if (time.hour < 12 && pop > _morningMaxPrecipProbability) {
+      _morningMaxPrecipProbability = pop;
+    }
+    if (time.hour >= 12 && pop > _afternoonMaxPrecipProbability) {
+      _afternoonMaxPrecipProbability = pop;
     }
 
     final precipitationAmount = _precipAmountStatic(values['PCP']);
@@ -907,6 +916,8 @@ class _DailyAccumulator {
       tempMax: maxTemp,
       condition: _condition,
       precipProbability: _maxPrecipProbability,
+      amPrecipProbability: _morningMaxPrecipProbability,
+      pmPrecipProbability: _afternoonMaxPrecipProbability,
       expectedPrecipitationMm: _maxPrecipitationAmountMm,
       amCondition: _morningCondition ?? _condition,
       pmCondition: _afternoonCondition ?? _condition,

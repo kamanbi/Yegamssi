@@ -63,6 +63,8 @@ class WeatherResponse {
               time: forecast.time,
               tempCelsius: forecast.tempCelsius,
               precipitationAmountMm: forecast.precipitationAmountMm,
+              precipProbability: forecast.precipProbability,
+              windSpeedMs: forecast.windSpeedMs,
               condition: _applyTempOverrides(
                 forecast.condition,
                 forecast.tempCelsius,
@@ -76,15 +78,21 @@ class WeatherResponse {
               date: forecast.date,
               tempMin: forecast.tempMin,
               tempMax: forecast.tempMax,
-              condition: _applyTempOverrides(
-                forecast.condition,
-                forecast.tempMax,
-                minTemp: forecast.tempMin,
-              ),
+              condition: forecast.temperatureAvailable
+                  ? _applyTempOverrides(
+                      forecast.condition,
+                      forecast.tempMax,
+                      minTemp: forecast.tempMin,
+                    )
+                  : forecast.condition,
               precipProbability: forecast.precipProbability,
+              amPrecipProbability: forecast.amPrecipProbability,
+              pmPrecipProbability: forecast.pmPrecipProbability,
               expectedPrecipitationMm: forecast.expectedPrecipitationMm,
               amCondition: forecast.amCondition == null
                   ? null
+                  : !forecast.temperatureAvailable
+                  ? forecast.amCondition
                   : _applyTempOverrides(
                       forecast.amCondition!,
                       forecast.amTempCelsius ?? forecast.tempMin,
@@ -92,6 +100,8 @@ class WeatherResponse {
                     ),
               pmCondition: forecast.pmCondition == null
                   ? null
+                  : !forecast.temperatureAvailable
+                  ? forecast.pmCondition
                   : _applyTempOverrides(
                       forecast.pmCondition!,
                       forecast.pmTempCelsius ?? forecast.tempMax,
@@ -99,6 +109,7 @@ class WeatherResponse {
                     ),
               amTempCelsius: forecast.amTempCelsius,
               pmTempCelsius: forecast.pmTempCelsius,
+              temperatureAvailable: forecast.temperatureAvailable,
             ),
           )
           .toList(growable: false),

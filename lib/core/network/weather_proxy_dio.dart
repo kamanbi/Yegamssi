@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../config/app_config.dart';
 
-enum WeatherProxyProvider { kma, airKorea, openWeather, airNow }
+enum WeatherProxyProvider { kma, airKorea, openWeather, airNow, publicData }
 
 class WeatherProxyDio {
   WeatherProxyDio._();

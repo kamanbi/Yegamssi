@@ -144,6 +144,7 @@ class _WeatherContent extends ConsumerWidget {
     final today = DateTime(now.year, now.month, now.day);
     final dailyForecasts = weather.dailyForecasts
         .where((forecast) => !forecast.date.isBefore(today))
+        .take(7)
         .toList(growable: false);
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 60),
@@ -1247,7 +1248,9 @@ class _DailyForecastList extends ConsumerWidget {
                     ],
                     const Spacer(),
                     Text(
-                      '${forecast.tempMin.round()}\u2103',
+                      forecast.temperatureAvailable
+                          ? '${forecast.tempMin.round()}\u2103'
+                          : '--',
                       style: TextStyle(
                         color: AppColors.caption(brightness),
                         fontSize: 13,
@@ -1261,7 +1264,9 @@ class _DailyForecastList extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      '${forecast.tempMax.round()}\u2103',
+                      forecast.temperatureAvailable
+                          ? '${forecast.tempMax.round()}\u2103'
+                          : '--',
                       style: TextStyle(
                         color: AppColors.title(brightness),
                         fontSize: 13,
@@ -1277,7 +1282,9 @@ class _DailyForecastList extends ConsumerWidget {
                       child: _DayPartForecastChip(
                         label: l10n.weatherAm,
                         condition: forecast.amCondition ?? forecast.condition,
-                        temperature: forecast.amTempCelsius ?? forecast.tempMin,
+                        temperature: forecast.temperatureAvailable
+                            ? forecast.amTempCelsius ?? forecast.tempMin
+                            : null,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -1285,7 +1292,9 @@ class _DailyForecastList extends ConsumerWidget {
                       child: _DayPartForecastChip(
                         label: l10n.weatherPm,
                         condition: forecast.pmCondition ?? forecast.condition,
-                        temperature: forecast.pmTempCelsius ?? forecast.tempMax,
+                        temperature: forecast.temperatureAvailable
+                            ? forecast.pmTempCelsius ?? forecast.tempMax
+                            : null,
                       ),
                     ),
                   ],
@@ -1329,7 +1338,7 @@ class _DayPartForecastChip extends StatelessWidget {
 
   final String label;
   final WeatherCondition condition;
-  final double temperature;
+  final double? temperature;
 
   @override
   Widget build(BuildContext context) {
@@ -1365,7 +1374,7 @@ class _DayPartForecastChip extends StatelessWidget {
           PremiumWeatherIcon(condition: condition, size: 22),
           const Spacer(),
           Text(
-            '${temperature.round()}\u2103',
+            temperature == null ? '--' : '${temperature!.round()}\u2103',
             style: TextStyle(
               color: AppColors.title(brightness),
               fontSize: 13,

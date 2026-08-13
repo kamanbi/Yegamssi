@@ -28,6 +28,8 @@ class WeatherSnapshotCacheCodec {
               'tempCelsius': forecast.tempCelsius,
               'condition': forecast.condition.name,
               'precipitationAmountMm': forecast.precipitationAmountMm,
+              'precipProbability': forecast.precipProbability,
+              'windSpeedMs': forecast.windSpeedMs,
             },
           )
           .toList(growable: false),
@@ -39,11 +41,14 @@ class WeatherSnapshotCacheCodec {
               'tempMax': forecast.tempMax,
               'condition': forecast.condition.name,
               'precipProbability': forecast.precipProbability,
+              'amPrecipProbability': forecast.amPrecipProbability,
+              'pmPrecipProbability': forecast.pmPrecipProbability,
               'expectedPrecipitationMm': forecast.expectedPrecipitationMm,
               'amCondition': forecast.amCondition?.name,
               'pmCondition': forecast.pmCondition?.name,
               'amTempCelsius': forecast.amTempCelsius,
               'pmTempCelsius': forecast.pmTempCelsius,
+              'temperatureAvailable': forecast.temperatureAvailable,
             },
           )
           .toList(growable: false),
@@ -61,6 +66,9 @@ class WeatherSnapshotCacheCodec {
                 condition: parseCondition(forecast['condition'] as String?),
                 precipitationAmountMm:
                     (forecast['precipitationAmountMm'] as num?)?.toDouble(),
+                precipProbability: (forecast['precipProbability'] as num?)
+                    ?.toDouble(),
+                windSpeedMs: (forecast['windSpeedMs'] as num?)?.toDouble(),
               ),
             )
             .toList(growable: false);
@@ -76,6 +84,10 @@ class WeatherSnapshotCacheCodec {
                 condition: parseCondition(forecast['condition'] as String?),
                 precipProbability: (forecast['precipProbability'] as num)
                     .toDouble(),
+                amPrecipProbability: (forecast['amPrecipProbability'] as num?)
+                    ?.toDouble(),
+                pmPrecipProbability: (forecast['pmPrecipProbability'] as num?)
+                    ?.toDouble(),
                 expectedPrecipitationMm:
                     (forecast['expectedPrecipitationMm'] as num?)?.toDouble(),
                 amCondition: parseNullableCondition(
@@ -86,6 +98,8 @@ class WeatherSnapshotCacheCodec {
                 ),
                 amTempCelsius: (forecast['amTempCelsius'] as num?)?.toDouble(),
                 pmTempCelsius: (forecast['pmTempCelsius'] as num?)?.toDouble(),
+                temperatureAvailable:
+                    forecast['temperatureAvailable'] as bool? ?? true,
               ),
             )
             .toList(growable: false);

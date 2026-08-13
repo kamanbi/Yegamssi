@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/fortune/presentation/fortune_screen.dart';
+import '../../features/activity_forecast/presentation/activity_forecast_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/home/presentation/home_tab_screen.dart';
 import '../../features/monthly/presentation/monthly_yegamssi_screen.dart';
@@ -62,6 +63,13 @@ GoRouter appRouter(Ref ref) {
             pageBuilder: (_, state) => _noTransition(
               key: state.pageKey,
               child: const MonthlyYegamssiScreen(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.activityForecast,
+            pageBuilder: (_, state) => _noTransition(
+              key: state.pageKey,
+              child: const ActivityForecastScreen(),
             ),
           ),
           GoRoute(
