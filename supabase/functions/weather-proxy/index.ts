@@ -55,7 +55,9 @@ const providerConfig: Record<Provider, {
     baseUrl: 'https://www.airnowapi.org',
     keyName: 'API_KEY',
     secretName: 'AIRNOW_API_KEY',
-    allowedPaths: new Set(['/aq/observation/latLong/current/']),
+    // 2026-09-30 폐지 예정인 /aq/observation/latLong/current/ 대신 후속
+    // 서비스(Current Observations by Latitude/Longitude or ZIP Code)로 이전.
+    allowedPaths: new Set(['/aq/observation/current/ziplatLong/']),
   },
   publicData: {
     baseUrl: 'https://apis.data.go.kr',
@@ -98,7 +100,7 @@ const TTL_SECONDS: Record<string, number> = {
   'openWeather:/weather': 2100,
   'openWeather:/forecast': 3600,
   'openWeather:/air_pollution': 3600,
-  'airNow:/aq/observation/latLong/current/': 1800,
+  'airNow:/aq/observation/current/ziplatLong/': 1800,
   'publicData:/1192136/fcstFishingv2/GetFcstFishingApiServicev2': 21600,
   'publicData:/1192136/tideFcstHghLw/GetTideFcstHghLwApiService': 43200,
   'publicData:/1192136/crntFcstFldEbb/GetCrntFcstFldEbbApiService': 43200,
@@ -132,7 +134,7 @@ const SNAP_CONFIG: Partial<Record<Provider, Record<string, Record<string, SnapRu
     '/air_pollution': { lat: { step: 0.25, decimals: 2 }, lon: { step: 0.25, decimals: 2 } },
   },
   airNow: {
-    '/aq/observation/latLong/current/': {
+    '/aq/observation/current/ziplatLong/': {
       latitude: { step: 0.1, decimals: 1 },
       longitude: { step: 0.1, decimals: 1 },
     },

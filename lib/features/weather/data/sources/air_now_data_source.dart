@@ -5,14 +5,19 @@ import '../../../../core/network/weather_proxy_dio.dart';
 
 /// EPA AirNow API — 미국 대기질 (무료, API 키 필요)
 /// https://docs.airnowapi.org/aq101
+///
+/// 기존 "/aq/observation/latLong/current/"는 2026-09-30 폐지 예정이라
+/// 후속 서비스 "Current Observations by Latitude/Longitude or ZIP Code"
+/// (/aq/observation/current/ziplatLong/)로 이전했다. 응답 스키마가 달라져
+/// AQI→categoryNumber(1~6) 조합 대신 aqiCategoryName(문자열)만 내려온다.
 class AirNowDataSource {
-  AirNowDataSource()
-    : _dio = WeatherProxyDio.create(WeatherProxyProvider.airNow);
+  AirNowDataSource({Dio? dio})
+    : _dio = dio ?? WeatherProxyDio.create(WeatherProxyProvider.airNow);
 
   final Dio _dio;
   final Logger _logger = Logger();
 
-  static const _path = '/aq/observation/latLong/current/';
+  static const _path = '/aq/observation/current/ziplatLong/';
 
   /// 위경도 기반 현재 대기질 조회
   /// 반환: (pm10 μg/m³, pm25 μg/m³, o3 ppm, aqiValue, aqiGrade 1~4)
@@ -27,7 +32,6 @@ class AirNowDataSource {
           'format': 'application/json',
           'latitude': lat.toStringAsFixed(4),
           'longitude': lon.toStringAsFixed(4),
-          'distance': 50,
         },
       );
 
@@ -43,9 +47,11 @@ class AirNowDataSource {
       int? highestCategory;
 
       for (final item in items) {
-        final param = (item['ParameterName'] as String? ?? '').toUpperCase();
-        final aqi = (item['AQI'] as num?)?.toInt() ?? 0;
-        final category = (item['Category']?['Number'] as num?)?.toInt();
+        final param = (item['parameterName'] as String? ?? '').toUpperCase();
+        final aqi = (item['nowcastAQI'] as num?)?.toInt() ?? 0;
+        final category = _categoryNumberFor(
+          item['aqiCategoryName'] as String?,
+        );
 
         if (aqi > highestAqi) {
           highestAqi = aqi;
@@ -73,6 +79,20 @@ class AirNowDataSource {
       _logger.w('AirNow 대기질 조회 실패', error: e, stackTrace: st);
       return (null, null, null, null, null);
     }
+  }
+
+  /// aqiCategoryName(문자열) → AirNow Category Number(1~6)
+  /// https://docs.airnowapi.org/ObservationsByZipCodeLatLon/docs
+  int? _categoryNumberFor(String? name) {
+    return switch (name) {
+      'Good' => 1,
+      'Moderate' => 2,
+      'Unhealthy for Sensitive Groups' => 3,
+      'Unhealthy' => 4,
+      'Very Unhealthy' => 5,
+      'Hazardous' => 6,
+      _ => null,
+    };
   }
 
   /// AQI → khaiGrade(1~4) 변환
