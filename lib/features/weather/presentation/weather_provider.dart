@@ -8,6 +8,7 @@ import '../../../core/locale/country_code.dart';
 import '../../../core/locale/country_resolver.dart';
 import '../../../core/locale/locale_provider.dart';
 import '../../../core/refresh/refresh_policy.dart';
+import '../../../core/storage/location_cache_store.dart';
 import '../../../core/storage/weather_cache_store.dart';
 import '../../../core/utils/geocoding_service.dart';
 import '../../../core/utils/location_provider.dart';
@@ -52,14 +53,21 @@ Future<WeatherEntity> currentWeather(Ref ref) async {
   });
   ref.onDispose(timer.cancel);
 
-  final position = await ref.watch(currentPositionProvider.future);
   final country = await ref.watch(resolvedCountryProvider.future);
   final cachedWeather = await WeatherCacheStore.load(allowStale: true);
-  if (cachedWeather != null && hasUsableForecastSnapshot(cachedWeather)) {
+
+  // 앱 시작 시 GPS fix(최대 10초)를 기다리지 않고 캐시된 위치+날씨로 먼저
+  // 렌더링한다. 실제 GPS 재확인은 _refreshWeatherInBackground에서 별도로
+  // 진행되고, 캐시가 없거나(첫 실행) 사용 불가한 경우에만 아래에서
+  // currentPositionProvider의 실시간 GPS 조회를 기다린다.
+  final cachedPosition = await LocationCacheStore.load();
+  if (cachedWeather != null &&
+      hasUsableForecastSnapshot(cachedWeather) &&
+      cachedPosition != null) {
     final localizedWeather = await _withLocalizedLocationName(
       cachedWeather,
-      lat: position.lat,
-      lon: position.lon,
+      lat: cachedPosition.lat,
+      lon: cachedPosition.lon,
       language: language,
       country: country,
     );
@@ -75,6 +83,7 @@ Future<WeatherEntity> currentWeather(Ref ref) async {
     return localizedWeather;
   }
 
+  final position = await ref.watch(currentPositionProvider.future);
   final repo = await ref.watch(weatherRepositoryProvider.future);
   final result = await repo.getCurrentWeather(
     lat: position.lat,
