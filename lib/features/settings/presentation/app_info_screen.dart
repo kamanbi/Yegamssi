@@ -16,6 +16,7 @@ class AppInfoScreen extends StatelessWidget {
   static const String _homepage = 'https://yegamssi.netlify.app/';
   static const String _privacyPolicy = 'https://yegamssi.netlify.app/privacy';
   static const String _email = 'kamanbi23@naver.com';
+  static const String _metNorwayLicense = 'https://docs.api.met.no/doc/License';
   static const double _baseBottomClearance = 61;
   static const double _qrSize = 236;
 
@@ -331,6 +332,18 @@ class _DataSourceSection extends StatelessWidget {
                 titleColor: titleColor,
                 bodyColor: bodyColor,
               ),
+              Divider(height: 24, color: Theme.of(context).dividerColor),
+              _SourceRow(
+                sourceName: l10n.appInfoMetNorway,
+                description: l10n.appInfoMetNorwayDescription,
+                titleColor: titleColor,
+                bodyColor: bodyColor,
+              ),
+              TextButton(
+                onPressed: () =>
+                    AppInfoScreen._launchUrl(AppInfoScreen._metNorwayLicense),
+                child: const Text('CC BY 4.0'),
+              ),
             ],
           ),
         ),
@@ -375,10 +388,7 @@ class _SourceRow extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 2),
-        Text(
-          description,
-          style: TextStyle(color: bodyColor, fontSize: 12),
-        ),
+        Text(description, style: TextStyle(color: bodyColor, fontSize: 12)),
       ],
     );
   }
@@ -413,10 +423,7 @@ class _SourceRowWithLogo extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 2),
-        Text(
-          description,
-          style: TextStyle(color: bodyColor, fontSize: 12),
-        ),
+        Text(description, style: TextStyle(color: bodyColor, fontSize: 12)),
         const SizedBox(height: 8),
         Image.asset(
           logoAsset,

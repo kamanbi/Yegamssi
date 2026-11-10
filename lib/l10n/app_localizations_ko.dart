@@ -9,6 +9,13 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get appInfoMetNorway => 'MET Norway / 노르웨이 기상청';
+
+  @override
+  String get appInfoMetNorwayDescription =>
+      '오전·오후 보완 예측 기온을 제공합니다. 시간별 기온 표본을 시간대별로 집계하여 표시합니다. (CC BY 4.0)';
+
+  @override
   String get appName => '예감씨';
 
   @override

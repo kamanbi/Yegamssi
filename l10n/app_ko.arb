@@ -1,5 +1,7 @@
 {
   "@@locale": "ko",
+  "appInfoMetNorway": "MET Norway / 노르웨이 기상청",
+  "appInfoMetNorwayDescription": "오전·오후 보완 예측 기온을 제공합니다. 시간별 기온 표본을 시간대별로 집계하여 표시합니다. (CC BY 4.0)",
   "appName": "예감씨",
   "tabHome": "오늘",
   "tabWeather": "날씨",

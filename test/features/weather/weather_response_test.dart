@@ -39,6 +39,27 @@ DailyForecast _daily({
 }
 
 void main() {
+  test('AM/PM temperature ranges survive entity conversion', () {
+    final forecast = DailyForecast(
+      date: DateTime(2026, 10, 5),
+      tempMin: 10,
+      tempMax: 25,
+      condition: WeatherCondition.sunny,
+      precipProbability: 0,
+      amTempMinCelsius: 10,
+      amTempMaxCelsius: 18,
+      pmTempMinCelsius: 17,
+      pmTempMaxCelsius: 25,
+    );
+    final actual = _response(
+      daily: [forecast],
+    ).toEntity().dailyForecasts.single;
+    expect(actual.amTempMinCelsius, 10);
+    expect(actual.amTempMaxCelsius, 18);
+    expect(actual.pmTempMinCelsius, 17);
+    expect(actual.pmTempMaxCelsius, 25);
+  });
+
   // ══════════════════════════════════════════════════════════════
   // _applyTempOverrides (WeatherResponse.toEntity 내부 로직)
   // ══════════════════════════════════════════════════════════════
@@ -64,32 +85,42 @@ void main() {
     });
 
     test('rainy + 40°C → rainy 유지 (강수 조건은 온도 오버라이드 미적용)', () {
-      final entity = _response(temp: 40, condition: WeatherCondition.rainy)
-          .toEntity();
+      final entity = _response(
+        temp: 40,
+        condition: WeatherCondition.rainy,
+      ).toEntity();
       expect(entity.condition, WeatherCondition.rainy);
     });
 
     test('heavyRain + -15°C → heavyRain 유지', () {
-      final entity = _response(temp: -15, condition: WeatherCondition.heavyRain)
-          .toEntity();
+      final entity = _response(
+        temp: -15,
+        condition: WeatherCondition.heavyRain,
+      ).toEntity();
       expect(entity.condition, WeatherCondition.heavyRain);
     });
 
     test('thunderstorm + 38°C → thunderstorm 유지 (비강수 아님)', () {
-      final entity = _response(temp: 38, condition: WeatherCondition.thunderstorm)
-          .toEntity();
+      final entity = _response(
+        temp: 38,
+        condition: WeatherCondition.thunderstorm,
+      ).toEntity();
       expect(entity.condition, WeatherCondition.thunderstorm);
     });
 
     test('hazy + 34°C → hot으로 변환 (hazy는 benign)', () {
-      final entity = _response(temp: 34, condition: WeatherCondition.hazy)
-          .toEntity();
+      final entity = _response(
+        temp: 34,
+        condition: WeatherCondition.hazy,
+      ).toEntity();
       expect(entity.condition, WeatherCondition.hot);
     });
 
     test('windy + -11°C → coldWave로 변환 (windy는 benign)', () {
-      final entity = _response(temp: -11, condition: WeatherCondition.windy)
-          .toEntity();
+      final entity = _response(
+        temp: -11,
+        condition: WeatherCondition.windy,
+      ).toEntity();
       expect(entity.condition, WeatherCondition.coldWave);
     });
   });
@@ -115,11 +146,7 @@ void main() {
     test('daily rainy + 38°C → rainy 유지', () {
       final entity = _response(
         daily: [
-          _daily(
-            tempMin: 30,
-            tempMax: 38,
-            condition: WeatherCondition.rainy,
-          ),
+          _daily(tempMin: 30, tempMax: 38, condition: WeatherCondition.rainy),
         ],
       ).toEntity();
       expect(entity.dailyForecasts.first.condition, WeatherCondition.rainy);

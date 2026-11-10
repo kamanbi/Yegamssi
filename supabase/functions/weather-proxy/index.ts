@@ -5,7 +5,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.4';
 // deno-lint-ignore no-explicit-any
 declare const EdgeRuntime: { waitUntil: (promise: Promise<unknown>) => void } | undefined;
 
-type Provider = 'kma' | 'airKorea' | 'openWeather' | 'airNow' | 'publicData';
+type Provider = 'kma' | 'airKorea' | 'openWeather' | 'airNow' | 'publicData' | 'metNorway';
 
 const corsHeaders = {
   'access-control-allow-headers':
@@ -22,6 +22,12 @@ const providerConfig: Record<Provider, {
   secretName: string;
   allowedPaths: ReadonlySet<string>;
 }> = {
+  metNorway: {
+    baseUrl: 'https://api.met.no',
+    keyName: '',
+    secretName: '',
+    allowedPaths: new Set(['/weatherapi/locationforecast/2.0/compact']),
+  },
   kma: {
     baseUrl: 'https://apihub.kma.go.kr',
     keyName: 'authKey',
@@ -88,6 +94,7 @@ const providerConfig: Record<Provider, {
 // §3.4 TTL 상수 테이블 (초). 표에 없는 provider:path 는 캐시하지 않는다 (BYPASS, skip=E5).
 // ---------------------------------------------------------------------------
 const TTL_SECONDS: Record<string, number> = {
+  'metNorway:/weatherapi/locationforecast/2.0/compact': 21600,
   'kma:/api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtNcst': 3900,
   'kma:/api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtFcst': 3900,
   'kma:/api/typ02/openApi/VilageFcstInfoService_2.0/getVilageFcst': 11400,
@@ -150,6 +157,9 @@ function snap(raw: string, step: number, decimals: number): string {
 }
 
 function normalizeParam(provider: Provider, path: string, name: string, value: string): string {
+  if (provider === 'metNorway' && (name === 'lat' || name === 'lon')) {
+    return snap(value, 0.05, 2);
+  }
   const rule = SNAP_CONFIG[provider]?.[path]?.[name];
   if (!rule) return value;
   return snap(value, rule.step, rule.decimals);
@@ -359,6 +369,7 @@ const supabase = supabaseUrl && supabaseServiceKey
 
 const CALLER_LIMIT_PER_MINUTE = 120;
 const PROVIDER_UPSTREAM_LIMIT_PER_MINUTE: Record<Provider, number> = {
+  metNorway: 20,
   kma: 120,
   airKorea: 120,
   openWeather: 120,
@@ -502,6 +513,7 @@ function json(status: number, body: Record<string, string>) {
 }
 
 function resolveProvider(value: string | null): Provider | null {
+  if (value === 'metNorway') return value;
   if (
     value === 'kma' ||
     value === 'airKorea' ||
@@ -541,8 +553,8 @@ serve(async (request) => {
     return json(400, { error: 'unsupported_provider_path' });
   }
 
-  const providerKey = Deno.env.get(config.secretName);
-  if (!providerKey) {
+  const providerKey = config.secretName ? Deno.env.get(config.secretName) : '';
+  if (config.secretName && !providerKey) {
     return json(503, { error: 'provider_not_configured' });
   }
 
@@ -564,20 +576,34 @@ serve(async (request) => {
   // ---- 여기부터 캐시 계층. 보안 검증은 위에서 이미 끝났다. ----
 
   const nocache = requestUrl.searchParams.get('nocache') === '1';
+  if (provider === 'metNorway' && nocache) {
+    return json(403, { error: 'cache_bypass_forbidden' });
+  }
   if (nocache && !(await hasInternalRefreshAccess(request))) {
     return json(403, { error: 'cache_bypass_forbidden' });
   }
   const canonical = canonicalize(provider, path, requestUrl.searchParams);
   const cacheKey = await sha256Hex(`${provider}\n${path}\n${canonical.query}`);
   const cacheKeyShort = cacheKey.slice(0, 16);
-  const ttlSeconds = TTL_SECONDS[`${provider}:${path}`];
+  let ttlSeconds = TTL_SECONDS[`${provider}:${path}`];
 
   // §2.3 근거: 좌표 스냅은 캐시 키뿐 아니라 upstream 요청 자체에도 반영해야 결정적 응답이 된다.
   const upstreamUrl = new URL(`${config.baseUrl}${path}`);
   for (const [name, value] of canonical.pairs) {
     upstreamUrl.searchParams.append(name, value);
   }
-  upstreamUrl.searchParams.set(config.keyName, providerKey);
+  if (config.keyName && providerKey) upstreamUrl.searchParams.set(config.keyName, providerKey);
+  if (provider === 'metNorway') {
+    for (const name of upstreamUrl.searchParams.keys()) {
+      if (name !== 'lat' && name !== 'lon') return json(400, { error: 'unsupported_parameter' });
+    }
+    const lat = Number(upstreamUrl.searchParams.get('lat'));
+    const lon = Number(upstreamUrl.searchParams.get('lon'));
+    if (!upstreamUrl.searchParams.has('lat') || !upstreamUrl.searchParams.has('lon') ||
+        !Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
+      return json(400, { error: 'invalid_coordinates' });
+    }
+  }
 
   const callUpstream = async (): Promise<UpstreamResult> => {
     const t0 = Date.now();
@@ -594,7 +620,7 @@ serve(async (request) => {
         retryAfterSeconds: providerLimit.retryAfterSeconds,
       };
     }
-    if (!providerLimit && provider === 'publicData') {
+    if (!providerLimit && (provider === 'publicData' || provider === 'metNorway')) {
       return {
         status: 503,
         contentType: 'application/json',
@@ -603,8 +629,16 @@ serve(async (request) => {
       };
     }
     const upstreamResponse = await fetch(upstreamUrl, {
-      headers: provider === 'openWeather' ? { accept: 'application/json' } : undefined,
+      headers: provider === 'metNorway'
+        ? { 'User-Agent': 'Yegamssi/1.1.93 (https://github.com/kamanbi/Yegamssi)', accept: 'application/json' }
+        : provider === 'openWeather' ? { accept: 'application/json' } : undefined,
     });
+    if (provider === 'metNorway') {
+      const expires = Date.parse(upstreamResponse.headers.get('expires') ?? '');
+      if (Number.isFinite(expires)) {
+        ttlSeconds = Math.max(ttlSeconds ?? 21600, Math.ceil((expires - Date.now()) / 1000));
+      }
+    }
     const contentType = upstreamResponse.headers.get('content-type') ?? 'application/json';
     const body = await upstreamResponse.text();
     return { status: upstreamResponse.status, contentType, body, ms: Date.now() - t0 };

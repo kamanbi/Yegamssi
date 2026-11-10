@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+  "appInfoMetNorway": "MET Norway",
+  "appInfoMetNorwayDescription": "Provides supplementary morning and afternoon forecast temperatures. Temperature samples are aggregated by period. (CC BY 4.0)",
   "appName": "Yegamssi",
   "tabHome": "Today",
   "tabWeather": "Weather",

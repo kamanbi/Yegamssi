@@ -30,7 +30,15 @@ class DailyForecast {
     this.pmCondition,
     this.amTempCelsius,
     this.pmTempCelsius,
+    this.amTempMinCelsius,
+    this.amTempMaxCelsius,
+    this.pmTempMinCelsius,
+    this.pmTempMaxCelsius,
     this.temperatureAvailable = true,
+    this.tempMinAvailable,
+    this.tempMaxAvailable,
+    this.amTemperatureComplete,
+    this.pmTemperatureComplete,
   });
 
   final DateTime date;
@@ -45,7 +53,18 @@ class DailyForecast {
   final WeatherCondition? pmCondition;
   final double? amTempCelsius;
   final double? pmTempCelsius;
+  final double? amTempMinCelsius;
+  final double? amTempMaxCelsius;
+  final double? pmTempMinCelsius;
+  final double? pmTempMaxCelsius;
   final bool temperatureAvailable;
+  final bool? tempMinAvailable;
+  final bool? tempMaxAvailable;
+  final bool? amTemperatureComplete;
+  final bool? pmTemperatureComplete;
+
+  bool get hasMinTemperature => tempMinAvailable ?? temperatureAvailable;
+  bool get hasMaxTemperature => tempMaxAvailable ?? temperatureAvailable;
 
   DailyForecast copyWith({
     DateTime? date,
@@ -60,11 +79,23 @@ class DailyForecast {
     WeatherCondition? pmCondition,
     double? amTempCelsius,
     double? pmTempCelsius,
+    double? amTempMinCelsius,
+    double? amTempMaxCelsius,
+    double? pmTempMinCelsius,
+    double? pmTempMaxCelsius,
     bool? temperatureAvailable,
+    bool? tempMinAvailable,
+    bool? tempMaxAvailable,
+    bool? amTemperatureComplete,
+    bool? pmTemperatureComplete,
     bool clearAmCondition = false,
     bool clearPmCondition = false,
     bool clearAmTempCelsius = false,
     bool clearPmTempCelsius = false,
+    bool clearAmTempMinCelsius = false,
+    bool clearAmTempMaxCelsius = false,
+    bool clearPmTempMinCelsius = false,
+    bool clearPmTempMaxCelsius = false,
     bool clearExpectedPrecipitationMm = false,
   }) {
     return DailyForecast(
@@ -86,7 +117,25 @@ class DailyForecast {
       pmTempCelsius: clearPmTempCelsius
           ? null
           : (pmTempCelsius ?? this.pmTempCelsius),
+      amTempMinCelsius: clearAmTempMinCelsius
+          ? null
+          : (amTempMinCelsius ?? this.amTempMinCelsius),
+      amTempMaxCelsius: clearAmTempMaxCelsius
+          ? null
+          : (amTempMaxCelsius ?? this.amTempMaxCelsius),
+      pmTempMinCelsius: clearPmTempMinCelsius
+          ? null
+          : (pmTempMinCelsius ?? this.pmTempMinCelsius),
+      pmTempMaxCelsius: clearPmTempMaxCelsius
+          ? null
+          : (pmTempMaxCelsius ?? this.pmTempMaxCelsius),
       temperatureAvailable: temperatureAvailable ?? this.temperatureAvailable,
+      tempMinAvailable: tempMinAvailable ?? this.tempMinAvailable,
+      tempMaxAvailable: tempMaxAvailable ?? this.tempMaxAvailable,
+      amTemperatureComplete:
+          amTemperatureComplete ?? this.amTemperatureComplete,
+      pmTemperatureComplete:
+          pmTemperatureComplete ?? this.pmTemperatureComplete,
     );
   }
 }

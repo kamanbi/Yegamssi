@@ -9,6 +9,13 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get appInfoMetNorway => 'MET Norway';
+
+  @override
+  String get appInfoMetNorwayDescription =>
+      'Provides supplementary morning and afternoon forecast temperatures. Temperature samples are aggregated by period. (CC BY 4.0)';
+
+  @override
   String get appName => '预感氏';
 
   @override

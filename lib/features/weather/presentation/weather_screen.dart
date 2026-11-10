@@ -16,6 +16,9 @@ import '../../score/domain/entities/score_tier.dart';
 import '../../score/presentation/score_provider.dart';
 import '../../score/presentation/widgets/score_gauge.dart';
 import '../domain/entities/weather_entity.dart';
+import '../domain/day_part_temperature_policy.dart';
+import '../data/sources/supplemental_temperature_source.dart';
+import 'supplemental_temperature_provider.dart';
 import 'weather_location_provider.dart';
 import 'weather_provider.dart';
 import 'widgets/location_dropdown.dart';
@@ -170,7 +173,12 @@ class _WeatherContent extends ConsumerWidget {
             icon: Icons.calendar_today_rounded,
           ),
           const SizedBox(height: 10),
-          _DailyForecastList(forecasts: dailyForecasts),
+          _DailyForecastList(
+            forecasts: dailyForecasts,
+            supplemental:
+                ref.watch(supplementalTemperatureProvider).valueOrNull ??
+                const {},
+          ),
         ],
         if (score != null) ...[
           const SizedBox(height: 20),
@@ -1186,11 +1194,15 @@ class _HourlyForecastCard extends StatelessWidget {
 }
 
 class _DailyForecastList extends ConsumerWidget {
-  const _DailyForecastList({required this.forecasts});
+  const _DailyForecastList({
+    required this.forecasts,
+    required this.supplemental,
+  });
 
   static const _probabilityOnlyDisplayThreshold = 40;
 
   final List<DailyForecast> forecasts;
+  final Map<String, SupplementalDay> supplemental;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1204,6 +1216,27 @@ class _DailyForecastList extends ConsumerWidget {
           language: language,
         );
         final isToday = _isToday(forecast.date);
+        final now = DateTime.now();
+        final futureDay = forecast.date.isAfter(
+          DateTime(now.year, now.month, now.day),
+        );
+        final supplement = futureDay
+            ? supplemental[SupplementalTemperatureSource.dateKey(forecast.date)]
+            : null;
+        final morningRange = DayPartTemperaturePolicy.selectRange(
+          forecast: forecast,
+          morning: true,
+          supplemental: supplement?.am,
+          requireCompleteCoverage:
+              ref.watch(resolvedCountryProvider).valueOrNull == CountryCode.kr,
+        );
+        final afternoonRange = DayPartTemperaturePolicy.selectRange(
+          forecast: forecast,
+          morning: false,
+          supplemental: supplement?.pm,
+          requireCompleteCoverage:
+              ref.watch(resolvedCountryProvider).valueOrNull == CountryCode.kr,
+        );
         final precipitationSummary = _dailyPrecipitationSummary(forecast);
 
         return Padding(
@@ -1231,6 +1264,7 @@ class _DailyForecastList extends ConsumerWidget {
                         ),
                       ),
                     ),
+                    const Spacer(),
                     if (precipitationSummary != null) ...[
                       const Icon(
                         Icons.water_drop_rounded,
@@ -1246,33 +1280,6 @@ class _DailyForecastList extends ConsumerWidget {
                         ),
                       ),
                     ],
-                    const Spacer(),
-                    Text(
-                      forecast.temperatureAvailable
-                          ? '${forecast.tempMin.round()}\u2103'
-                          : '--',
-                      style: TextStyle(
-                        color: AppColors.caption(brightness),
-                        fontSize: 13,
-                      ),
-                    ),
-                    Text(
-                      ' ~ ',
-                      style: TextStyle(
-                        color: AppColors.caption(brightness),
-                        fontSize: 12,
-                      ),
-                    ),
-                    Text(
-                      forecast.temperatureAvailable
-                          ? '${forecast.tempMax.round()}\u2103'
-                          : '--',
-                      style: TextStyle(
-                        color: AppColors.title(brightness),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -1282,9 +1289,8 @@ class _DailyForecastList extends ConsumerWidget {
                       child: _DayPartForecastChip(
                         label: l10n.weatherAm,
                         condition: forecast.amCondition ?? forecast.condition,
-                        temperature: forecast.temperatureAvailable
-                            ? forecast.amTempCelsius ?? forecast.tempMin
-                            : null,
+                        minTemperature: morningRange?.min,
+                        maxTemperature: morningRange?.max,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -1292,9 +1298,8 @@ class _DailyForecastList extends ConsumerWidget {
                       child: _DayPartForecastChip(
                         label: l10n.weatherPm,
                         condition: forecast.pmCondition ?? forecast.condition,
-                        temperature: forecast.temperatureAvailable
-                            ? forecast.pmTempCelsius ?? forecast.tempMax
-                            : null,
+                        minTemperature: afternoonRange?.min,
+                        maxTemperature: afternoonRange?.max,
                       ),
                     ),
                   ],
@@ -1333,12 +1338,14 @@ class _DayPartForecastChip extends StatelessWidget {
   const _DayPartForecastChip({
     required this.label,
     required this.condition,
-    required this.temperature,
+    required this.minTemperature,
+    required this.maxTemperature,
   });
 
   final String label;
   final WeatherCondition condition;
-  final double? temperature;
+  final double? minTemperature;
+  final double? maxTemperature;
 
   @override
   Widget build(BuildContext context) {
@@ -1374,7 +1381,7 @@ class _DayPartForecastChip extends StatelessWidget {
           PremiumWeatherIcon(condition: condition, size: 22),
           const Spacer(),
           Text(
-            temperature == null ? '--' : '${temperature!.round()}\u2103',
+            _temperatureLabel,
             style: TextStyle(
               color: AppColors.title(brightness),
               fontSize: 13,
@@ -1384,6 +1391,16 @@ class _DayPartForecastChip extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String get _temperatureLabel {
+    if (minTemperature != null && maxTemperature != null) {
+      if (minTemperature!.round() == maxTemperature!.round()) {
+        return '${minTemperature!.round()}\u2103';
+      }
+      return '${minTemperature!.round()}~${maxTemperature!.round()}\u2103';
+    }
+    return '--';
   }
 }
 

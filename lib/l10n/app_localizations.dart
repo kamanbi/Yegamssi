@@ -116,6 +116,18 @@ abstract class AppLocalizations {
     Locale('zh'),
   ];
 
+  /// No description provided for @appInfoMetNorway.
+  ///
+  /// In en, this message translates to:
+  /// **'MET Norway'**
+  String get appInfoMetNorway;
+
+  /// No description provided for @appInfoMetNorwayDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Provides supplementary morning and afternoon forecast temperatures. Temperature samples are aggregated by period. (CC BY 4.0)'**
+  String get appInfoMetNorwayDescription;
+
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:

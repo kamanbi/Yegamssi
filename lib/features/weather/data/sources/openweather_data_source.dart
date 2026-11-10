@@ -66,7 +66,12 @@ class OpenWeatherDataSource implements WeatherDataSource {
         khaiValue: airQuality.openWeatherAqi?.toDouble(),
         khaiGrade: airQuality.openWeatherAqi,
         hourlyForecasts: _parseHourlyForecasts(forecastList),
-        dailyForecasts: _parseDailyForecasts(forecastList),
+        dailyForecasts: _parseDailyForecasts(
+          forecastList,
+          (forecastData['city'] as Map<String, dynamic>?)?['timezone']
+                  as int? ??
+              0,
+        ),
       );
     } on DioException catch (error) {
       throw NetworkException('OpenWeather API error: ${error.message}');
@@ -109,13 +114,20 @@ class OpenWeatherDataSource implements WeatherDataSource {
         (snow?['3h'] as num?)?.toDouble();
   }
 
-  List<DailyForecast> _parseDailyForecasts(List<dynamic> forecastList) {
+  List<DailyForecast> _parseDailyForecasts(
+    List<dynamic> forecastList,
+    int timezoneOffsetSeconds,
+  ) {
     final dailyMap = <String, List<Map<String, dynamic>>>{};
     for (final raw in forecastList) {
       final item = raw as Map<String, dynamic>;
-      final dtTxt = (item['dt_txt'] as String?) ?? '';
-      final dateKey = dtTxt.split(' ').first;
-      if (dateKey.isEmpty) continue;
+      final timestamp = item['dt'] as int?;
+      if (timestamp == null) continue;
+      final localTime = DateTime.fromMillisecondsSinceEpoch(
+        (timestamp + timezoneOffsetSeconds) * 1000,
+        isUtc: true,
+      );
+      final dateKey = localTime.toIso8601String().split('T').first;
       dailyMap.putIfAbsent(dateKey, () => []).add(item);
     }
 
@@ -124,20 +136,56 @@ class OpenWeatherDataSource implements WeatherDataSource {
       final items = entry.value;
       double tempMin = double.infinity;
       double tempMax = double.negativeInfinity;
+      double? amTempMin;
+      double? amTempMax;
+      double? pmTempMin;
+      double? pmTempMax;
       double totalPrecip = 0;
       int precipCount = 0;
+      final sampledHours = <int>{};
       WeatherCondition? noonCondition;
+      WeatherCondition? morningCondition;
+      WeatherCondition? afternoonCondition;
 
       for (final item in items) {
         final itemMain = item['main'] as Map<String, dynamic>? ?? const {};
-        final temp = (itemMain['temp'] as num?)?.toDouble() ?? 0;
+        final temp = (itemMain['temp'] as num?)?.toDouble();
+        if (temp == null || !temp.isFinite) continue;
+        final localTime = DateTime.fromMillisecondsSinceEpoch(
+          ((item['dt'] as int) + timezoneOffsetSeconds) * 1000,
+          isUtc: true,
+        );
         if (temp < tempMin) tempMin = temp;
         if (temp > tempMax) tempMax = temp;
+        final forecastHour = localTime.hour;
+        sampledHours.add(forecastHour);
+        final weather = item['weather'] as List<dynamic>? ?? const [];
+        final slotCondition = weather.isEmpty
+            ? WeatherCondition.unknown
+            : _mapOwmCode(
+                (weather.first as Map<String, dynamic>)['id'] as int? ?? -1,
+              );
+        if (forecastHour < 12) {
+          morningCondition ??= slotCondition;
+          amTempMin = amTempMin == null
+              ? temp
+              : (temp < amTempMin ? temp : amTempMin);
+          amTempMax = amTempMax == null
+              ? temp
+              : (temp > amTempMax ? temp : amTempMax);
+        } else {
+          afternoonCondition ??= slotCondition;
+          pmTempMin = pmTempMin == null
+              ? temp
+              : (temp < pmTempMin ? temp : pmTempMin);
+          pmTempMax = pmTempMax == null
+              ? temp
+              : (temp > pmTempMax ? temp : pmTempMax);
+        }
         totalPrecip += (item['pop'] as num?)?.toDouble() ?? 0;
         precipCount++;
 
-        final dtTxt = (item['dt_txt'] as String?) ?? '';
-        if (dtTxt.contains('12:00')) {
+        if (forecastHour == 12) {
           final weatherList = item['weather'] as List<dynamic>? ?? const [];
           if (weatherList.isNotEmpty) {
             noonCondition = _mapOwmCode(
@@ -165,6 +213,14 @@ class OpenWeatherDataSource implements WeatherDataSource {
           tempMax: tempMax,
           condition: noonCondition ?? fallbackCondition,
           precipProbability: avgPrecip,
+          amCondition: morningCondition,
+          pmCondition: afternoonCondition,
+          amTempMinCelsius: amTempMin,
+          amTempMaxCelsius: amTempMax,
+          pmTempMinCelsius: pmTempMin,
+          pmTempMaxCelsius: pmTempMax,
+          // A partial first/last day is not a full-day temperature range.
+          temperatureAvailable: sampledHours.length >= 8,
         ),
       );
     }

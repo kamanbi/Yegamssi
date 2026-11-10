@@ -113,6 +113,7 @@ class NoaaDataSource implements WeatherDataSource {
       }
 
       // ── 일별 예보 (7일, 낮/밤 쌍으로 묶기) ────────────────────
+      final localDayParts = parseHourlyDayParts(hourlyPeriods);
       final dailyForecasts = <DailyForecast>[];
       if (responses.length > 1) {
         final dailyData = responses[1].data as Map<String, dynamic>;
@@ -149,31 +150,38 @@ class NoaaDataSource implements WeatherDataSource {
           }
 
           // 다음 기간(밤)에서 최저기온 추출
-          double nightTemp = dayTemp - 10; // fallback
-          WeatherCondition? nightCondition;
+          double? nightTemp;
           if (i + 1 < dailyPeriods.length) {
             final n = dailyPeriods[i + 1] as Map<String, dynamic>;
             final isNextNight = !((n['isDaytime'] as bool?) ?? true);
             if (isNextNight) {
-              nightTemp = _toCelsius(
-                (n['temperature'] as num?)?.toDouble() ?? 0,
-                (n['temperatureUnit'] as String?) ?? 'F',
-              );
-              nightCondition = _mapForecast(
-                (n['shortForecast'] as String?) ?? '',
-              );
+              final rawNightTemperature = n['temperature'] as num?;
+              if (rawNightTemperature != null) {
+                nightTemp = _toCelsius(
+                  rawNightTemperature.toDouble(),
+                  (n['temperatureUnit'] as String?) ?? 'F',
+                );
+              }
             }
           }
 
+          final localDate = startTimeStr.substring(0, 10);
+          final dayParts = localDayParts[localDate];
           dailyForecasts.add(
             DailyForecast(
-              date: DateTime.parse(startTimeStr),
-              tempMin: nightTemp,
+              date: DateTime.parse(localDate),
+              tempMin: nightTemp ?? dayTemp,
               tempMax: dayTemp,
               condition: _mapForecast(dayForecast),
               precipProbability: precipProb,
-              amCondition: _mapForecast(dayForecast),
-              pmCondition: nightCondition,
+              temperatureAvailable:
+                  nightTemp != null && p['temperature'] != null,
+              amCondition: dayParts?.amCondition,
+              pmCondition: dayParts?.pmCondition,
+              amTempMinCelsius: dayParts?.amTempMinCelsius,
+              amTempMaxCelsius: dayParts?.amTempMaxCelsius,
+              pmTempMinCelsius: dayParts?.pmTempMinCelsius,
+              pmTempMaxCelsius: dayParts?.pmTempMaxCelsius,
             ),
           );
           i += 2; // 낮+밤 한 쌍 처리
@@ -210,7 +218,61 @@ class NoaaDataSource implements WeatherDataSource {
     }
   }
 
-  double _toCelsius(double temperature, String unit) {
+  static const _middayHour = 12;
+
+  static Map<String, DailyForecast> parseHourlyDayParts(List<dynamic> periods) {
+    final result = <String, DailyForecast>{};
+    for (final raw in periods) {
+      final period = raw as Map<String, dynamic>;
+      final start = period['startTime'] as String?;
+      final temperature = period['temperature'] as num?;
+      if (start == null || start.length < 19 || temperature == null) continue;
+      // Retain the wall-clock components before parsing the timezone suffix.
+      final localTime = DateTime.tryParse(start.substring(0, 19));
+      if (localTime == null) continue;
+      final temp = _toCelsius(
+        temperature.toDouble(),
+        period['temperatureUnit'] as String? ?? 'F',
+      );
+      if (!temp.isFinite) continue;
+      final dateKey = start.substring(0, 10);
+      final previous = result[dateKey];
+      final morning = localTime.hour < _middayHour;
+      final oldMin = morning
+          ? previous?.amTempMinCelsius
+          : previous?.pmTempMinCelsius;
+      final oldMax = morning
+          ? previous?.amTempMaxCelsius
+          : previous?.pmTempMaxCelsius;
+      final minTemp = oldMin == null || temp < oldMin ? temp : oldMin;
+      final maxTemp = oldMax == null || temp > oldMax ? temp : oldMax;
+      final condition = _mapForecast(period['shortForecast'] as String? ?? '');
+      final base =
+          previous ??
+          DailyForecast(
+            date: DateTime(localTime.year, localTime.month, localTime.day),
+            tempMin: temp,
+            tempMax: temp,
+            condition: condition,
+            precipProbability: 0,
+            temperatureAvailable: false,
+          );
+      result[dateKey] = morning
+          ? base.copyWith(
+              amTempMinCelsius: minTemp,
+              amTempMaxCelsius: maxTemp,
+              amCondition: base.amCondition ?? condition,
+            )
+          : base.copyWith(
+              pmTempMinCelsius: minTemp,
+              pmTempMaxCelsius: maxTemp,
+              pmCondition: base.pmCondition ?? condition,
+            );
+    }
+    return result;
+  }
+
+  static double _toCelsius(double temperature, String unit) {
     if (unit.toUpperCase() == 'C') return temperature;
     return (temperature - 32) * 5 / 9;
   }
@@ -227,7 +289,7 @@ class NoaaDataSource implements WeatherDataSource {
     return (precipitation?['value'] as num?)?.toDouble();
   }
 
-  WeatherCondition _mapForecast(String forecast) {
+  static WeatherCondition _mapForecast(String forecast) {
     final n = forecast.toLowerCase();
     // 비+천둥 우선 (예: "rain and thunderstorms")
     final hasThunder = n.contains('thunder');

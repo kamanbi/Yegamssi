@@ -9,6 +9,13 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get appInfoMetNorway => 'MET Norway';
+
+  @override
+  String get appInfoMetNorwayDescription =>
+      'Provides supplementary morning and afternoon forecast temperatures. Temperature samples are aggregated by period. (CC BY 4.0)';
+
+  @override
   String get appName => 'Yegamssi';
 
   @override

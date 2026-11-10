@@ -8,18 +8,20 @@ import '../../../../core/extensions/datetime_ext.dart';
 import '../../../../core/network/weather_proxy_dio.dart';
 import '../../../../core/utils/geocoding_service.dart';
 import '../../domain/entities/weather_entity.dart';
+import '../../domain/day_part_temperature_policy.dart';
 import '../models/weather_response.dart';
 import 'air_korea_data_source.dart';
 import 'kma_grid_converter.dart';
+import 'kma_daily_temperature_policy.dart';
+import 'kma_forecast_history_store.dart';
 import 'weather_data_source.dart';
 
 class KmaDataSource implements WeatherDataSource {
-  KmaDataSource()
-    : _dio = WeatherProxyDio.create(WeatherProxyProvider.kma),
-      _airKorea = AirKoreaDataSource();
+  KmaDataSource({Dio? dio})
+    : _dio = dio ?? WeatherProxyDio.create(WeatherProxyProvider.kma);
 
   final Dio _dio;
-  final AirKoreaDataSource _airKorea;
+  late final AirKoreaDataSource _airKorea = AirKoreaDataSource();
   final Logger _logger = Logger();
 
   static const _ncstPath =
@@ -35,6 +37,11 @@ class KmaDataSource implements WeatherDataSource {
 
   static const _hourlyCutoffHours = 1;
   static const _maxDailyForecasts = 11;
+  static const _previousDayIssueTime = '2300';
+  static const _villageForecastRows = 1000;
+  static const _midTermFirstDay = 3;
+  static const _midTermLastDay = 10;
+  static const _midTermIssueInterval = Duration(hours: 12);
 
   @override
   Future<WeatherResponse> fetchCurrent({
@@ -97,38 +104,18 @@ class KmaDataSource implements WeatherDataSource {
         ...villageForecastItems,
         ...ultraShortForecastItems,
       ], now);
-      final villageDailyForecasts = _parseDailyForecasts(
-        villageForecastItems,
-        now,
-      );
-
-      // 중기예보 + 에어코리아 병렬 조회
-      final midTermFuture = _fetchMidTermDailyForecasts(
-        lat: lat,
-        lon: lon,
+      final dailyFuture = loadDailyForecasts(
+        latestItems: villageForecastItems,
+        position: (lat: lat, lon: lon),
         now: now,
-      ).catchError((_) => (const <DailyForecast>[], ''));
+      );
       final airFuture = _airKorea.fetchAirQuality(lat: lat, lon: lon);
       final locationFuture = GeocodingService.reverseGeocode(lat, lon);
 
-      final midTermResult = await midTermFuture;
-      final midTermForecasts = midTermResult.$1;
+      final dailyForecasts = await dailyFuture;
       final (pm10, pm25, o3, khaiValue, khaiGrade) = await airFuture;
       final locationName = await locationFuture;
 
-      // 단기(village) 우선, 이후 날짜는 중기예보로 채움
-      final dailyByDate = <String, DailyForecast>{};
-      for (final f in villageDailyForecasts) {
-        dailyByDate[f.date.yyyyMMdd] = f;
-      }
-      for (final f in midTermForecasts) {
-        dailyByDate.putIfAbsent(f.date.yyyyMMdd, () => f);
-      }
-      final dailyForecasts =
-          (dailyByDate.values.toList()
-                ..sort((a, b) => a.date.compareTo(b.date)))
-              .take(_maxDailyForecasts)
-              .toList(growable: false);
       final nearestForecastValues = _nearestForecastValues(
         ultraShortForecastItems,
         now,
@@ -325,7 +312,7 @@ class KmaDataSource implements WeatherDataSource {
 
     return forecasts
         .take(_maxDailyForecasts)
-        .map((daily) => daily.toForecast(_mapCondition))
+        .map((daily) => daily.toForecast())
         .toList(growable: false);
   }
 
@@ -535,11 +522,129 @@ class KmaDataSource implements WeatherDataSource {
     return (baseDate, '${baseHour.toString().padLeft(2, '0')}00');
   }
 
+  Future<List<DailyForecast>> loadDailyForecasts({
+    required List<Map<String, dynamic>> latestItems,
+    required ({double lat, double lon}) position,
+    required DateTime now,
+  }) async {
+    final grid = KmaGridConverter.latLonToGrid(position.lat, position.lon);
+    final restoredItems = await _restoreTodayForecast(
+      latestItems: latestItems,
+      grid: (nx: grid.nx, ny: grid.ny),
+      now: now,
+    );
+    final shortTerm = _parseDailyForecasts(restoredItems, now);
+    final midTerm = await _fetchMidTermDailyForecasts(
+      lat: position.lat,
+      lon: position.lon,
+      now: now,
+      completeTemperatureDates: shortTerm
+          .where((forecast) => forecast.temperatureAvailable)
+          .map((forecast) => forecast.date.yyyyMMdd)
+          .toSet(),
+      incompleteTemperatureDates: shortTerm
+          .where((forecast) => !forecast.temperatureAvailable)
+          .map((forecast) => forecast.date.yyyyMMdd)
+          .toSet(),
+    );
+    final dailyByDate = {
+      for (final forecast in shortTerm) forecast.date.yyyyMMdd: forecast,
+    };
+    for (final forecast in midTerm.$1) {
+      final latest = dailyByDate[forecast.date.yyyyMMdd];
+      dailyByDate[forecast.date.yyyyMMdd] = latest == null
+          ? forecast
+          : KmaDailyTemperaturePolicy.fillMissing(latest, forecast);
+    }
+    return (dailyByDate.values.toList()
+          ..sort((left, right) => left.date.compareTo(right.date)))
+        .take(_maxDailyForecasts)
+        .toList(growable: false);
+  }
+
+  Future<List<Map<String, dynamic>>> _restoreTodayForecast({
+    required List<Map<String, dynamic>> latestItems,
+    required ({int nx, int ny}) grid,
+    required DateTime now,
+  }) async {
+    final todayDate = now.kmaDate;
+    final todayForecasts = _parseDailyForecasts(
+      latestItems,
+      now,
+    ).where((forecast) => forecast.date.yyyyMMdd == todayDate);
+    if (todayForecasts.isNotEmpty) {
+      final today = todayForecasts.first;
+      if (today.temperatureAvailable &&
+          today.amTemperatureComplete == true &&
+          today.pmTemperatureComplete == true) {
+        await _cacheTodayForecast(
+          grid: grid,
+          date: todayDate,
+          items: latestItems
+              .where((item) => item['fcstDate'] == todayDate)
+              .toList(),
+        );
+        return latestItems;
+      }
+    }
+
+    final fallbackDate = now.subtract(const Duration(days: 1)).kmaDate;
+    if (_fcstBaseTime(now) == (fallbackDate, _previousDayIssueTime)) {
+      return latestItems;
+    }
+
+    try {
+      var history = await KmaForecastHistoryStore.load(grid, todayDate);
+      if (history == null) {
+        final items = await _requestItems(
+          path: _fcstPath,
+          nx: grid.nx,
+          ny: grid.ny,
+          baseDate: fallbackDate,
+          baseTime: _previousDayIssueTime,
+          numOfRows: _villageForecastRows,
+        );
+        history = items.where((item) => item['fcstDate'] == todayDate).toList();
+      }
+      final mergedToday = KmaDailyTemperaturePolicy.mergeForecastDay((
+        history: history,
+        latest: latestItems,
+        date: todayDate,
+      ));
+      await _cacheTodayForecast(
+        grid: grid,
+        date: todayDate,
+        items: mergedToday,
+      );
+      return [
+        ...mergedToday,
+        ...latestItems.where((item) => item['fcstDate'] != todayDate),
+      ];
+    } catch (error) {
+      _logger.w('KMA today forecast history unavailable', error: error);
+      return latestItems;
+    }
+  }
+
+  Future<void> _cacheTodayForecast({
+    required ({int nx, int ny}) grid,
+    required String date,
+    required List<Map<String, dynamic>> items,
+  }) async {
+    try {
+      await KmaForecastHistoryStore.save(grid: grid, date: date, items: items);
+    } catch (error) {
+      _logger.w('KMA day history cache write failed', error: error);
+    }
+  }
+
   // 최신 유효 tmFc 우선 조회, 데이터 부족 시 직전 발표시각으로 fallback
   Future<(List<DailyForecast>, String)> _fetchMidTermDailyForecasts({
     required double lat,
     required double lon,
     required DateTime now,
+    required Set<String> completeTemperatureDates,
+    required Set<String> incompleteTemperatureDates,
   }) async {
     final landId = _landRegId(lat, lon);
     final tmFcs = _validTmFcs(now);
@@ -551,6 +656,8 @@ class KmaDataSource implements WeatherDataSource {
         final (entries, debug) = await _fetchMidTermForTmFc(
           tmFc: tmFc,
           landId: landId,
+          completeTemperatureDates: completeTemperatureDates,
+          incompleteTemperatureDates: incompleteTemperatureDates,
         );
         lastDebug = debug.isEmpty ? 'ok:$tmFc' : debug;
         if (entries.length > 2) return (entries, '');
@@ -573,6 +680,8 @@ class KmaDataSource implements WeatherDataSource {
   Future<(List<DailyForecast>, String)> _fetchMidTermForTmFc({
     required String tmFc, // YYYYMMDDHHMM (12자리)
     required String landId,
+    required Set<String> completeTemperatureDates,
+    required Set<String> incompleteTemperatureDates,
   }) async {
     // 1. 날씨 상태 + 강수확률: getMidLandFcst (JSON)
     final landRes = await _dio.get(
@@ -597,33 +706,76 @@ class KmaDataSource implements WeatherDataSource {
     // 2. 기온 min/max: fct_afs_wc.php (plain text)
     final cityId = _tempCityFor(landId);
     final tmfc10 = tmFc.substring(0, 10); // YYYYMMDDHH
-    final tmef1 = _fmt8(baseDate.add(const Duration(days: 3)));
-    final tmef2 = _fmt8(baseDate.add(const Duration(days: 10)));
+    final tmef1 = _fmt8(baseDate.add(const Duration(days: _midTermFirstDay)));
+    final tmef2 = _fmt8(baseDate.add(const Duration(days: _midTermLastDay)));
     Map<String, (int, int)> tempsByDate = {};
     try {
-      final taRes = await _dio.get(
-        _midTaWcPath,
-        queryParameters: {
-          'reg': cityId,
-          'tmfc1': tmfc10,
-          'tmfc2': tmfc10,
-          'tmef1': tmef1,
-          'tmef2': tmef2,
-          'disp': 0,
-          'help': 0,
-        },
-        options: Options(responseType: ResponseType.plain),
-      );
-      tempsByDate = _parseTaWcText(taRes.data?.toString() ?? '', cityId);
-    } catch (_) {}
+      tempsByDate = await _fetchMidTermTemperatures((
+        cityId: cityId,
+        issue: tmfc10,
+        from: tmef1,
+        to: tmef2,
+      ));
+    } catch (error) {
+      _logger.w('KMA midterm temperatures unavailable', error: error);
+    }
+
+    final weatherDates = <String>{};
+    for (var day = _midTermFirstDay; day <= _midTermLastDay; day++) {
+      final dateKey = _fmt8(baseDate.add(Duration(days: day)));
+      final morning = (land['wf${day}Am'] ?? land['wf$day'] ?? '').toString();
+      final afternoon = (land['wf${day}Pm'] ?? land['wf$day'] ?? '').toString();
+      if (morning.isEmpty &&
+          afternoon.isEmpty &&
+          !incompleteTemperatureDates.contains(dateKey)) {
+        continue;
+      }
+      weatherDates.add(dateKey);
+    }
+    final missingTemperatureDate =
+        KmaDailyTemperaturePolicy.needsMidTermFallback((
+          weatherDates: weatherDates,
+          temperatureDates: tempsByDate.keys.toSet(),
+          completeShortTermDates: completeTemperatureDates,
+        ));
+    if (missingTemperatureDate) {
+      final issueDate = DateTime(
+        baseDate.year,
+        baseDate.month,
+        baseDate.day,
+        int.parse(tmfc10.substring(8, 10)),
+      ).subtract(_midTermIssueInterval);
+      final previousIssue =
+          '${_fmt8(issueDate)}'
+          '${issueDate.hour.toString().padLeft(2, '0')}';
+      try {
+        final previous = await _fetchMidTermTemperatures((
+          cityId: cityId,
+          issue: previousIssue,
+          from: tmef1,
+          to: tmef2,
+        ));
+        tempsByDate = KmaDailyTemperaturePolicy.fillMissingDates(
+          tempsByDate,
+          previous,
+        );
+      } catch (error) {
+        _logger.w('KMA midterm temperature fallback unavailable', error: error);
+      }
+    }
 
     final result = <DailyForecast>[];
-    for (int d = 3; d <= 10; d++) {
+    for (int d = _midTermFirstDay; d <= _midTermLastDay; d++) {
       final wfAm = (land['wf${d}Am'] ?? land['wf$d'] ?? '').toString();
       final wfPm = (land['wf${d}Pm'] ?? land['wf$d'] ?? '').toString();
-      if (wfAm.isEmpty && wfPm.isEmpty) continue;
       final date = baseDate.add(Duration(days: d));
       final temps = tempsByDate[_fmt8(date)];
+      if (wfAm.isEmpty &&
+          wfPm.isEmpty &&
+          (!incompleteTemperatureDates.contains(_fmt8(date)) ||
+              temps == null)) {
+        continue;
+      }
       final rnStAm =
           _double(land['rnSt${d}Am']?.toString()) ??
           _double(land['rnSt$d']?.toString()) ??
@@ -659,24 +811,38 @@ class KmaDataSource implements WeatherDataSource {
     return (result, '');
   }
 
+  double? _estimateDayPartTemperature(
+    double? minTemp,
+    double? maxTemp, {
+    required bool isMorning,
+  }) {
+    if (minTemp == null || maxTemp == null) return maxTemp ?? minTemp;
+    final range = maxTemp - minTemp;
+    return minTemp + range * (isMorning ? 0.35 : 0.8);
+  }
+
+  Future<Map<String, (int, int)>> _fetchMidTermTemperatures(
+    ({String cityId, String issue, String from, String to}) request,
+  ) async {
+    final response = await _dio.get(
+      _midTaWcPath,
+      queryParameters: {
+        'reg': request.cityId,
+        'tmfc1': request.issue,
+        'tmfc2': request.issue,
+        'tmef1': request.from,
+        'tmef2': request.to,
+        'disp': 0,
+        'help': 0,
+      },
+      options: Options(responseType: ResponseType.plain),
+    );
+    return _parseTaWcText(response.data?.toString() ?? '', request.cityId);
+  }
+
   // fct_afs_wc.php plain text 파싱 → {YYYYMMDD: (min, max)}
   Map<String, (int, int)> _parseTaWcText(String text, String regId) {
-    final result = <String, (int, int)>{};
-    for (final line in text.split('\n')) {
-      final trimmed = line.trim();
-      if (trimmed.startsWith('#') || trimmed.isEmpty) continue;
-      final parts = trimmed.split(RegExp(r'\s+'));
-      if (parts.length < 8 || parts[0] != regId) continue;
-      final tmEf = parts[2]; // YYYYMMDDHHMM
-      if (tmEf.length < 8) continue;
-      final dateKey = tmEf.substring(0, 8);
-      final min = int.tryParse(parts[6]);
-      final max = int.tryParse(parts[7]);
-      if (min != null && max != null && !result.containsKey(dateKey)) {
-        result[dateKey] = (min, max);
-      }
-    }
-    return result;
+    return KmaDailyTemperaturePolicy.parseMidTermText(text, regId);
   }
 
   // landId → fct_afs_wc.php city regId 매핑
@@ -773,21 +939,6 @@ class KmaDataSource implements WeatherDataSource {
     return WeatherCondition.unknown;
   }
 
-  double? _estimateDayPartTemperature(
-    double? minTemp,
-    double? maxTemp, {
-    required bool isMorning,
-  }) {
-    if (minTemp == null || maxTemp == null) {
-      return maxTemp ?? minTemp;
-    }
-    final range = maxTemp - minTemp;
-    if (isMorning) {
-      return minTemp + range * 0.35;
-    }
-    return minTemp + range * 0.8;
-  }
-
   double? _double(String? value) =>
       value == null ? null : double.tryParse(value);
   int? _int(String? value) => value == null ? null : int.tryParse(value);
@@ -817,6 +968,8 @@ class _DailyAccumulator {
   final DateTime date;
   double? _minTemp;
   double? _maxTemp;
+  double? _officialMinTemp;
+  double? _officialMaxTemp;
   double _maxPrecipProbability = 0;
   double _morningMaxPrecipProbability = 0;
   double _afternoonMaxPrecipProbability = 0;
@@ -826,12 +979,19 @@ class _DailyAccumulator {
   DateTime? _morningTime;
   WeatherCondition? _morningCondition;
   double? _morningTemp;
+  double? _morningMinTemp;
+  double? _morningMaxTemp;
   DateTime? _afternoonTime;
   WeatherCondition? _afternoonCondition;
   double? _afternoonTemp;
+  double? _afternoonMinTemp;
+  double? _afternoonMaxTemp;
+  final _temperatureHours = <int>{};
 
   void add({required DateTime time, required Map<String, String> values}) {
     final temperature = _parseDouble(values['TMP']);
+    _officialMinTemp = _parseDouble(values['TMN']) ?? _officialMinTemp;
+    _officialMaxTemp = _parseDouble(values['TMX']) ?? _officialMaxTemp;
     final minCandidate = _parseDouble(values['TMN']) ?? temperature;
     final maxCandidate = _parseDouble(values['TMX']) ?? temperature;
     if (minCandidate != null) {
@@ -839,6 +999,24 @@ class _DailyAccumulator {
     }
     if (maxCandidate != null) {
       _maxTemp = _maxTemp == null ? maxCandidate : max(_maxTemp!, maxCandidate);
+    }
+    if (temperature != null) {
+      _temperatureHours.add(time.hour);
+      if (time.hour < 12) {
+        _morningMinTemp = _morningMinTemp == null
+            ? temperature
+            : min(_morningMinTemp!, temperature);
+        _morningMaxTemp = _morningMaxTemp == null
+            ? temperature
+            : max(_morningMaxTemp!, temperature);
+      } else {
+        _afternoonMinTemp = _afternoonMinTemp == null
+            ? temperature
+            : min(_afternoonMinTemp!, temperature);
+        _afternoonMaxTemp = _afternoonMaxTemp == null
+            ? temperature
+            : max(_afternoonMaxTemp!, temperature);
+      }
     }
 
     final pop = (_parseDouble(values['POP']) ?? 0) / 100;
@@ -900,16 +1078,9 @@ class _DailyAccumulator {
     }
   }
 
-  DailyForecast toForecast(
-    WeatherCondition Function(
-      String pty,
-      String sky,
-      double precipitationAmount,
-    )
-    mapCondition,
-  ) {
-    final minTemp = _minTemp ?? 0;
-    final maxTemp = _maxTemp ?? minTemp;
+  DailyForecast toForecast() {
+    final minTemp = _officialMinTemp ?? _minTemp ?? 0;
+    final maxTemp = _officialMaxTemp ?? _maxTemp ?? minTemp;
     return DailyForecast(
       date: date,
       tempMin: minTemp,
@@ -925,12 +1096,28 @@ class _DailyAccumulator {
           _morningTemp ?? _estimateDayPartTemp(minTemp, maxTemp, true),
       pmTempCelsius:
           _afternoonTemp ?? _estimateDayPartTemp(minTemp, maxTemp, false),
+      amTempMinCelsius: _morningMinTemp,
+      amTempMaxCelsius: _morningMaxTemp,
+      pmTempMinCelsius: _afternoonMinTemp,
+      pmTempMaxCelsius: _afternoonMaxTemp,
+      temperatureAvailable:
+          _officialMinTemp != null && _officialMaxTemp != null,
+      tempMinAvailable: _officialMinTemp != null,
+      tempMaxAvailable: _officialMaxTemp != null,
+      amTemperatureComplete: DayPartTemperaturePolicy.isComplete(
+        _temperatureHours,
+        morning: true,
+      ),
+      pmTemperatureComplete: DayPartTemperaturePolicy.isComplete(
+        _temperatureHours,
+        morning: false,
+      ),
     );
   }
 
   double _estimateDayPartTemp(double minTemp, double maxTemp, bool isMorning) {
     final range = maxTemp - minTemp;
-    return isMorning ? minTemp + range * 0.35 : minTemp + range * 0.8;
+    return minTemp + range * (isMorning ? 0.35 : 0.8);
   }
 
   static double? _parseDouble(String? value) {

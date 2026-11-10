@@ -33,7 +33,10 @@ void resetPassiveWeatherThrottle() {
 Future<WeatherRepository> weatherRepository(Ref ref) async {
   final country = await ref.watch(resolvedCountryProvider.future);
   final source = switch (country) {
-    CountryCode.kr => FallbackWeatherDataSource([KmaDataSource()]),
+    CountryCode.kr => FallbackWeatherDataSource([
+      KmaDataSource(),
+      OpenWeatherDataSource(),
+    ]),
     CountryCode.us => FallbackWeatherDataSource([
       NoaaDataSource(),
       OpenWeatherDataSource(),

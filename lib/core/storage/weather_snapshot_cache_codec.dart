@@ -48,7 +48,15 @@ class WeatherSnapshotCacheCodec {
               'pmCondition': forecast.pmCondition?.name,
               'amTempCelsius': forecast.amTempCelsius,
               'pmTempCelsius': forecast.pmTempCelsius,
+              'amTempMinCelsius': forecast.amTempMinCelsius,
+              'amTempMaxCelsius': forecast.amTempMaxCelsius,
+              'pmTempMinCelsius': forecast.pmTempMinCelsius,
+              'pmTempMaxCelsius': forecast.pmTempMaxCelsius,
               'temperatureAvailable': forecast.temperatureAvailable,
+              'tempMinAvailable': forecast.hasMinTemperature,
+              'tempMaxAvailable': forecast.hasMaxTemperature,
+              'amTemperatureComplete': forecast.amTemperatureComplete,
+              'pmTemperatureComplete': forecast.pmTemperatureComplete,
             },
           )
           .toList(growable: false),
@@ -98,8 +106,22 @@ class WeatherSnapshotCacheCodec {
                 ),
                 amTempCelsius: (forecast['amTempCelsius'] as num?)?.toDouble(),
                 pmTempCelsius: (forecast['pmTempCelsius'] as num?)?.toDouble(),
+                amTempMinCelsius: (forecast['amTempMinCelsius'] as num?)
+                    ?.toDouble(),
+                amTempMaxCelsius: (forecast['amTempMaxCelsius'] as num?)
+                    ?.toDouble(),
+                pmTempMinCelsius: (forecast['pmTempMinCelsius'] as num?)
+                    ?.toDouble(),
+                pmTempMaxCelsius: (forecast['pmTempMaxCelsius'] as num?)
+                    ?.toDouble(),
                 temperatureAvailable:
                     forecast['temperatureAvailable'] as bool? ?? true,
+                tempMinAvailable: forecast['tempMinAvailable'] as bool?,
+                tempMaxAvailable: forecast['tempMaxAvailable'] as bool?,
+                amTemperatureComplete:
+                    forecast['amTemperatureComplete'] as bool?,
+                pmTemperatureComplete:
+                    forecast['pmTemperatureComplete'] as bool?,
               ),
             )
             .toList(growable: false);

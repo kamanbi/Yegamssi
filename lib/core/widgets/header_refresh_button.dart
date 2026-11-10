@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../features/weather/presentation/supplemental_temperature_provider.dart';
 import '../refresh/app_refresh_controller.dart';
 
 class HeaderRefreshButton extends ConsumerStatefulWidget {
@@ -21,6 +22,7 @@ class _HeaderRefreshButtonState extends ConsumerState<HeaderRefreshButton> {
     }
 
     setState(() => _isRefreshing = true);
+    ref.invalidate(supplementalTemperatureProvider);
     try {
       await ref.read(appRefreshControllerProvider).refreshSignals(force: true);
     } catch (error) {
