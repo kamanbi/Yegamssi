@@ -1,0 +1,49 @@
+# 예감씨 1.1.96 업데이트 출시노트
+
+버전: 1.1.96 (빌드 96)
+
+## Google Play 출시노트 (11개 로케일)
+
+<ko-KR>
+• 기상청 데이터가 일시적으로 지연돼도 날씨와 운세가 표시되도록 개선했습니다.
+</ko-KR>
+
+<de-DE>
+• Wetter und Horoskop erscheinen auch bei Datenverzögerungen der koreanischen Wetterbehörde.
+</de-DE>
+
+<en-US>
+• Weather and fortune now keep showing even when Korean weather agency data is temporarily delayed.
+</en-US>
+
+<es-ES>
+• El tiempo y el horóscopo se muestran aunque los datos de la agencia meteorológica coreana se retrasen temporalmente.
+</es-ES>
+
+<fr-FR>
+• La météo et l'horoscope restent affichés même en cas de retard temporaire des données de l'agence météo coréenne.
+</fr-FR>
+
+<hi-IN>
+• कोरियाई मौसम एजेंसी का डेटा अस्थायी रूप से देर से आने पर भी मौसम और राशिफल दिखते रहेंगे।
+</hi-IN>
+
+<ja-JP>
+• 韓国気象庁のデータが一時的に遅延しても、天気と運勢が表示されるように改善しました。
+</ja-JP>
+
+<pt-BR>
+• O clima e o horóscopo continuam sendo exibidos mesmo quando os dados da agência meteorológica coreana atrasam temporariamente.
+</pt-BR>
+
+<ro>
+• Vremea și horoscopul rămân afișate chiar și când datele agenției meteo coreene sunt temporar întârziate.
+</ro>
+
+<vi>
+• Thời tiết và tử vi vẫn hiển thị ngay cả khi dữ liệu của cơ quan khí tượng Hàn Quốc tạm thời chậm trễ.
+</vi>
+
+<zh-CN>
+• 即使韩国气象厅数据暂时延迟，也能继续显示天气和运势。
+</zh-CN>
